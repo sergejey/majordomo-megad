@@ -2,8 +2,12 @@
 
  $record=SQLSelectOne("SELECT * FROM megaddevices WHERE ID='".(int)$id."'");
 
- 
- $stateData=getURL('http://'.$record['IP'].'/'.$record['PASSWORD'].'/?cmd=all', 0);
+
+ if ($all) {
+  $stateData=$all;
+ } else {
+  $stateData=getURL('http://'.$record['IP'].'/'.$record['PASSWORD'].'/?cmd=all', 0);
+ }
 
  $states=explode(';', $stateData);
 
@@ -39,6 +43,8 @@
        } else {
         $prop['CURRENT_VALUE']=0;
        }
+      } elseif ($type==3 && preg_match('/temp:(\d+)\/hum:(\d+)/', $states[$i], $m)) {
+       $prop['CURRENT_VALUE']=$states[$i];
       } else {
        $prop['CURRENT_VALUE']=$states[$i];
       }

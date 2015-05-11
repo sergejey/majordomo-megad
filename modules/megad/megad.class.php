@@ -201,7 +201,7 @@ function usual(&$out) {
   require(DIR_MODULES.$this->name.'/readconfig.inc.php');
  }
 
- function readValues($id) {
+ function readValues($id, $all='') {
   require(DIR_MODULES.$this->name.'/readvalues.inc.php');
  }
 
@@ -287,6 +287,12 @@ function usual(&$out) {
    global $v; // value for ADC
    global $dir; //direction 1/0
    global $cnt; //counter
+   global $all;
+
+   //all data received
+   if (isset($all)) {
+    $this->readValues($rec['ID'], $all);
+   }
 
    //input data changed
    if (isset($pt)) {
