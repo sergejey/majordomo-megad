@@ -313,14 +313,14 @@ function usual(&$out) {
       $prop['COUNTER']=$cnt;
      }
 
-     $old_value=$prop['CURRENT_VALUE'];
-     $prop['CURRENT_VALUE']=$value;
+     $old_value=$prop['CURRENT_VALUE_STRING'];
+     $prop['CURRENT_VALUE_STRING']=$value;
      $prop['UPDATED']=date('Y-m-d H:i:s');
      SQLUpdate('megadproperties', $prop);
 
      if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
-      if ($old_value!=$prop['CURRENT_VALUE'] || $prop['CURRENT_VALUE']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
-       setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE'], array($this->name=>'0'));
+      if ($old_value!=$prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
+       setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name=>'0'));
       }
      }
 
@@ -334,14 +334,14 @@ function usual(&$out) {
     $value=$at;
 
     if ($prop['ID']) {
-     $old_value=$prop['CURRENT_VALUE'];
-     $prop['CURRENT_VALUE']=$value;
+     $old_value=$prop['CURRENT_VALUE_STRING'];
+     $prop['CURRENT_VALUE_STRING']=$value;
      $prop['UPDATED']=date('Y-m-d H:i:s');
      SQLUpdate('megadproperties', $prop);
 
      if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
-      if ($old_value!=$prop['CURRENT_VALUE'] || $prop['CURRENT_VALUE']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
-       setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE'], array($this->name=>'0'));
+      if ($old_value!=$prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
+       setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name=>'0'));
       }
      }
     }
@@ -382,7 +382,7 @@ function usual(&$out) {
 */
  function setProperty($property_id, $value) {
   $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE ID='".$property_id."'");
-  $prop['CURRENT_VALUE']=$value;
+  $prop['CURRENT_VALUE_STRING']=$value;
   SQLUpdate('megadproperties', $prop);
 
   $channel=$prop['NUM'];
@@ -521,6 +521,7 @@ megadproperties - megad Properties
  megadproperties: TYPE int(3) NOT NULL DEFAULT '0'
  megadproperties: NUM int(3) NOT NULL DEFAULT '0'
  megadproperties: CURRENT_VALUE int(10) NOT NULL DEFAULT '0'
+ megadproperties: CURRENT_VALUE_STRING varchar(255) NOT NULL DEFAULT ''
  megadproperties: COUNTER int(10) NOT NULL DEFAULT '0'
  megadproperties: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''

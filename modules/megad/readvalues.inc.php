@@ -24,29 +24,29 @@
      }
 
      //echo $type.' '.$states[$i]."<br/>";
-     $old_value=$prop['CURRENT_VALUE'];
+     $old_value=$prop['CURRENT_VALUE_STRING'];
 
      if ($states[$i]) {
       if ($type==0) {
        $tmp=explode('/', $states[$i]);
        if ($tmp[0]=='ON') {
-        $prop['CURRENT_VALUE']=1;
+        $prop['CURRENT_VALUE_STRING']=1;
        } else {
-        $prop['CURRENT_VALUE']=0;
+        $prop['CURRENT_VALUE_STRING']=0;
        }
        if ($tmp[1]) {
         $prop['COUNTER']=$tmp[1];
        }
       } elseif ($type==1) {
        if ($states[$i]=='ON') {
-        $prop['CURRENT_VALUE']=1;
+        $prop['CURRENT_VALUE_STRING']=1;
        } else {
-        $prop['CURRENT_VALUE']=0;
+        $prop['CURRENT_VALUE_STRING']=0;
        }
       } elseif ($type==3 && preg_match('/temp:(\d+)\/hum:(\d+)/', $states[$i], $m)) {
-       $prop['CURRENT_VALUE']=$states[$i];
+       $prop['CURRENT_VALUE_STRING']=$states[$i];
       } else {
-       $prop['CURRENT_VALUE']=$states[$i];
+       $prop['CURRENT_VALUE_STRING']=$states[$i];
       }
      }
 
@@ -55,8 +55,8 @@
 
 
     if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
-     if ($old_value!=$prop['CURRENT_VALUE'] || $prop['CURRENT_VALUE']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
-      setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE'], array($this->name=>'0'));
+     if ($old_value!=$prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
+      setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name=>'0'));
      }
     }
 
@@ -67,15 +67,15 @@
 $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND TYPE='100'");
 if ($prop['ID']) {
  $stateData=getURL('http://'.$record['IP'].'/'.$record['PASSWORD'].'/?tget=1', 0);
- $old_value=$prop['CURRENT_VALUE'];
+ $old_value=$prop['CURRENT_VALUE_STRING'];
  if ($stateData!='') {
-  $prop['CURRENT_VALUE']=$stateData;
+  $prop['CURRENT_VALUE_STRING']=$stateData;
   $prop['UPDATED']=date('Y-m-d H:i:s');
   SQLUpdate('megadproperties', $prop);
 
     if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
-     if ($old_value!=$prop['CURRENT_VALUE'] || $prop['CURRENT_VALUE']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
-      setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE'], array($this->name=>'0'));
+     if ($old_value!=$prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
+      setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name=>'0'));
      }
     }
 
