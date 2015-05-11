@@ -1,0 +1,202 @@
+[#if RESULT!=""#]
+<legend>Command result</legend>
+<p>[#RESULT#]</p>
+[#endif#]
+
+
+<legend>Server change</legend>
+
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<fieldset>
+<div class="form-group">
+ <label class="col-lg-2 control-label"[#if ERR_CONFIG#] style="color:red;font-weight:bold"[#endif#]>
+ Server IP-address:
+ </label>
+ <div class="col-lg-2">
+  <input type="text" name="server_ip" value="[#SERVER_IP#]" class="form-control">
+ </div>
+</div>
+
+<div class="form-group">
+ <label class="col-lg-2 control-label"[#if ERR_CONFIG#] style="color:red;font-weight:bold"[#endif#]>
+ Server Script:
+ </label>
+ <div class="col-lg-2">
+  <input type="text" name="server_script" value="megad.php" class="form-control">
+ </div>
+</div>
+
+<div class="form-group">
+        <div class="col-lg-offset-2 col-lg-2">
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="set_server">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="<#TAB#>">
+        </div>
+</div>
+</fieldset>
+</form>
+
+
+<legend>Address change</legend>
+
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<fieldset>
+<div class="form-group">
+ <label class="col-lg-2 control-label"[#if ERR_CONFIG#] style="color:red;font-weight:bold"[#endif#]>
+ Set new IP-address:
+ </label>
+ <div class="col-lg-2">
+  <input type="text" name="ip" value="[#IP#]" class="form-control">
+ </div>
+</div>
+<div class="form-group">
+        <div class="col-lg-offset-2 col-lg-2">
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="set_address">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="<#TAB#>">
+        </div>
+</div>
+</fieldset>
+</form>
+
+<legend>Firmware update</legend>
+
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<fieldset>
+<div class="form-group">
+ <label class="col-lg-2 control-label"[#if ERR_CONFIG#] style="color:red;font-weight:bold"[#endif#]>
+ &nbsp;
+ </label>
+ <div class="col-lg-2">
+  <input type="checkbox" name="beta" value="1"> use beta-version
+ </div>
+</div>
+
+<div class="form-group">
+ <label class="col-lg-2 control-label"[#if ERR_CONFIG#] style="color:red;font-weight:bold"[#endif#]>
+ &nbsp;
+ </label>
+ <div class="col-lg-2">
+  <input type="checkbox" name="clear" value="1"> clear EEPROM
+ </div>
+</div>
+
+
+<div class="form-group">
+        <div class="col-lg-offset-2 col-lg-2">
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="upgrade_firmware">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="<#TAB#>">
+        </div>
+</div>
+</fieldset>
+</form>
+
+<legend>Advanced config</legend>
+
+
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<fieldset>
+
+<div class="form-group">
+        <div class="col-lg-offset-2 col-lg-2">
+         <a href="http://[#IP#]/[#PASSWORD#]" target=_blank>Manual config</a>
+        </div>
+</div>
+
+
+<div class="form-group">
+
+        <div class="col-lg-offset-2 col-lg-2">
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary">Read config</button>
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="read_config">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="<#TAB#>">
+        </div>
+</div>
+</fieldset>
+</form>
+
+
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<fieldset>
+
+<div class="form-group">
+ <label class="col-lg-2 control-label"[#if ERR_CONFIG#] style="color:red;font-weight:bold"[#endif#]>
+ Current config:
+ </label>
+ <div class="col-lg-4">
+  <textarea name="config" class="form-control" rows="5">[#CONFIG#]</textarea>
+ </div>
+</div>
+
+<div class="form-group">
+        <div class="col-lg-offset-2 col-lg-2">
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary">Write config</button>
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="write_config">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="<#TAB#>">
+        </div>
+</div>
+
+</fieldset>
+</form>
+
+<!--#
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+[#if OK#]
+<div class="alert alert-success">Data has been saved</div>
+[#endif OK#]
+[#if ERR#]
+<div class="alert alert-error">Please fill out all required fields</div>
+[#endif ERR#]
+<fieldset>
+[#if ID=""#]
+<legend>New Record</legend>
+[#endif ID#]
+<div class="form-group">
+ <label class="col-lg-3 control-label"[#if ERR_CONFIG#] style="color:red;font-weight:bold"[#endif#]>
+ CONFIG
+ :
+ </label>
+ <div class="col-lg-4">
+ <textarea name="config" rows=12 cols=100 class="form-control">[#CONFIG#]</textarea>
+ </div>
+</div>
+<div class="form-group">
+        <div class="col-lg-offset-3 col-lg-4">
+ [#if ID!=""#]
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary">Submit</button>
+ [#else ID#]
+ <button type="submit" name="subm" value="Add" class="btn btn-primary">Add</button>
+ [#endif ID#]
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default ">Cancel</a>
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="update">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="<#TAB#>">
+        </div>
+</div>
+</fieldset>
+</form>
+#-->

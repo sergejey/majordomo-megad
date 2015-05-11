@@ -1,0 +1,64 @@
+
+[#if SET_DATASOURCE!="1"#]
+<!-- / source select -->
+[#endif SET_DATASOURCE#]
+ <!-- action usual -->
+ [#if DATA_SOURCE="megaddevices" || DATA_SOURCE=""#]
+ <!-- table megaddevices search -->
+ [#if VIEW_MODE="search_megaddevices" || VIEW_MODE=""#]
+  [#inc megaddevices_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table megaddevices search -->
+ <!-- table megaddevices edit -->
+ [#if VIEW_MODE="edit_megaddevices"#]
+   [#if ID!=""#]
+   [#if TITLE!=""#]<h4>[#TITLE#]</h4>[#endif TITLE#]
+<ul class="nav nav-tabs">
+  <li[#if TAB=""#] class="active"[#endif#]>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab="><#LANG_GENERAL#></a>
+  </li>
+  <li[#if TAB="data"#] class="active"[#endif#]>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data"><#LANG_DATA#></a>
+  </li>
+  <li[#if TAB="config"#] class="active"[#endif#]>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=config">Advanced</a>
+  </li>
+</ul>
+   [#endif ID#]
+   [#if TAB=""#]
+    [#inc megaddevices_edit_default.html#]
+   [#endif TAB#]
+   [#if TAB="data"#]
+    [#inc megaddevices_edit_data.html#]
+   [#endif TAB#]
+   [#if TAB="config"#]
+    [#inc megaddevices_edit_config.html#]
+   [#endif TAB#]
+ [#endif VIEW_MODE#]
+ <!-- / table megaddevices edit -->
+ <!-- table megaddevices view --> 
+ [#if VIEW_MODE="view_megaddevices"#]
+   [#if TAB=""#]
+    [#inc megaddevices_view_default.html#]
+   [#endif TAB#]
+ [#endif VIEW_MODE#]
+ <!-- / table megaddevices view -->
+ [#endif DATA_SOURCE#]
+ <!-- action usual -->
+ [#if DATA_SOURCE="megadproperties"#]
+ <!-- table megadproperties search -->
+ [#if VIEW_MODE="search_megadproperties" || VIEW_MODE=""#]
+  [#inc megadproperties_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table megadproperties search -->
+ <!-- table megadproperties edit -->
+ [#if VIEW_MODE="edit_megadproperties"#]
+   [#inc megadproperties_edit.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table megadproperties edit -->
+ <!-- table megadproperties view --> 
+ [#if VIEW_MODE="view_megadproperties"#]
+   [#inc megadproperties_view.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table megadproperties view -->
+ [#endif DATA_SOURCE#]
