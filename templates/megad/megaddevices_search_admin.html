@@ -3,7 +3,33 @@
 <p>
 <a href="?view_mode=edit_megaddevices&data_source=<#DATA_SOURCE#>" class="btn btn-default"> <#LANG_ADD#></a>
 <a href="?view_mode=scan" class="btn btn-default"> <#LANG_RESCAN_DEVICES#></a>
+[ <a href="#" onClick="$('#api_settings').toggle();return false;"><#LANG_SETUP#></a> ]
 </p>
+
+
+<div style="display:none" id='api_settings'>
+&nbsp;
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+<fieldset>
+<div class="form-group">
+ <label class="control-label"[#if ERR_API_IP#] style="color:red;font-weight:bold"[#endif#]>
+ Local IP:
+ </label>
+ <div class="controls"><input type="text" name="api_ip" value="<#API_IP#>" class="input"></div>
+</div>
+
+<div class="form-actions">
+<button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_UPDATE#></button>
+<input type="hidden" name="view_mode" value="update_settings">
+<input type="hidden" name="mode" value="update">
+</div>
+</fieldset>
+</form>
+</div>
+
+</div>
+
+
 <table width=100% border=0><tr>
 <td valign=top>
 <!-- results -->
