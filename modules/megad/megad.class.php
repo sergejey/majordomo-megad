@@ -134,6 +134,21 @@ function admin(&$out) {
  if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
   $out['SET_DATASOURCE']=1;
  }
+
+ $this->getConfig();
+ $out['API_IP']=$this->config['API_IP'];
+ if (!$out['API_IP']) {
+  $out['API_IP']=$this->get_local_ip();
+ }
+
+ if ($this->view_mode=='update_settings') {
+   global $api_ip;
+   $this->config['API_IP']=$api_ip;
+   $this->saveConfig();
+   $this->redirect("?");
+ }
+
+
  if ($this->data_source=='megaddevices' || $this->data_source=='') {
   if ($this->view_mode=='' || $this->view_mode=='search_megaddevices') {
    $this->search_megaddevices($out);

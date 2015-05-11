@@ -3,6 +3,11 @@
  $url=BASE_URL.'/modules/megad/megad-cfg.php';
  $url.='?scan=1';
 
+ if ($this->config['API_IP']) {
+  $url.='&local-ip='.$this->config['API_IP'];
+ }
+
+
  $data=getURL($url, 0);
 
  if ($data!='') {

@@ -48,7 +48,7 @@ else
         }
 
         if ( !preg_match("/192\.168\./", $local_ip) && !preg_match("/10\.0\./", $local_ip) && !preg_match("/172\.16\./", $local_ip) )
-        {
+                {
                 echo "Unable to detect local network\nPlase, specify local IP-address with --local-ip\n";
                 exit;
         }
