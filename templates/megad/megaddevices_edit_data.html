@@ -5,6 +5,7 @@
 [#endif ID#]
 
 &nbsp;
+[#if DATA!=""#]<p>[#DATA#]</p>[#endif DATA#]
 
 <p><a href="?id=<#ID#>&view_mode=<#VIEW_MODE#>&tab=<#TAB#>&mode=getdata" class="btn btn-default"><#LANG_REFRESH#></a></p>
 
@@ -14,8 +15,16 @@
  <tr>
   <td valign="top"><#LANG_TYPE#></td>
   <td valign="top"><#LANG_CURRENT_VALUE#></td>
+
   <td valign="top"><#LANG_LINKED_OBJECT#></td>
   <td valign="top"><#LANG_LINKED_PROPERTY#></td>
+
+  <td valign="top"><#LANG_CURRENT_VALUE#> 2</td>
+
+  <td valign="top"><#LANG_LINKED_OBJECT#> 2</td>
+  <td valign="top"><#LANG_LINKED_PROPERTY#> 2</td>
+
+
  </tr>
  [#begin PROPERTIES#]
  <tr>
@@ -27,11 +36,17 @@
   [#if TYPE="100"#]Int. temp[#endif#] 
   [#if TYPE="255"#]NC[#endif#] 
   [#NUM#]</td>
-  <td valign="top" align="center">[#CURRENT_VALUE_STRING#]</td>
+  <td valign="top" align="center">[#CURRENT_VALUE_STRING#]&nbsp;</td>
   <td valign="top"><input type="text" value="[#LINKED_OBJECT#]" name="linked_object[#TYPE#][#NUM#]" id="linked_object[#TYPE#][#NUM#]"></td>
   <td valign="top"><input type="text" value="[#LINKED_PROPERTY#]" name="linked_property[#TYPE#][#NUM#]" id="linked_property[#TYPE#][#NUM#]"></td>
+
+  <td valign="top" align="center">[#CURRENT_VALUE_STRING2#]&nbsp;</td>
+  <td valign="top"><input type="text" value="[#LINKED_OBJECT2#]" name="linked_object2_[#TYPE#][#NUM#]" id="linked_object2_[#TYPE#][#NUM#]"></td>
+  <td valign="top"><input type="text" value="[#LINKED_PROPERTY2#]" name="linked_property2_[#TYPE#][#NUM#]" id="linked_property2_[#TYPE#][#NUM#]"></td>
+
  </tr>
  [#module name="linkedobject" object_field="linked_object<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" property_field="linked_property<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" width="200"#]
+ [#module name="linkedobject" object_field="linked_object2_<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" property_field="linked_property2_<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" width="200"#]
  [#end PROPERTIES#]
 </table>
 &nbsp;<br/>

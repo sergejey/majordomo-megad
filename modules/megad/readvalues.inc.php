@@ -25,6 +25,7 @@
 
      //echo $type.' '.$states[$i]."<br/>";
      $old_value=$prop['CURRENT_VALUE_STRING'];
+     $old_value2=$prop['CURRENT_VALUE_STRING2'];
 
      if ($states[$i]) {
       if ($type==0) {
@@ -34,7 +35,8 @@
        } else {
         $prop['CURRENT_VALUE_STRING']=0;
        }
-       if ($tmp[1]) {
+       if (isset($tmp[1])) {
+        $prop['CURRENT_VALUE_STRING2']=$tmp[1];
         $prop['COUNTER']=$tmp[1];
        }
       } elseif ($type==1) {
@@ -44,7 +46,8 @@
         $prop['CURRENT_VALUE_STRING']=0;
        }
       } elseif ($type==3 && preg_match('/temp:(\d+)\/hum:(\d+)/', $states[$i], $m)) {
-       $prop['CURRENT_VALUE_STRING']=$states[$i];
+       $prop['CURRENT_VALUE_STRING']=$m[1];
+       $prop['CURRENT_VALUE_STRING2']=$m[2];
       } else {
        $prop['CURRENT_VALUE_STRING']=$states[$i];
       }
@@ -53,12 +56,21 @@
      $prop['UPDATED']=date('Y-m-d H:i:s');
      SQLUpdate('megadproperties', $prop);
 
+     //echo $stateData;exit;
+
 
     if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
      if ($old_value!=$prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING']!=gg($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'])) {
       setGlobal($prop['LINKED_OBJECT'].'.'.$prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name=>'0'));
      }
     }
+
+    if ($prop['LINKED_OBJECT2'] && $prop['LINKED_PROPERTY2']) {
+     if ($old_value2!=$prop['CURRENT_VALUE_STRING2'] || $prop['CURRENT_VALUE_STRING2']!=gg($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_PROPERTY2'])) {
+      setGlobal($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_PROPERTY2'], $prop['CURRENT_VALUE_STRING2'], array($this->name=>'0'));
+     }
+    }
+
 
  }
 

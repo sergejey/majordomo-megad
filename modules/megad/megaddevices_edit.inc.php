@@ -177,14 +177,27 @@
    $total=count($properties);
    for($i=0;$i<$total;$i++) {
     if ($this->mode=='update' && $this->tab=='data') {
+
      global ${"linked_object".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      global ${"linked_property".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      $properties[$i]['LINKED_OBJECT']=${"linked_object".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      $properties[$i]['LINKED_PROPERTY']=${"linked_property".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+
+     global ${"linked_object2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     global ${"linked_property2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     $properties[$i]['LINKED_OBJECT2']=${"linked_object2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     $properties[$i]['LINKED_PROPERTY2']=${"linked_property2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+
+
      SQLUpdate('megadproperties', $properties[$i]);
      if ($properties[$i]['LINKED_OBJECT']) {
       addLinkedProperty($properties[$i]['LINKED_OBJECT'], $properties[$i]['LINKED_PROPERTY'], $this->name);
      }
+
+     if ($properties[$i]['LINKED_OBJECT2']) {
+      addLinkedProperty($properties[$i]['LINKED_OBJECT2'], $properties[$i]['LINKED_PROPERTY2'], $this->name);
+     }
+
     }
    }
    $out['PROPERTIES']=$properties;
