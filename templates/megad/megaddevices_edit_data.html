@@ -24,6 +24,8 @@
   <td valign="top"><#LANG_LINKED_OBJECT#> 2</td>
   <td valign="top"><#LANG_LINKED_PROPERTY#> 2</td>
 
+  <td valign="top"><#LANG_UPDATED#></td>
+
 
  </tr>
  [#begin PROPERTIES#]
@@ -43,6 +45,7 @@
   <td valign="top" align="center">[#CURRENT_VALUE_STRING2#]&nbsp;</td>
   <td valign="top"><input type="text" value="[#LINKED_OBJECT2#]" name="linked_object2_[#TYPE#][#NUM#]" id="linked_object2_[#TYPE#][#NUM#]"></td>
   <td valign="top"><input type="text" value="[#LINKED_PROPERTY2#]" name="linked_property2_[#TYPE#][#NUM#]" id="linked_property2_[#TYPE#][#NUM#]"></td>
+  <td valign="top">[#UPDATED#]</td>
 
  </tr>
  [#module name="linkedobject" object_field="linked_object<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" property_field="linked_property<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" width="200"#]
