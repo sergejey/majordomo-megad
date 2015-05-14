@@ -19,6 +19,10 @@
     $ok=0;
    }
 
+   global $mdid;
+   $rec['MDID']=$mdid;
+
+
   //updating 'IP' (varchar)
    global $ip;
    $rec['IP']=$ip;

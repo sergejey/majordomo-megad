@@ -49,7 +49,11 @@
        $prop['CURRENT_VALUE_STRING']=$m[1];
        $prop['CURRENT_VALUE_STRING2']=$m[2];
       } else {
-       $prop['CURRENT_VALUE_STRING']=$states[$i];
+       $tmp=explode('/', $states[$i]);
+       $prop['CURRENT_VALUE_STRING']=$tmp[0];
+       if (isset($tmp[1])) {
+        $prop['CURRENT_VALUE_STRING2']=$tmp[1];
+       }
       }
      }
 

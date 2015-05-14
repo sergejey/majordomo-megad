@@ -269,15 +269,27 @@ function usual(&$out) {
 * @access public
 */
  function processRequest() {
+
+  global $mdid;
+
   $ip=$_SERVER['REMOTE_ADDR'];
 
   $ecmd='';
 
-  $rec=SQLSelectOne("SELECT * FROM megaddevices WHERE IP='".$ip."'");
+  if ($mdid) {
+   $rec=SQLSelectOne("SELECT * FROM megaddevices WHERE MDID LIKE '".trim($mdid)."'");
+  }
+
+  if (!$rec['ID']) {
+   $rec=SQLSelectOne("SELECT * FROM megaddevices WHERE IP='".$ip."'");
+  }
+
+
   if (!$rec['ID']) {
    $rec=array();
    $rec['IP']=$ip;
    $rec['TITLE']='MegaD '.$rec['IP'];
+   $rec['MDID']=trim($mdid);
    $rec['PASSWORD']='sec';
    $rec['ID']=SQLInsert('megaddevices', $rec);
    $this->readConfig($rec['ID']);
@@ -550,6 +562,7 @@ megadproperties - megad Properties
   $data = <<<EOD
  megaddevices: ID int(10) unsigned NOT NULL auto_increment
  megaddevices: TITLE varchar(255) NOT NULL DEFAULT ''
+ megaddevices: MDID varchar(255) NOT NULL DEFAULT ''
  megaddevices: TYPE varchar(255) NOT NULL DEFAULT ''
  megaddevices: CONNECTION_TYPE int(3) NOT NULL DEFAULT '0'
  megaddevices: PORT int(10) NOT NULL DEFAULT '0'
