@@ -180,13 +180,18 @@
 
      global ${"linked_object".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      global ${"linked_property".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     global ${"linked_method".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      $properties[$i]['LINKED_OBJECT']=${"linked_object".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      $properties[$i]['LINKED_PROPERTY']=${"linked_property".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     $properties[$i]['LINKED_METHOD']=${"linked_method".$properties[$i]['TYPE'].$properties[$i]['NUM']};
 
      global ${"linked_object2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      global ${"linked_property2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     global ${"linked_method2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+
      $properties[$i]['LINKED_OBJECT2']=${"linked_object2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      $properties[$i]['LINKED_PROPERTY2']=${"linked_property2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     $properties[$i]['LINKED_METHOD2']=${"linked_method2_".$properties[$i]['TYPE'].$properties[$i]['NUM']};
 
 
      SQLUpdate('megadproperties', $properties[$i]);
