@@ -65,10 +65,26 @@
      }
     }
 
+    if ($prop['LINKED_OBJECT'] && $prop['LINKED_METHOD'] && ($old_value!=$prop['CURRENT_VALUE_STRING'])) {
+     $params=array();
+     $params['VALUE']=$prop['CURRENT_VALUE_STRING'];
+     $params['value']=$params['VALUE'];
+     $params['port']=$i;
+     callMethod($prop['LINKED_OBJECT'].'.'.$prop['LINKED_METHOD'], $params);
+    }
+
     if ($prop['LINKED_OBJECT2'] && $prop['LINKED_PROPERTY2']) {
      if ($old_value2!=$prop['CURRENT_VALUE_STRING2'] || $prop['CURRENT_VALUE_STRING2']!=gg($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_PROPERTY2'])) {
       setGlobal($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_PROPERTY2'], $prop['CURRENT_VALUE_STRING2'], array($this->name=>'0'));
      }
+    }
+
+    if ($prop['LINKED_OBJECT2'] && $prop['LINKED_METHOD2'] && ($old_value2!=$prop['CURRENT_VALUE_STRING2'])) {
+     $params=array();
+     $params['VALUE']=$prop['CURRENT_VALUE_STRING2'];
+     $params['value']=$params['VALUE'];
+     $params['port']=$i;
+     callMethod($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_METHOD2'], $params);
     }
 
 

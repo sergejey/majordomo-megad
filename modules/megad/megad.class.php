@@ -271,6 +271,8 @@ function usual(&$out) {
  function processRequest() {
   $ip=$_SERVER['REMOTE_ADDR'];
 
+  $ecmd='';
+
   $rec=SQLSelectOne("SELECT * FROM megaddevices WHERE IP='".$ip."'");
   if (!$rec['ID']) {
    $rec=array();
@@ -299,6 +301,8 @@ function usual(&$out) {
     $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=".$rec['ID']." AND NUM='".DBSafe($pt)."'");
     if ($prop['ID']) {
      //
+     unset($value2);
+
      if (isset($v)) {
       $value=$v;
      } else {
@@ -311,9 +315,12 @@ function usual(&$out) {
 
      if (isset($cnt)) {
       $prop['COUNTER']=$cnt;
+      $value2=$prop['COUNTER'];
      }
 
      $old_value=$prop['CURRENT_VALUE_STRING'];
+     $old_value2=$prop['CURRENT_VALUE_STRING2'];
+
      $prop['CURRENT_VALUE_STRING']=$value;
      $prop['UPDATED']=date('Y-m-d H:i:s');
      SQLUpdate('megadproperties', $prop);
@@ -324,6 +331,38 @@ function usual(&$out) {
       }
      }
 
+     if ($prop['LINKED_OBJECT'] && $prop['LINKED_METHOD'] && $old_value!=$prop['CURRENT_VALUE_STRING']) {
+      $params=array();
+      $params['VALUE']=$prop['CURRENT_VALUE_STRING'];
+      $params['value']=$params['VALUE'];
+      $params['port']=$prop['NUM'];
+      callMethod($prop['LINKED_OBJECT'].'.'.$prop['LINKED_METHOD'], $params);
+     }
+
+     if (isset($value2)) {
+      $prop['CURRENT_VALUE_STRING2']=$value2;
+      $prop['UPDATED']=date('Y-m-d H:i:s');
+      SQLUpdate('megadproperties', $prop);
+
+      if ($prop['LINKED_OBJECT2'] && $prop['LINKED_PROPERTY2']) {
+       if ($old_value!=$prop['CURRENT_VALUE_STRING2'] || $prop['CURRENT_VALUE_STRING2']!=gg($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_PROPERTY2'])) {
+        setGlobal($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_PROPERTY2'], $prop['CURRENT_VALUE_STRING2'], array($this->name=>'0'));
+       }
+      }
+
+      if ($prop['LINKED_OBJECT2'] && $prop['LINKED_METHOD2'] && $old_value2!=$prop['CURRENT_VALUE_STRING2']) {
+       $params=array();
+       $params['VALUE']=$prop['CURRENT_VALUE_STRING2'];
+       $params['value']=$params['VALUE'];
+       $params['port']=$prop['NUM'];
+       callMethod($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_METHOD2'], $params);
+      }
+     }
+
+
+     if ($prop['ECMD']) {
+      $ecmd=$prop['ECMD'];
+     }
 
     }
    }
@@ -350,6 +389,10 @@ function usual(&$out) {
    }
 
 
+  }
+
+  if ($ecmd) {
+   echo $ecmd;
   }
 
   exit;
@@ -529,9 +572,11 @@ megadproperties - megad Properties
  megadproperties: COUNTER int(10) NOT NULL DEFAULT '0'
  megadproperties: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
+ megadproperties: LINKED_METHOD varchar(255) NOT NULL DEFAULT ''
 
  megadproperties: LINKED_OBJECT2 varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_PROPERTY2 varchar(255) NOT NULL DEFAULT ''
+ megadproperties: LINKED_METHOD2 varchar(255) NOT NULL DEFAULT ''
 
 
  megadproperties: ETH varchar(255) NOT NULL DEFAULT ''

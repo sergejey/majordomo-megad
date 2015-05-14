@@ -56,7 +56,7 @@
      if (preg_match('/d=(\d+)/', $line, $m3)) {
       $prop['DEF']=$m3[1];
      }
-     if (preg_match('/misc=(.*)\&/', $line, $m3)) {
+     if (preg_match('/misc=(.*?)\&/', $line, $m3)) {
       $prop['MISC']=$m3[1];
      }
 
