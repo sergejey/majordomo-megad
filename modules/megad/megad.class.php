@@ -272,6 +272,11 @@ function usual(&$out) {
 
   global $mdid;
 
+  @ini_set('zlib.output_compression', 'Off');
+  @ini_set('output_buffering', 'Off');
+  @ini_set('output_handler', '');
+  @apache_setenv('no-gzip', 1);   
+
   $ip=$_SERVER['REMOTE_ADDR'];
 
   $ecmd='';
@@ -295,13 +300,28 @@ function usual(&$out) {
    $this->readConfig($rec['ID']);
   } else {
    //processing
+   /*
    global $pt; //port
-   global $m;  // mode
    global $at; // internal temperature
    global $v; // value for ADC
    global $dir; //direction 1/0
    global $cnt; //counter
    global $all;
+   */
+
+   if (isset($_GET['v'])) {
+    $v=$_GET['v'];
+   }
+
+   $m=$_GET['m'];
+   $pt=$_GET['pt'];
+   $at=$_GET['at'];
+   $dir=$_GET['dir'];
+   $cnt=$_GET['cnt'];
+
+   if (isset($_GET['all'])) {
+    $all=$_GET['all'];
+   }
 
    //all data received
    if (isset($all)) {
