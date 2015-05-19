@@ -9,6 +9,8 @@
   $stateData=getURL('http://'.$record['IP'].'/'.$record['PASSWORD'].'/?cmd=all', 0);
  }
 
+ //echo $stateData;exit;
+
  $states=explode(';', $stateData);
 
  $total=count($states);

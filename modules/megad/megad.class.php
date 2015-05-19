@@ -255,9 +255,9 @@ function usual(&$out) {
    $properties=SQLSelect("SELECT ID FROM megadproperties WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."' AND TYPE=1");
    $total=count($properties);
    if ($total) {
-    for($i=0;$i<$total;$i++) {
-     $this->setProperty($properties[$i]['ID'], $value);
-    }
+      for($i=0;$i<$total;$i++) {
+         $this->setProperty($properties[$i]['ID'], $value);
+      }
    }
  }
 
@@ -271,11 +271,6 @@ function usual(&$out) {
  function processRequest() {
 
   global $mdid;
-
-  @ini_set('zlib.output_compression', 'Off');
-  @ini_set('output_buffering', 'Off');
-  @ini_set('output_handler', '');
-  @apache_setenv('no-gzip', 1);   
 
   $ip=$_SERVER['REMOTE_ADDR'];
 
@@ -320,12 +315,7 @@ function usual(&$out) {
    $cnt=$_GET['cnt'];
 
    if (isset($_GET['all'])) {
-    $all=$_GET['all'];
-   }
-
-   //all data received
-   if (isset($all)) {
-    $this->readValues($rec['ID'], $all);
+    $this->readValues($rec['ID'], $_GET['all']);
    }
 
    //input data changed
@@ -424,10 +414,10 @@ function usual(&$out) {
   }
 
   if ($ecmd) {
-   echo $ecmd;
+   header_remove();
+   header ('Content-Type:text/html;charset=windows-1251');
+   echo trim(utf2win($ecmd));
   }
-
-  exit;
 
  }
 
