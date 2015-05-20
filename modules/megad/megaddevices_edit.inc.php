@@ -46,8 +46,6 @@
     if ($rec['ID']) {
      SQLUpdate($table_name, $rec); // update
 
-     $this->readConfig($rec['ID']);
-
     } else {
      $new_rec=1;
      $rec['ID']=SQLInsert($table_name, $rec); // adding new record

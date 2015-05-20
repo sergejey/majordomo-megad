@@ -192,7 +192,7 @@ function usual(&$out) {
 
  if ($device && $command) {
 
-  if ($this->sendCommand($device, $command) {
+  if ($this->sendCommand($device, $command)) {
    echo "OK";
   } else {
    echo "Error";
@@ -335,6 +335,11 @@ function usual(&$out) {
     $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=".$rec['ID']." AND NUM='".DBSafe($pt)."'");
     if ($prop['ID']) {
      //
+
+     if ($prop['ECMD']) {
+      $ecmd=$prop['ECMD'];
+     }
+
      unset($value2);
 
      if (isset($v)) {
@@ -370,7 +375,12 @@ function usual(&$out) {
       $params['VALUE']=$prop['CURRENT_VALUE_STRING'];
       $params['value']=$params['VALUE'];
       $params['port']=$prop['NUM'];
-      callMethod($prop['LINKED_OBJECT'].'.'.$prop['LINKED_METHOD'], $params);
+      $methodRes=callMethod($prop['LINKED_OBJECT'].'.'.$prop['LINKED_METHOD'], $params);
+
+      if (is_string($methodRes)) {
+       $ecmd=$methodRes;
+      }
+
      }
 
      if (isset($value2)) {
@@ -394,9 +404,6 @@ function usual(&$out) {
      }
 
 
-     if ($prop['ECMD']) {
-      $ecmd=$prop['ECMD'];
-     }
 
     }
    }
