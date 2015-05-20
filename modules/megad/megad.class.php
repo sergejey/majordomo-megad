@@ -186,7 +186,19 @@ function admin(&$out) {
 * @access public
 */
 function usual(&$out) {
- $this->admin($out);
+ //$this->admin($out);
+ $device=$_GET['device'];
+ $command=$_GET['command'];
+
+ if ($device && $command) {
+
+  if ($this->sendCommand($device, $command) {
+   echo "OK";
+  } else {
+   echo "Error";
+  }
+ }
+
 }
 /**
 * megaddevices search
@@ -453,17 +465,43 @@ function usual(&$out) {
 *
 * @access public
 */
+ function sendCommand($id, $command) {
+  $device=SQLSelectOne("SELECT * FROM megaddevices WHERE ID='".$id."'");  
+  if (!$device['ID']) {
+   $device=SQLSelectOne("SELECT * FROM megaddevices WHERE TITLE LIKE '".DBSafe($id)."'");  
+  }
+  if (!$device['ID']) {
+   $device=SQLSelectOne("SELECT * FROM megaddevices WHERE IP='".DBSafe($id)."'");  
+  }
+  if ($device['ID']) {
+   $url='http://'.$device['IP'].'/'.$device['PASSWORD'].'/?cmd='.$command;
+   getURL($url, 0);
+   return 1;
+  } else {
+   return 0;
+  }
+ }
+
+
+/**
+* Title
+*
+* Description
+*
+* @access public
+*/
  function setProperty($property_id, $value) {
   $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE ID='".$property_id."'");
   $prop['CURRENT_VALUE_STRING']=$value;
   SQLUpdate('megadproperties', $prop);
 
   $channel=$prop['NUM'];
-  $device=SQLSelectOne("SELECT * FROM megaddevices WHERE ID='".$prop['DEVICE_ID']."'");
+  //$device=SQLSelectOne("SELECT * FROM megaddevices WHERE ID='".$prop['DEVICE_ID']."'");
 
   if ($prop['TYPE']==1) {
-   $url='http://'.$device['IP'].'/'.$device['PASSWORD'].'/?cmd='.$prop['NUM'].':'.$value;
-   getURL($url, 0);
+   $this->sendCommand($prop['DEVICE_ID'], $prop['NUM'].':'.$value);
+   //$url='http://'.$device['IP'].'/'.$device['PASSWORD'].'/?cmd='.$prop['NUM'].':'.$value;
+   //getURL($url, 0);
   }
 
   $this->readValues($prop['DEVICE_ID']);

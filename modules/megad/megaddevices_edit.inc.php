@@ -207,6 +207,8 @@
       addLinkedProperty($properties[$i]['LINKED_OBJECT2'], $properties[$i]['LINKED_PROPERTY2'], $this->name);
      }
 
+     $this->readValues($rec['ID']);
+
     }
    }
    $out['PROPERTIES']=$properties;
