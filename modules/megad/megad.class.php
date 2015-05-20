@@ -417,6 +417,14 @@ function usual(&$out) {
    header_remove();
    header ('Content-Type:text/html;charset=windows-1251');
    echo trim(utf2win($ecmd));
+
+   $mega_id=$rec['ID'];
+   $code='';
+   $code.='include_once(DIR_MODULES."megad/megad.class.php");';
+   $code.='$mega=new megad();';
+   $code.='$mega->readValues('.(int)$mega_id.');';
+   setTimeOut('mega_refresh_'.$mega_id, $code, 1);
+
   }
 
  }
