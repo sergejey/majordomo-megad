@@ -144,11 +144,13 @@ if ( array_key_exists('read-conf', $options) || array_key_exists('write-conf', $
                         if ( $preset_flag == 1 )                        
                         {
                                 //echo "Setting preset 0\n";
-                                $page = file_get_contents("http://".$options['ip']."/".$options['p']."/?cf=1&pr=0");
+                                //echo "http://".$options['ip']."/".$options['p']."/?cf=1&pr=".$stored_preset."<br/>";
+                                $page = file_get_contents("http://".$options['ip']."/".$options['p']."/?cf=1&pr=".$stored_preset);
                                 sleep(1);
                                 $preset_flag = 2;
                         }
 
+                        //echo "http://".$options['ip']."/".$options['p']."/?".$pages[$i]."<br/>";
                         $page = file_get_contents("http://".$options['ip']."/".$options['p']."/?".$pages[$i]);
 
                         @$dom->loadHTML($page);

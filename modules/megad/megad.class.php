@@ -435,6 +435,10 @@ function usual(&$out) {
   if ($ecmd) {
    header_remove();
    header ('Content-Type:text/html;charset=windows-1251');
+
+   if (preg_match('/(\d+):3/is', $ecmd, $m)) {
+    $ecmd=$m[1].':'.(int)$prop['CURRENT_VALUE_STRING'];
+   }
    echo trim(utf2win($ecmd));
 
    $mega_id=$rec['ID'];
