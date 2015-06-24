@@ -20,6 +20,7 @@
      $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND NUM='".$i."'");
 
      $type=(int)$prop['TYPE'];
+     $mode=(int)$prop['MODE'];
 
      if (!$prop['ID']) {
       continue;
@@ -42,11 +43,18 @@
         $prop['COUNTER']=$tmp[1];
        }
       } elseif ($type==1) {
-       if ($states[$i]=='ON') {
-        $prop['CURRENT_VALUE_STRING']=1;
+
+       if($mode==1){
+        $prop['CURRENT_VALUE_STRING']=intval($states[$i]);
        } else {
-        $prop['CURRENT_VALUE_STRING']=0;
+         if ($states[$i]=='ON') {
+          $prop['CURRENT_VALUE_STRING']=1;
+         } else {
+          $prop['CURRENT_VALUE_STRING']=0;
+         }
        }
+
+
       } elseif ($type==3 && preg_match('/temp:(\d+)\/hum:(\d+)/', $states[$i], $m)) {
        $prop['CURRENT_VALUE_STRING']=$m[1];
        $prop['CURRENT_VALUE_STRING2']=$m[2];
