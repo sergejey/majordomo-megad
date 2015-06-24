@@ -439,6 +439,13 @@ function usual(&$out) {
    if (preg_match('/(\d+):3/is', $ecmd, $m)) {
     $ecmd=$m[1].':'.(int)$prop['CURRENT_VALUE_STRING'];
    }
+   if (preg_match('/(\d+):4/is', $ecmd, $m)) {
+    if ((int)$prop['CURRENT_VALUE_STRING']) {
+     $ecmd=$m[1].':0';
+    } else {
+     $ecmd=$m[1].':1';
+    }
+   }
    echo trim(utf2win($ecmd));
 
    $mega_id=$rec['ID'];
