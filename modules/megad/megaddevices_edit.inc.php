@@ -165,7 +165,7 @@
      if ($this->config['API_IP']) {
       $url.='&local-ip='.$this->config['API_IP'];
      }
-     $data=getURL('http://'.$rec['IP'].'/'.$rec['PASSWORD'].'/?cf=1&eip='.$ip, 0);
+     $data=getURL($url, 0);
      if (preg_match('/Back/is', $data)) {
       $rec['IP']=$ip;
       SQLUpdate('megaddevices', $rec);
