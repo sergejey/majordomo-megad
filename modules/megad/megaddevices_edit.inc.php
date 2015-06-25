@@ -102,6 +102,9 @@
    if ($this->mode=='upgrade_firmware') {
     $url=BASE_URL.'/modules/megad/megad-cfg.php';
     $url.='?ip='.urlencode($rec['IP']).'&p='.urlencode($rec['PASSWORD']).'&w=1';
+    if ($this->config['API_IP']) {
+     $url.='&local-ip='.$this->config['API_IP'];
+    }
     global $beta;
     if ($beta) {
      $url.="&b=1";
@@ -124,7 +127,11 @@
    if ($this->mode=='set_server') {
     global $server_ip;
     global $server_script;
-    $data=getURL('http://'.$rec['IP'].'/'.$rec['PASSWORD'].'/?cf=1&sip='.$server_ip."&sct=".urlencode($server_script), 0);
+    $url='http://'.$rec['IP'].'/'.$rec['PASSWORD'].'/?cf=1&sip='.$server_ip."&sct=".urlencode($server_script);
+    if ($this->config['API_IP']) {
+     $url.='&local-ip='.$this->config['API_IP'];
+    }
+    $data=getURL($url, 0);
     $data='OK';
     $this->redirect("?view_mode=".$this->view_mode."&tab=config"."&id=".$rec['ID']."&result=".urlencode($data));
    }
@@ -135,6 +142,9 @@
     SaveFile(ROOT.'cached/megad.cfg', $config);
     $url=BASE_URL.'/modules/megad/megad-cfg.php';
     $url.='?ip='.urlencode($rec['IP']).'&write-conf='.urlencode(ROOT.'cached/megad.cfg').'&p='.urlencode($rec['PASSWORD']);
+    if ($this->config['API_IP']) {
+     $url.='&local-ip='.$this->config['API_IP'];
+    }
     $data=getURL($url, 0);
 
     $this->readConfig($rec['ID']);
@@ -151,6 +161,10 @@
    if ($this->mode=='set_address') {
     global $ip;
     if ($ip!=$rec['IP']) {
+     $url='http://'.$rec['IP'].'/'.$rec['PASSWORD'].'/?cf=1&eip='.$ip;
+     if ($this->config['API_IP']) {
+      $url.='&local-ip='.$this->config['API_IP'];
+     }
      $data=getURL('http://'.$rec['IP'].'/'.$rec['PASSWORD'].'/?cf=1&eip='.$ip, 0);
      if (preg_match('/Back/is', $data)) {
       $rec['IP']=$ip;
