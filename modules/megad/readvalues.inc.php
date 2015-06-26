@@ -81,6 +81,7 @@
 
     if ($prop['LINKED_OBJECT'] && $prop['LINKED_METHOD'] && ($old_value!=$prop['CURRENT_VALUE_STRING'])) {
      $params=array();
+     $params['TITLE']=$record['TITLE'];
      $params['VALUE']=$prop['CURRENT_VALUE_STRING'];
      $params['value']=$params['VALUE'];
      $params['port']=$i;
@@ -95,6 +96,7 @@
 
     if ($prop['LINKED_OBJECT2'] && $prop['LINKED_METHOD2'] && ($old_value2!=$prop['CURRENT_VALUE_STRING2'])) {
      $params=array();
+     $params['TITLE']=$record['TITLE'];
      $params['VALUE']=$prop['CURRENT_VALUE_STRING2'];
      $params['value']=$params['VALUE'];
      $params['port']=$i;

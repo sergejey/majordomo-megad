@@ -372,6 +372,7 @@ function usual(&$out) {
 
      if ($prop['LINKED_OBJECT'] && $prop['LINKED_METHOD']) { // && $old_value!=$prop['CURRENT_VALUE_STRING']
       $params=array();
+      $params['TITLE']=$rec['TITLE'];
       $params['VALUE']=$prop['CURRENT_VALUE_STRING'];
       $params['value']=$params['VALUE'];
       $params['port']=$prop['NUM'];
@@ -396,6 +397,7 @@ function usual(&$out) {
 
       if ($prop['LINKED_OBJECT2'] && $prop['LINKED_METHOD2']) { // && $old_value2!=$prop['CURRENT_VALUE_STRING2']
        $params=array();
+       $params['TITLE']=$rec['TITLE'];
        $params['VALUE']=$prop['CURRENT_VALUE_STRING2'];
        $params['value']=$params['VALUE'];
        $params['port']=$prop['NUM'];
@@ -483,7 +485,7 @@ function usual(&$out) {
 *
 * @access public
 */
- function sendCommand($id, $command) {
+ function sendCommand($id, $command, $custom=false) {
   $device=SQLSelectOne("SELECT * FROM megaddevices WHERE ID='".$id."'");  
   if (!$device['ID']) {
    $device=SQLSelectOne("SELECT * FROM megaddevices WHERE TITLE LIKE '".DBSafe($id)."'");  
@@ -492,7 +494,7 @@ function usual(&$out) {
    $device=SQLSelectOne("SELECT * FROM megaddevices WHERE IP='".DBSafe($id)."'");  
   }
   if ($device['ID']) {
-   $url='http://'.$device['IP'].'/'.$device['PASSWORD'].'/?cmd='.$command;
+   $url='http://'.$device['IP'].'/'.$device['PASSWORD'].'/?'.($custom ? '' : 'cmd=').$command;
    getURL($url, 0);
    return 1;
   } else {
