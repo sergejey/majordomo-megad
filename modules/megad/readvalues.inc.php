@@ -55,7 +55,7 @@
        }
 
 
-      } elseif ($type==3 && preg_match('/temp:(\d+)\/hum:(\d+)/', $states[$i], $m)) {
+      } elseif ($type==3 && preg_match('/temp:([\d\.]+)\/hum:([\d\.]+)/', $states[$i], $m)) {
        $prop['CURRENT_VALUE_STRING']=$m[1];
        $prop['CURRENT_VALUE_STRING2']=$m[2];
       } else {
