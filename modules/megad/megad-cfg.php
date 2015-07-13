@@ -15,6 +15,7 @@ if( !function_exists('hex2bin') )
 
 # Parsing options
 $options = getopt("sp:fewb", array("scan", "ip:", "new-ip:", "fw:", "local-ip:", "ee", "read-conf:", "write-conf:"));
+#print_r($options);
 
 if ($_SERVER['REQUEST_METHOD']=='GET') {
  foreach($_GET as $k=>$v) {
@@ -48,7 +49,7 @@ else
         }
 
         if ( !preg_match("/192\.168\./", $local_ip) && !preg_match("/10\.0\./", $local_ip) && !preg_match("/172\.16\./", $local_ip) )
-                {
+        {
                 echo "Unable to detect local network\nPlase, specify local IP-address with --local-ip\n";
                 exit;
         }
@@ -118,7 +119,7 @@ if ( array_key_exists('read-conf', $options) || array_key_exists('write-conf', $
                 echo "Error: incorrect filename!\n";
                 exit;
         }
-        elseif ( isset($options['write-conf']) && !file_exists($options['write-conf']) )
+        elseif ( isset($options['write-conf']) && !isset($options['read-conf']) && !file_exists($options['write-conf']) )
         {
                 echo "Filename '".$options['write-conf']."' doesn't exist!\n";
                 exit;
@@ -144,13 +145,12 @@ if ( array_key_exists('read-conf', $options) || array_key_exists('write-conf', $
                         if ( $preset_flag == 1 )                        
                         {
                                 //echo "Setting preset 0\n";
-                                //echo "http://".$options['ip']."/".$options['p']."/?cf=1&pr=".$stored_preset."<br/>";
                                 $page = file_get_contents("http://".$options['ip']."/".$options['p']."/?cf=1&pr=".$stored_preset);
+
                                 sleep(1);
                                 $preset_flag = 2;
                         }
 
-                        //echo "http://".$options['ip']."/".$options['p']."/?".$pages[$i]."<br/>";
                         $page = file_get_contents("http://".$options['ip']."/".$options['p']."/?".$pages[$i]);
 
                         @$dom->loadHTML($page);
@@ -183,11 +183,13 @@ if ( array_key_exists('read-conf', $options) || array_key_exists('write-conf', $
                         }
 
                         $select = $dom->getelementsbytagname('select');
+
                         foreach($select as $elem)
                         {
                                 $name=$elem->getAttribute('name');
                                 $els=$elem->getelementsbytagname('option');
         
+                                $sel_flag = 0;
                                 foreach($els as $inp)
                                 {
                                         if ( $inp->hasAttribute('selected') )
@@ -196,6 +198,7 @@ if ( array_key_exists('read-conf', $options) || array_key_exists('write-conf', $
                                                 $value=urlencode($inp->getAttribute('value'));
                                                 $value=$inp->getAttribute('value');
                                                 $url .= "$name=$value&";
+                                                $sel_flag = 1;
 
                                                 if ( $pages[$i] == "cf=1" && $name == "pr" && !empty($value) )
                                                 {
@@ -205,7 +208,10 @@ if ( array_key_exists('read-conf', $options) || array_key_exists('write-conf', $
 
                                         }
                                 }
-        
+                                // Хак ввиду того, что PHP DOM почему-то не может распарсить значение <> поля "Mode"
+                                if ( $sel_flag == 0 && $name == "m" )
+                                $url .= "m=3&";
+                        
                         }
 
                         $url = preg_replace("/&$/", "", $url);
@@ -431,7 +437,7 @@ elseif ( $conf_flag == 1 || ( array_key_exists('ip', $options) && array_key_exis
 {}
 else
 {
-        echo "MegaD-328 management script Ver 1.35\n";
+        echo "MegaD-328 management script Ver 1.37\n";
         echo "Available options:\n";
         echo "--scan (Scanning network for MegaD-328 devices)\n";
         echo "--ip [current IP address] --new-ip [new IP address] -p [password] (Changing IP-address)\n";
@@ -531,6 +537,7 @@ if ( array_key_exists('write-conf', $options) && $conf_flag == 1 )
         $wconf = file($options['write-conf']);
         for ( $i = 0; $i < count($wconf); $i++ )
         {
+                $wconf[$i] = preg_replace("/\n|\r/", "", $wconf[$i]);
                 if ( array_key_exists('ee', $options) && $i == 0 )
                 {
                         if ( array_key_exists('new-ip', $options) )
@@ -541,6 +548,7 @@ if ( array_key_exists('write-conf', $options) && $conf_flag == 1 )
                 else
                 {
                         file_get_contents("http://".$options['ip']."/".$options['p']."/?".$wconf[$i]);
+                        //echo "http://".$options['ip']."/".$options['p']."/?".$wconf[$i]."\n";
                         if ( $i == 0 && preg_match("/&pwd=/", $wconf[$i]) )
                         $options['p'] = trim(preg_replace("/.*&pwd=(.*)&.*?/U", "$1", $wconf[$i]));
 
