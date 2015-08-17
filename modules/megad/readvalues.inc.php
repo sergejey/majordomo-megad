@@ -30,7 +30,7 @@
      $old_value=$prop['CURRENT_VALUE_STRING'];
      $old_value2=$prop['CURRENT_VALUE_STRING2'];
 
-     if ($states[$i]) {
+     if ($states[$i]!=='') {
       if ($type==0) {
        $tmp=explode('/', $states[$i]);
        if ($tmp[0]=='ON') {
