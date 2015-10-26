@@ -60,6 +60,7 @@
        $prop['CURRENT_VALUE_STRING2']=$m[2];
       } else {
        $tmp=explode('/', $states[$i]);
+       $tmp[0]=str_replace("temp:", "", $tmp[0]);
        $prop['CURRENT_VALUE_STRING']=$tmp[0];
        if (isset($tmp[1])) {
         $prop['CURRENT_VALUE_STRING2']=$tmp[1];
