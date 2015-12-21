@@ -194,6 +194,9 @@
    for($i=0;$i<$total;$i++) {
     if ($this->mode=='update' && $this->tab=='data') {
 
+     global ${"skip_default".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+     $properties[$i]['SKIP_DEFAULT']=(int)${"skip_default".$properties[$i]['TYPE'].$properties[$i]['NUM']};
+
      global ${"linked_object".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      global ${"linked_property".$properties[$i]['TYPE'].$properties[$i]['NUM']};
      global ${"linked_method".$properties[$i]['TYPE'].$properties[$i]['NUM']};

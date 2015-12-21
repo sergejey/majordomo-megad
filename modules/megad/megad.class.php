@@ -336,7 +336,7 @@ function usual(&$out) {
     if ($prop['ID']) {
      //
 
-     if ($prop['ECMD']) {
+     if ($prop['ECMD'] && !($prop['SKIP_DEFAULT'])) {
       $ecmd=$prop['ECMD'];
      }
 
@@ -652,28 +652,23 @@ megadproperties - megad Properties
  megadproperties: DEVICE_ID int(10) NOT NULL DEFAULT '0'
  megadproperties: TYPE int(3) NOT NULL DEFAULT '0'
  megadproperties: NUM int(3) NOT NULL DEFAULT '0'
-
  megadproperties: CURRENT_VALUE int(10) NOT NULL DEFAULT '0'
-
  megadproperties: CURRENT_VALUE_STRING varchar(255) NOT NULL DEFAULT ''
  megadproperties: CURRENT_VALUE_STRING2 varchar(255) NOT NULL DEFAULT ''
-
  megadproperties: COUNTER int(10) NOT NULL DEFAULT '0'
  megadproperties: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_METHOD varchar(255) NOT NULL DEFAULT ''
-
  megadproperties: LINKED_OBJECT2 varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_PROPERTY2 varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_METHOD2 varchar(255) NOT NULL DEFAULT ''
-
-
  megadproperties: ETH varchar(255) NOT NULL DEFAULT ''
  megadproperties: ECMD varchar(255) NOT NULL DEFAULT ''
  megadproperties: PWM varchar(255) NOT NULL DEFAULT ''
  megadproperties: MODE varchar(255) NOT NULL DEFAULT ''
  megadproperties: DEF varchar(255) NOT NULL DEFAULT ''
  megadproperties: MISC varchar(255) NOT NULL DEFAULT ''
+ megadproperties: SKIP_DEFAULT int(3) NOT NULL DEFAULT '0'
  megadproperties: UPDATED datetime
 EOD;
   parent::dbInstall($data);

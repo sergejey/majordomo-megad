@@ -15,6 +15,7 @@
  <tr>
   <td valign="top"><#LANG_TYPE#></td>
   <td valign="top"><#LANG_CURRENT_VALUE#></td>
+  <td valign="top">Skip default action</td>
 
   <td valign="top"><#LANG_LINKED_OBJECT#></td>
   <td valign="top"><#LANG_LINKED_PROPERTY#></td>
@@ -43,6 +44,9 @@
   [#if ECMD!=""#]<br/><small>(ecmd: [#ECMD#])</small>[#endif ECMD#]
   </td>
   <td valign="top" align="center">[#CURRENT_VALUE_STRING#]&nbsp;</td>
+  <td valign="top" align="center">
+   [#if TYPE!="1"#]<input type="checkbox" name="skip_default[#TYPE#][#NUM#]" value="1"[#if SKIP_DEFAULT="1"#] checked[#endif#]>[#else#]&nbsp;[#endif#]
+  </td>
   <td valign="top"><input type="text" value="[#LINKED_OBJECT#]" name="linked_object[#TYPE#][#NUM#]" id="linked_object[#TYPE#][#NUM#]"></td>
   <td valign="top"><input type="text" value="[#LINKED_PROPERTY#]" name="linked_property[#TYPE#][#NUM#]" id="linked_property[#TYPE#][#NUM#]"></td>
   <td valign="top"><input type="text" value="[#LINKED_METHOD#]" name="linked_method[#TYPE#][#NUM#]" id="linked_method[#TYPE#][#NUM#]"></td>
