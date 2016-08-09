@@ -630,7 +630,7 @@ function get_local_ip_win()
 *
 * @access private
 */
- function dbInstall() {
+ function dbInstall($data) {
 /*
 megaddevices - megad Devices
 megadproperties - megad Properties
