@@ -29,7 +29,7 @@
 
     if (preg_match('/pty=(\d+)/', $line, $m2)) {
      $type=(int)$m2[1];
-    } elseif (preg_match('/ecmd=/', $line)) {
+    } /*elseif (preg_match('/ecmd=/', $line)) {
      $type=0;       
     } else {
      $type=1;       
@@ -41,7 +41,8 @@
     if ($i==16) {
      $port=16;
      $type=100;
-    }
+    }*/
+   
 
     if ($type!=='') {
      $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND NUM='".$port."'");
