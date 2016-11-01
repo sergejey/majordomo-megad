@@ -3,10 +3,11 @@
  $record=SQLSelectOne("SELECT * FROM megaddevices WHERE ID='".(int)$id."'");
 
 
+ $url='http://'.$record['IP'].'/'.$record['PASSWORD'].'/?cmd=all';
  if ($all) {
   $stateData=$all;
  } else {
-  $stateData=getURL('http://'.$record['IP'].'/'.$record['PASSWORD'].'/?cmd=all', 0);
+  $stateData=getURL($url, 0);
  }
 
  //echo $stateData;exit;

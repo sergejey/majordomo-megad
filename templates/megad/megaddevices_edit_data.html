@@ -33,14 +33,14 @@
  </tr>
  [#begin PROPERTIES#]
  <tr>
-  <td valign="top">
+  <td valign="top" nowrap>
+  [#NUM#]
   [#if TYPE="0"#]Input[#endif#]
   [#if TYPE="1"#]Output[#endif#] 
   [#if TYPE="2"#]ADC[#endif#] 
   [#if TYPE="3"#]DSen[#endif#] 
   [#if TYPE="100"#]Int. temp[#endif#] 
   [#if TYPE="255"#]NC[#endif#] 
-  [#NUM#]
   [#if ECMD!=""#]<br/><small>(ecmd: [#ECMD#])</small>[#endif ECMD#]
   </td>
   <td valign="top" align="center">[#CURRENT_VALUE_STRING#]&nbsp;</td>
