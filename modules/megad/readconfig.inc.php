@@ -38,12 +38,12 @@
 
     if (preg_match('/pty=(\d+)/', $line, $m2)) {
      $type=(int)$m2[1];
-    } /*elseif (preg_match('/ecmd=/', $line)) {
+    } elseif (preg_match('/ecmd=/', $line)) {
      $type=0;       
     } else {
      $type=1;       
     }
-
+    /*
     if ($port==14 || $port==15) {
      $type=2;
     }
