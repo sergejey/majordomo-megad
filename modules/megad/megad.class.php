@@ -289,7 +289,7 @@ function usual(&$out) {
   $ecmd='';
 
   if ($mdid) {
-   $rec=SQLSelectOne("SELECT * FROM megaddevices WHERE MDID LIKE '".trim($mdid)."'");
+   $rec=SQLSelectOne("SELECT * FROM megaddevices WHERE MDID LIKE '".trim($mdid)."%'");
   }
 
   if (!$rec['ID']) {

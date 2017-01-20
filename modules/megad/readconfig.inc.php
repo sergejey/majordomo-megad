@@ -19,7 +19,8 @@
   $record['CONFIG']=LoadFile(ROOT.'cached/megad.cfg');
 
   if (preg_match('/mdid=(.+?)&/is', $record['CONFIG'], $m)) {
-   $record['MDID']=$m[1];
+   $tmp=explode("\n", $m[1]);
+   $record['MDID']=$tmp[0];
   }
 
   SQLUpdate('megaddevices', $record);
