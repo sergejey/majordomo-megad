@@ -11,26 +11,32 @@
  }
  */
 
- //echo $url;exit;
-
  $data=getURL($url, 0);
+ //$data='OK';
 
  if (preg_match('/OK/', $data)) {
   $record['CONFIG']=LoadFile(ROOT.'cached/megad.cfg');
-
   if (preg_match('/mdid=(.+?)&/is', $record['CONFIG'], $m)) {
    $tmp=explode("\n", $m[1]);
    $record['MDID']=$tmp[0];
   }
 
   SQLUpdate('megaddevices', $record);
+
+  $device_type='';
+  if (preg_match('/pr=1/', $record['CONFIG'])) {
+   $device_type='7I7O';
+  }
   //unlink(ROOT.'cached/megad.cfg');
 
   //process config
-  if (preg_match_all('/pn=(\d+)&(.+?)'."\n".'/is', $record['CONFIG'], $m)) {
+  if (preg_match_all('/pn=(\d+)&(.+?)\\n'.'/is', $record['CONFIG'], $m)) {
    $total=count($m[2]);
 
-   $total++;
+   if ($device_type=='7I7O') {
+    $total++;
+   }
+   //
 
    for($i=0;$i<$total;$i++) {
     $port=$m[1][$i];
@@ -44,17 +50,20 @@
     } else {
      $type=1;       
     }
-    /*
-    if ($port==14 || $port==15) {
+
+    if ($device_type=='7I7O' && ($port==14 || $port==15)) {
      $type=2;
     }
-    if ($i==16) {
+
+
+    if (($i==16) && $device_type=='7I7O') {
      $port=16;
      $type=100;
-    }*/
+    }
    
 
     if ($type!=='') {
+     //echo $port.':'.$type."<br/>";
      $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND NUM='".$port."'");
      $prop['TYPE']=$type;
      $prop['NUM']=$port;
@@ -88,6 +97,7 @@
 
    $this->readValues($record['ID']);
   }
+  //echo $record['CONFIG'];exit;
 
  }
 
