@@ -10,7 +10,6 @@
 * @copyright http://www.atmatic.eu/ (c)
 * @version 0.1 (wizard, 12:04:34 [Apr 09, 2015])
 */
-Define('DEF_TYPE_OPTIONS', 'automation=Automation|light=Light controller|dimmer=Dimmer controller'); // options for 'TYPE'
 //
 //
 class megad extends module {
@@ -639,6 +638,7 @@ megadproperties - megad Properties
  megaddevices: ID int(10) unsigned NOT NULL auto_increment
  megaddevices: TITLE varchar(255) NOT NULL DEFAULT ''
  megaddevices: MDID varchar(255) NOT NULL DEFAULT ''
+ megaddevices: TYPE_MAIN varchar(255) NOT NULL DEFAULT '' 
  megaddevices: TYPE varchar(255) NOT NULL DEFAULT ''
  megaddevices: CONNECTION_TYPE int(3) NOT NULL DEFAULT '0'
  megaddevices: PORT int(10) NOT NULL DEFAULT '0'

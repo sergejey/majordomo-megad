@@ -23,11 +23,7 @@
 
   SQLUpdate('megaddevices', $record);
 
-  $device_type='';
-  if (preg_match('/pr=1/', $record['CONFIG'])) {
-   $device_type='7I7O';
-  }
-  //unlink(ROOT.'cached/megad.cfg');
+  $device_type=$record['TYPE'];
 
   //process config
   if (preg_match_all('/pn=(\d+)&(.+?)\\n'.'/is', $record['CONFIG'], $m)) {

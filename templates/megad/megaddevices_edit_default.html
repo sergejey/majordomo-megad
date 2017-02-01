@@ -20,6 +20,35 @@
  <div class="col-lg-4"><input type="text" class="form-control" name="title" value="[#TITLE#]" ></div>
 </div>
 
+ <div class="form-group">
+  <label class="col-lg-3 control-label">
+   <#LANG_TYPE#> (контроллер):
+  </label>
+  <div class="col-lg-4">
+   <select name="type_main" class="form-control">
+    <option value="328"[#if TYPE_MAIN="328"#] selected[#endif#]>MegaD-328</option>
+    <option value="2561"[#if TYPE_MAIN="2561"#] selected[#endif#]>MegaD-2561</option>
+   </select>
+  </div>
+ </div>
+
+ <div class="form-group">
+  <label class="col-lg-3 control-label">
+   <#LANG_TYPE#> (периферия):
+  </label>
+  <div class="col-lg-4">
+   <select name="type" class="form-control">
+    <option value=""></option>
+    <option value="7I7O"[#if TYPE="7I7O"#] selected[#endif#]>MegaD-7I7O-R</option>
+    <option value="14IN"[#if TYPE="14IN"#] selected[#endif#]>MegaD-14-IN</option>
+    <option value="14R"[#if TYPE="14R"#] selected[#endif#]>MegaD-14-R</option>
+    <option value="7I7Ox2"[#if TYPE="7I7Ox2"#] selected[#endif#]>MegaD-7I7O-R x 2</option>
+    <option value="14INx2"[#if TYPE="14INx2"#] selected[#endif#]>MegaD-14-IN x 2</option>
+    <option value="14Rx2"[#if TYPE="14Rx2"#] selected[#endif#]>MegaD-14-R x 2</option>
+   </select>
+  </div>
+ </div>
+
 <div class="form-group">
  <label class="col-lg-3 control-label">
  Megad-ID:

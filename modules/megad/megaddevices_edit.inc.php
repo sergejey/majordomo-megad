@@ -27,6 +27,12 @@
    global $ip;
    $rec['IP']=$ip;
 
+   global $type_main;
+   $rec['TYPE_MAIN']=$type_main;
+
+   global $type;
+   $rec['TYPE']=$type;
+
    global $password;
    if (!$password) {
     $password='sec';
@@ -71,29 +77,6 @@
    } else {
     $out['ERR']=1;
    }
-  }
-  // step: default
-  if ($this->tab=='') {
-  //options for 'TYPE' (select)
-  $tmp=explode('|', DEF_TYPE_OPTIONS);
-  foreach($tmp as $v) {
-   if (preg_match('/(.+)=(.+)/', $v, $matches)) {
-    $value=$matches[1];
-    $title=$matches[2];
-   } else {
-    $value=$v;
-    $title=$v;
-   }
-   $out['TYPE_OPTIONS'][]=array('VALUE'=>$value, 'TITLE'=>$title);
-   $type_opt[$value]=$title;
-  }
-  for($i=0;$i<count($out['TYPE_OPTIONS']);$i++) {
-   if ($out['TYPE_OPTIONS'][$i]['VALUE']==$rec['TYPE']) {
-    $out['TYPE_OPTIONS'][$i]['SELECTED']=1;
-    $out['TYPE']=$out['TYPE_OPTIONS'][$i]['TITLE'];
-    $rec['TYPE']=$out['TYPE_OPTIONS'][$i]['TITLE'];
-   }
-  }
   }
   // step: config
   if ($this->tab=='config') {
@@ -189,7 +172,7 @@
   outHash($rec, $out);
 
   if ($rec['ID']) {
-   $properties=SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='".$rec['ID']."' ORDER BY TYPE, NUM");
+   $properties=SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='".$rec['ID']."' ORDER BY NUM, TYPE");
    $total=count($properties);
    for($i=0;$i<$total;$i++) {
     if ($this->mode=='update' && $this->tab=='data') {
