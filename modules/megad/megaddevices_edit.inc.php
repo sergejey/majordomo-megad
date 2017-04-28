@@ -39,6 +39,11 @@
    }
    $rec['PASSWORD']=$password;
 
+   global $update_period;
+   $rec['UPDATE_PERIOD']=(int)$update_period;
+
+   $rec['NEXT_UPDATE']=date('Y-m-d H:i:s',time()+$rec['UPDATE_PERIOD']);
+
   }
   // step: config
   if ($this->tab=='config') {

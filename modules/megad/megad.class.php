@@ -189,6 +189,13 @@ function usual(&$out) {
  $device=$_GET['device'];
  $command=$_GET['command'];
 
+ if ($this->ajax) {
+  if ($_GET['op']=='processCycle') {
+   $this->processCycle();
+  }
+ }
+ 
+ 
  if ($device && $command) {
 
   if ($this->sendCommand($device, $command)) {
@@ -272,6 +279,11 @@ function usual(&$out) {
    }
  }
 
+
+ function processCycle() {
+   $this->updateDevices();
+ }
+
 /**
 * Title
 *
@@ -282,6 +294,7 @@ function usual(&$out) {
  function processRequest() {
 
   global $mdid;
+  global $st;
 
   $ip=$_SERVER['REMOTE_ADDR'];
 
@@ -289,6 +302,12 @@ function usual(&$out) {
 
   if ($mdid) {
    $rec=SQLSelectOne("SELECT * FROM megaddevices WHERE MDID LIKE '".trim($mdid)."%'");
+  }
+
+  if ($st=='1' && $rec['ID']) {
+   //restore on start
+   $this->restoreDeviceStatus($rec['ID']);
+   return;
   }
 
   if (!$rec['ID']) {
@@ -522,9 +541,20 @@ function usual(&$out) {
    //$url='http://'.$device['IP'].'/'.$device['PASSWORD'].'/?cmd='.$prop['NUM'].':'.$value;
    //getURL($url, 0);
   }
-
   $this->readValues($prop['DEVICE_ID']);
+ }
 
+ function restoreDeviceStatus($device_id) {
+  $properties=SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID=".$device_id);
+  $total = count($properties);
+  for ($i = 0; $i < $total; $i++) {
+   if ($properties[$i]['TYPE']==1) {
+    $this->sendCommand($properties[$i]['DEVICE_ID'], $properties[$i]['NUM'].':'.$properties[$i]['CURRENT_VALUE_STRING']);
+    if ($i<($total-1)) {
+     usleep(500);
+    }
+   }
+  }
  }
 
 
@@ -608,6 +638,7 @@ function get_local_ip_win()
 * @access private
 */
  function install($data='') {
+  setGlobal('cycle_megadControl', 'restart');
   parent::install();
  }
 /**

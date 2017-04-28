@@ -88,6 +88,7 @@
      $params['VALUE']=$prop['CURRENT_VALUE_STRING'];
      $params['value']=$params['VALUE'];
      $params['port']=$i;
+     $params['m']=$m; 
      callMethod($prop['LINKED_OBJECT'].'.'.$prop['LINKED_METHOD'], $params);
     }
 
@@ -103,6 +104,7 @@
      $params['VALUE']=$prop['CURRENT_VALUE_STRING2'];
      $params['value']=$params['VALUE'];
      $params['port']=$i;
+     $params['m']=$m; 
      callMethod($prop['LINKED_OBJECT2'].'.'.$prop['LINKED_METHOD2'], $params);
     }
 
