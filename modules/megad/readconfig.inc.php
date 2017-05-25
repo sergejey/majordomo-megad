@@ -4,15 +4,12 @@
 
  $url=BASE_URL.'/modules/megad/megad-cfg.php';
  $url.='?ip='.urlencode($record['IP']).'&read-conf='.urlencode(ROOT.'cached/megad.cfg').'&p='.urlencode($record['PASSWORD']);
-
- /*
- if ($this->config['API_IP']) {
-  $url.='&local-ip='.$this->config['API_IP'];
- }
- */
-
  $data=getURL($url, 0);
- //$data='OK';
+
+ if (!preg_match('/OK/',$data) && $this->config['API_IP']) {
+   $url.='&local-ip='.$this->config['API_IP'];
+   $data=getURL($url, 0);
+ }
 
  if (preg_match('/OK/', $data)) {
   $record['CONFIG']=LoadFile(ROOT.'cached/megad.cfg');
