@@ -139,10 +139,13 @@ function admin(&$out) {
  if (!$out['API_IP']) {
   $out['API_IP']=$this->get_local_ip();
  }
+ $out['API_DEBUG']=$this->config['API_DEBUG'];
 
  if ($this->view_mode=='update_settings') {
    global $api_ip;
    $this->config['API_IP']=$api_ip;
+   global $api_debug;
+   $this->config['API_DEBUG']=(int)$api_debug;
    $this->saveConfig();
    $this->redirect("?");
  }
@@ -353,28 +356,31 @@ function usual(&$out) {
     $prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=".$rec['ID']." AND NUM='".DBSafe($pt)."'");
     if ($prop['ID']) {
      //
-
      if ($prop['ECMD'] && !($prop['SKIP_DEFAULT'])) {
       $ecmd=$prop['ECMD'];
      }
-
      unset($value2);
-
      if (isset($v)) {
       $value=$v;
+     } elseif ($_GET['wg']) {
+      $value=$_GET['wg'];
+     } elseif ($_GET['ib']) {
+      $value=$_GET['ib'];
+     } elseif ($_GET['click']) {
+      $value=$_GET['click'];
      } else {
       if ($m=='1') {
        $value=0;
+      //} elseif ($m=='2') {
+      // $value=2;
       } else {
        $value=1;
       }
      }
-
      if (isset($cnt)) {
       $prop['COUNTER']=$cnt;
       $value2=$prop['COUNTER'];
      }
-
      $old_value=$prop['CURRENT_VALUE_STRING'];
      $old_value2=$prop['CURRENT_VALUE_STRING2'];
 
@@ -390,6 +396,7 @@ function usual(&$out) {
 
      if ($prop['LINKED_OBJECT'] && $prop['LINKED_METHOD']) { // && $old_value!=$prop['CURRENT_VALUE_STRING']
       $params=array();
+      $params=$_REQUEST;
       $params['TITLE']=$rec['TITLE'];
       $params['VALUE']=$prop['CURRENT_VALUE_STRING'];
       $params['value']=$params['VALUE'];
@@ -415,6 +422,7 @@ function usual(&$out) {
 
       if ($prop['LINKED_OBJECT2'] && $prop['LINKED_METHOD2']) { // && $old_value2!=$prop['CURRENT_VALUE_STRING2']
        $params=array();
+       $params=$_REQUEST;
        $params['TITLE']=$rec['TITLE'];
        $params['VALUE']=$prop['CURRENT_VALUE_STRING2'];
        $params['value']=$params['VALUE'];
@@ -534,12 +542,10 @@ function usual(&$out) {
   SQLUpdate('megadproperties', $prop);
 
   $channel=$prop['NUM'];
-  //$device=SQLSelectOne("SELECT * FROM megaddevices WHERE ID='".$prop['DEVICE_ID']."'");
-
-  if ($prop['TYPE']==1) {
-   $this->sendCommand($prop['DEVICE_ID'], $prop['NUM'].':'.$value);
-   //$url='http://'.$device['IP'].'/'.$device['PASSWORD'].'/?cmd='.$prop['NUM'].':'.$value;
-   //getURL($url, 0);
+  if ($prop['TYPE']==1) { // output
+   $this->sendCommand($prop['DEVICE_ID'], $channel.':'.$value);
+  } elseif ($prop['TYPE']==101) { // raw command
+   $this->sendCommand($prop['DEVICE_ID'], $value);
   }
   $this->readValues($prop['DEVICE_ID']);
  }
