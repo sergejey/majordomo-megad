@@ -65,6 +65,8 @@
        $tmp[0]=str_replace("hum:", "", $tmp[0]);
        $prop['CURRENT_VALUE_STRING']=$tmp[0];
        if (isset($tmp[1])) {
+        $tmp[1]=str_replace("temp:", "", $tmp[1]);
+        $tmp[1]=str_replace("hum:", "", $tmp[1]);
         $prop['CURRENT_VALUE_STRING2']=$tmp[1];
        }
       }
