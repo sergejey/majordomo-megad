@@ -499,6 +499,7 @@ function usual(&$out) {
    $total=count($devices);
    for($i=0;$i<$total;$i++) {
     $devices[$i]['NEXT_UPDATE']=date('Y-m-d H:i:s', time()+$devices[$i]['UPDATE_PERIOD']);
+    SQLUpdate('megaddevices',$devices[$i]);
     $this->refreshDevice($devices[$i]['ID']);
    }
   }
