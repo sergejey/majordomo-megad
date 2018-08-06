@@ -3,7 +3,14 @@
 $record = SQLSelectOne("SELECT * FROM megaddevices WHERE ID='" . (int)$id . "'");
 
 $url = BASE_URL . '/modules/megad/megad-cfg.php';
-$url .= '?ip=' . urlencode($record['IP']) . '&read-conf=' . urlencode(ROOT . 'cached/megad.cfg') . '&p=' . urlencode($record['PASSWORD']);
+
+if (is_dir(ROOT . 'cms/cached/')) {
+    $config_file=ROOT . 'cms/cached/megad.cfg';
+} else {
+    $config_file=ROOT . 'cached/megad.cfg';
+}
+
+$url .= '?ip=' . urlencode($record['IP']) . '&read-conf=' . urlencode($config_file) . '&p=' . urlencode($record['PASSWORD']);
 $data = getURL($url, 0);
 
 if (!preg_match('/OK/', $data) && $this->config['API_IP']) {
@@ -12,7 +19,7 @@ if (!preg_match('/OK/', $data) && $this->config['API_IP']) {
 }
 
 if (preg_match('/OK/', $data)) {
-    $record['CONFIG'] = LoadFile(ROOT . 'cached/megad.cfg');
+    $record['CONFIG'] = LoadFile($config_file);
     if (preg_match('/mdid=(.+?)&/is', $record['CONFIG'], $m)) {
         $tmp = explode("\n", $m[1]);
         $record['MDID'] = $tmp[0];
