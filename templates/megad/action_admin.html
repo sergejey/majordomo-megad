@@ -12,6 +12,7 @@
  <!-- table megaddevices edit -->
  [#if VIEW_MODE="edit_megaddevices"#]
    [#if ID!=""#]
+<p><a href="?">&lt;&lt;&lt; <#LANG_BACK#></a></p>
    [#if TITLE!=""#]<h4>[#TITLE#]</h4>[#endif TITLE#]
 <ul class="nav nav-tabs">
   <li[#if TAB=""#] class="active"[#endif#]>
@@ -30,7 +31,11 @@
     [#inc megaddevices_edit_default.html#]
    [#endif TAB#]
    [#if TAB="data"#]
+[#if PROPERTY_ID=""#]
     [#inc megaddevices_edit_data.html#]
+[#else PROPERTY_ID#]
+[#inc megaddevices_edit_property.html#]
+[#endif PROPERTY_ID#]
    [#endif TAB#]
    [#if TAB="config"#]
     [#inc megaddevices_edit_config.html#]

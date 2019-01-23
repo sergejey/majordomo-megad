@@ -1,8 +1,8 @@
 
 <!-- table megaddevices search -->
 <p>
-<a href="?view_mode=edit_megaddevices&data_source=<#DATA_SOURCE#>" class="btn btn-default"> <#LANG_ADD#></a>
-<a href="?view_mode=scan" class="btn btn-default"> <#LANG_RESCAN_DEVICES#></a>
+<a href="?view_mode=edit_megaddevices&data_source=<#DATA_SOURCE#>" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> <#LANG_ADD#></a>
+<a href="?view_mode=scan" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>  <#LANG_RESCAN_DEVICES#></a>
 [ <a href="#" onClick="$('#api_settings').toggle();return false;"><#LANG_SETUP#></a> ]
 </p>
 
@@ -34,7 +34,7 @@
 </form>
 </div>
 
-
+[#module name="xray" action="service" cycle="megad"#]
 
 
 <table width=100% border=0><tr>
@@ -60,7 +60,8 @@
  <th>
  IP
  </th>
-<td>&nbsp;</td>
+ <th><#LANG_NOTES#></th>
+<th>&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -83,13 +84,16 @@
    >
    [#IP#]&nbsp;
  </td>
- <td style="vertical-align:middle" width="1%" nowrap>
-  <div style="width:120px">
+ <td>[#COMMENT#]</td>
+ <td style="vertical-align:middle" nowrap>
+
   [#if "<#ACTION#>"=="admin"#]
-   <a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_megaddevices&id=[#ID#]" class="btn btn-default" title="<#LANG_EDIT#>"><i class="glyphicon glyphicon-pencil"></i></a>
-    <a href="?data_source=<#DATA_SOURCE#>&view_mode=delete_megaddevices&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')" class="btn btn-default" title="Delete"><i class="glyphicon glyphicon-remove"></i></a>
+  <a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_megaddevices&id=[#ID#]" class="btn btn-default" title="<#LANG_EDIT#>"><i class="glyphicon glyphicon-pencil"></i></a>
+  <a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_megaddevices&id=[#ID#]&tab=data" class="btn btn-default" title="<#LANG_EDIT#>"><i class="glyphicon glyphicon-th-list"></i></a>
+  <a href="http://[#IP#]/[#PASSWORD#]" class="btn btn-default" title="<#LANG_EDIT#>" target="_blank"><i class="glyphicon glyphicon-wrench"></i></a>
+  <a href="?data_source=<#DATA_SOURCE#>&view_mode=delete_megaddevices&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')" class="btn btn-default" title="Delete"><i class="glyphicon glyphicon-remove"></i></a>
   [#endif ACTION#]
-  </div>
+
  </td>
 </tr>
 [#end RESULT#]
