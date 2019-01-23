@@ -653,7 +653,6 @@ class megad extends module
      */
     function install($data = '')
     {
-        setGlobal('cycle_megadControl', 'restart');
         parent::install();
 
         SQLExec("UPDATE megadproperties SET COMMAND='input' WHERE COMMAND='' AND TYPE=0");
@@ -661,6 +660,16 @@ class megad extends module
         SQLExec("UPDATE megadproperties SET COMMAND='adc' WHERE COMMAND='' AND TYPE=2");
         SQLExec("UPDATE megadproperties SET COMMAND='dsen' WHERE COMMAND='' AND TYPE=3");
         SQLExec("UPDATE megadproperties SET COMMAND='inttemp' WHERE COMMAND='' AND TYPE=100");
+
+
+        $devices = SQLSelect("SELECT ID FROM megaddevices");
+        if ($devices[0]['ID']) {
+            foreach($devices as $device) {
+                $this->readValues($device['ID']);
+            }
+        }
+
+        setGlobal('cycle_megadControl', 'restart');
 
     }
 
