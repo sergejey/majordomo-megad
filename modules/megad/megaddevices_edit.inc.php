@@ -191,7 +191,7 @@ if ($rec['ID'] && $this->tab == 'data') {
                 $property_id=$property['ID'];
             } else {
                 $property['LINKED_OBJECT'] = gr('linked_object');
-                $property['LINKED_METHOD'] = gr('linked_method');
+                $property['LINKED_PROPERTY'] = gr('linked_property');
                 $property['LINKED_METHOD'] = gr('linked_method');
                 SQLUpdate('megadproperties', $property);
             }
