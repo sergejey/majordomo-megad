@@ -18,7 +18,13 @@ $megad->getConfig();
 if ($megad->config['API_DEBUG']) {
  DebMes("Request: ".$_SERVER['REQUEST_URI']. " (".$_SERVER['REMOTE_ADDR'].")",'megad');
 }
-$megad->processRequest();
+$result = $megad->processRequest();
+if ($result!='') {
+ echo $result;
+}
+if ($megad->config['API_DEBUG']) {
+ DebMes("Result: ".$result,'megad');
+}
 
 $db->Disconnect(); 
 

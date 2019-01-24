@@ -380,9 +380,11 @@ class megad extends module
             $commands=array();
             //input data changed
             if (isset($pt)) {
-                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM='" . DBSafe($pt) . "'");
+                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM='" . DBSafe($pt) . "' AND COMMAND='input'");
+                if (!$prop['ID']) {
+                    $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM='" . DBSafe($pt) . "' AND COMMAND!='counter'");
+                }
                 if ($prop['ID']) {
-                    //
                     if ($prop['ECMD'] && !($prop['SKIP_DEFAULT'])) {
                         $ecmd = $prop['ECMD'];
                     }
@@ -390,18 +392,6 @@ class megad extends module
                         $cmd = array('NUM' => $pt, 'VALUE' => $v, 'COMMAND' => $prop['COMMAND']);
                         $commands[]=$cmd;
                         $prop['CURRENT_VALUE_STRING']=$v;
-                    } elseif ($_GET['wg']) {
-                        $value = $_GET['wg'];
-                        $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'wiegand');
-                        $commands[]=$cmd;
-                    } elseif ($_GET['ib']) {
-                        $value = $_GET['ib'];
-                        $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'ibutton');
-                        $commands[]=$cmd;
-                    } elseif ($_GET['click']) {
-                        $value = $_GET['click'];
-                        $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'click');
-                        $commands[]=$cmd;
                     } else {
                         if ($m == '1') {
                             $value = 0;
@@ -412,11 +402,25 @@ class megad extends module
                         $prop['CURRENT_VALUE_STRING']=$value;
                         $commands[]=$cmd;
                     }
-                    if (isset($cnt)) {
-                        $cmd = array('NUM' => $pt, 'VALUE' => $cnt, 'COMMAND' => 'counter');
-                        $commands[]=$cmd;
-                    }
                    }
+
+                if ($_GET['wg']) {
+                    $value = $_GET['wg'];
+                    $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'wiegand');
+                    $commands[]=$cmd;
+                } elseif ($_GET['ib']) {
+                    $value = $_GET['ib'];
+                    $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'ibutton');
+                    $commands[]=$cmd;
+                } elseif ($_GET['click']) {
+                    $value = $_GET['click'];
+                    $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'click');
+                    $commands[] = $cmd;
+                }
+                if (isset($cnt)) {
+                    $cmd = array('NUM' => $pt, 'VALUE' => $cnt, 'COMMAND' => 'counter');
+                    $commands[]=$cmd;
+                }
             }
 
             // internal temp sensor data
