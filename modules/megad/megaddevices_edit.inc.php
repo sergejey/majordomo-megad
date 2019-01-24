@@ -230,6 +230,11 @@ if ($rec['ID'] && $this->tab == 'data') {
     }
 }
 
+if ($this->mode == 'clear') {
+    SQLExec("DELETE FROM megadproperties WHERE DEVICE_ID=".$rec['ID']);
+    $this->readValues($rec['ID']);
+    $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
+}
 
 if ($this->mode == 'getdata') {
     $this->readValues($rec['ID']);

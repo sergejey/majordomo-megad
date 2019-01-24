@@ -11,10 +11,6 @@ if ($all) {
 }
 
 //echo $stateData;exit;
-if ($_GET['debug']) {
-    dprint($url."\n".$stateData);
-}
-
 $commands = array();
 $states = explode(';', $stateData);
 $total = count($states);
@@ -54,11 +50,11 @@ for ($i = 0; $i < $total; $i++) {
         $totalm=count($m[1]);
         for($im=0;$im<$totalm;$im++) {
             if ($m[1][$im]=='temp') {
-                $cmd = array('NUM' => $i, 'VALUE' => $m[1][$im], 'COMMAND' => 'temperature','INDEX'=>$im);
+                $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'temperature','INDEX'=>$im);
                 $commands[] = $cmd;
                 $matched=1;
             } else {
-                $cmd = array('NUM' => $i, 'VALUE' => $m[1][$im], 'COMMAND' => 'humidity','INDEX'=>$im);
+                $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'humidity','INDEX'=>$im);
                 $commands[] = $cmd;
                 $matched=1;
             }
@@ -82,6 +78,11 @@ if ($prop['ID']) {
     if ($stateData != '') {
         $commands[] = array('NUM' => 0, 'COMMAND' => 'inttemp', 'VALUE' => $stateData);
     }
+}
+
+if ($_GET['debug']) {
+    dprint($url."\n".$stateData,false);
+    dprint($commands);
 }
 
 foreach ($commands as $command) {
