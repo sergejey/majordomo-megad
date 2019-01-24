@@ -491,6 +491,7 @@ class megad extends module
             $prop['DEVICE_ID'] = $device_id;
             $prop['NUM'] = $command['NUM'];
             $prop['COMMAND'] = $command['COMMAND'];
+            $prop['COMMAND_INDEX'] = $command['INDEX'];
             $prop['ID'] = SQLInsert('megadproperties', $prop);
         }
         $prop['CURRENT_VALUE_STRING'] = $command['VALUE'];
