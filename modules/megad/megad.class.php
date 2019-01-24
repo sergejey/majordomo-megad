@@ -297,7 +297,7 @@ class megad extends module
 
     function propertySetHandle($object, $property, $value)
     {
-        $properties = SQLSelect("SELECT ID FROM megadproperties WHERE LINKED_OBJECT LIKE '" . DBSafe($object) . "' AND LINKED_PROPERTY LIKE '" . DBSafe($property) . "' AND TYPE=1");
+        $properties = SQLSelect("SELECT ID FROM megadproperties WHERE LINKED_OBJECT LIKE '" . DBSafe($object) . "' AND LINKED_PROPERTY LIKE '" . DBSafe($property) . "'");
         $total = count($properties);
         if ($total) {
             for ($i = 0; $i < $total; $i++) {

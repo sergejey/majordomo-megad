@@ -216,7 +216,7 @@ if ($rec['ID'] && $this->tab == 'data') {
             $this->readValues($rec['ID']);
         }
     } else {
-        $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, TYPE");
+        $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, TYPE");
         $total = count($properties);
         for ($i = 0; $i < $total; $i++) {
             if ($properties[$i]['LINKED_OBJECT']!='') {
