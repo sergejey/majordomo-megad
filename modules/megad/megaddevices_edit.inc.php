@@ -180,6 +180,10 @@ if ($rec['ID'] && $this->tab == 'data') {
     $property_id = gr('property_id');
     if ($property_id) {
         $property = SQLSelectOne("SELECT * FROM megadproperties WHERE ID=" . (int)$property_id);
+        if ($this->mode == 'delete') {
+            SQLExec("DELETE FROM megadproperties WHERE ID=".$property['ID']);
+            $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
+        }
         if ($this->mode == 'update') {
             $property['NUM'] = gr('num', 'int');
             $property['ADD_NUM'] = gr('add_num', 'int');
