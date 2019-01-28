@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 * Copyright (c) 2016, Andrey_B
 * http://ab-log.ru

@@ -14,7 +14,7 @@
 
         <div class="form-group">
             <label class="col-lg-3 control-label"[#if ERR_PORT#] style="color:red;font-weight:bold"[#endif#]>
-                <#LANG_PORT#>[#if I2C="1"#] SLC[#endif#]:
+                <#LANG_PORT#>[#if I2C="1"#] SCL[#endif#]:
                     (*)
             </label>
             <div class="col-lg-4"><input type="text" class="form-control" name="num" value="[#PROPERTY_NUM#]" required></div>
@@ -67,8 +67,8 @@
                     <option value="humidity"[#if PROPERTY_COMMAND="humidity"#] selected[#endif#]>Humidity</option>
                     <option value="wiegand"[#if PROPERTY_COMMAND="wiegand"#] selected[#endif#]>Wiegand</option>
                     <option value="ibutton"[#if PROPERTY_COMMAND="ibutton"#] selected[#endif#]>IButton</option>
-                    <option value="i2c"[#if PROPERTY_COMMAND="i2c"#] selected[#endif#]>I2C (coming soon)</option>
-                    <option value="i2c_htu21d"[#if PROPERTY_COMMAND="i2c_htu21d"#] selected[#endif#]>I2C htu21d (coming soon)</option>
+                    <option value="i2c"[#if PROPERTY_COMMAND="i2c"#] selected[#endif#]>I2C</option>
+                    <option value="i2c_htu21d"[#if PROPERTY_COMMAND="i2c_htu21d"#] selected[#endif#]>I2C htu21d</option>
                     <option value="i2c_bmp180"[#if PROPERTY_COMMAND="i2c_bmp180"#] selected[#endif#]>I2C bmp180 (coming soon)</option>
                     <option value="i2c_tsl2591"[#if PROPERTY_COMMAND="i2c_tsl2591"#] selected[#endif#]>I2C tsl2591 (coming soon)</option>
                     <option value="i2c_ssd1306"[#if PROPERTY_COMMAND="i2c_ssd1306"#] selected[#endif#]>I2C ssd1306 (coming soon)</option>
