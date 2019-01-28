@@ -5,7 +5,7 @@ if (!defined('LOW')) define("LOW", 0);
 
 class i2c_com extends stdClass
 {
-    public $slc;    
+    public $scl;
     public $sda;
     public $version;
     public $url;
