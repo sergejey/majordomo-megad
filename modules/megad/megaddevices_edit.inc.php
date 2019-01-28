@@ -44,6 +44,8 @@ if ($this->mode == 'update') {
         global $update_period;
         $rec['UPDATE_PERIOD'] = (int)$update_period;
 
+        $rec['I2C_VERSION']=gr('i2c_version','int');
+
         $rec['NEXT_UPDATE'] = date('Y-m-d H:i:s', time() + $rec['UPDATE_PERIOD']);
 
     }
@@ -220,7 +222,7 @@ if ($rec['ID'] && $this->tab == 'data') {
             $this->readValues($rec['ID']);
         }
     } else {
-        $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, TYPE");
+        $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, COMMAND");
         $total = count($properties);
         for ($i = 0; $i < $total; $i++) {
             if ($properties[$i]['LINKED_OBJECT']!='') {

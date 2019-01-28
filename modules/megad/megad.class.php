@@ -716,6 +716,7 @@ class megad extends module
  megaddevices: IP varchar(255) NOT NULL DEFAULT ''
  megaddevices: PASSWORD varchar(255) NOT NULL DEFAULT ''
  megaddevices: ADDRESS int(3) NOT NULL DEFAULT '0'
+ megaddevices: I2C_VERSION int(1) NOT NULL DEFAULT '0' 
  megaddevices: UPDATE_PERIOD int(10) NOT NULL DEFAULT '0'
  megaddevices: NEXT_UPDATE datetime
  megaddevices: CONFIG text

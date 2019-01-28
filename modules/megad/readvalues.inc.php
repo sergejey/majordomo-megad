@@ -22,8 +22,7 @@ for ($i = 0; $i < $total; $i++) {
     $mode=(int)$prop['MODE'];
     $cmd=(int)$prop['COMMAND'];
     */
-    $current_prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND NUM='".$i."'");
-
+    $current_prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND NUM='".$i."' AND COMMAND_INDEX=0");
     if ($states[$i] == 'ON') {
         $cmd = array('NUM' => $i, 'VALUE' => 1, 'COMMAND' => 'output');
         $commands[] = $cmd;
@@ -77,6 +76,29 @@ if ($prop['ID']) {
     $stateData = getURL('http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?tget=1', 0);
     if ($stateData != '') {
         $commands[] = array('NUM' => 0, 'COMMAND' => 'inttemp', 'VALUE' => $stateData);
+    }
+}
+
+$i2c_properties=SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND COMMAND LIKE 'i2c%' ORDER BY NUM");
+if ($i2c_properties[0]['ID']) {
+    include_once(DIR_MODULES.$this->name.'/libs/i2c_com.class.php');
+    include_once(DIR_MODULES.$this->name.'/libs/i2c_functions.inc.php');
+    foreach($i2c_properties as $property) {
+        $scl=$property['NUM'];
+        $sda=$property['ADD_NUM'];
+        $i2c_com=new i2c_com('http://'.$record['IP'].'/'.$record['PASSWORD'].'/?',$scl,$sda,$record['I2C_VERSION']);
+        if ($property['COMMAND']=='i2c_htu21d') {
+            include_once(DIR_MODULES.$this->name.'/libs/i2c_htu21d.inc.php');
+            $temperature = get_htu21d_temperature($i2c_com);
+            if (is_numeric($temperature)) {
+                $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'temperature','INDEX'=>1, 'VALUE' => $temperature);
+                $humidity = get_htu21d_humidity($i2c_com);
+                if (is_numeric($humidity)) {
+                    $hum_compensated = round($humidity + (25 - $temperature) * -0.15,2);
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity','INDEX'=>1, 'VALUE' => $hum_compensated);
+                }
+            }
+        }
     }
 }
 
