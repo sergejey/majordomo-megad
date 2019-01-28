@@ -51,7 +51,9 @@ if (preg_match('/OK/', $data)) {
             $port = $m[1][$i];
             $line = $m[2][$i];
             $type = '';
+            $command = '';
 
+            /*
             if (preg_match('/pty=(\d+)/', $line, $m2)) {
                 $type = (int)$m2[1];
             } elseif (preg_match('/ecmd=/', $line)) {
@@ -59,15 +61,28 @@ if (preg_match('/OK/', $data)) {
             } else {
                 $type = 1; // output
             }
+            */
+            if (preg_match('/pty=(\d+)/', $line, $m2)) {
+                if ($m2[1]=='0') $command='input';
+                if ($m2[1]=='1') $command='output';
+                if ($m2[1]=='2') $command='adc';
+                if ($m2[1]=='3') $command='dsen';
+            } elseif (preg_match('/ecmd=/', $line)) {
+                $command = 'input';
+            } else {
+                $command = 'output';
+            }
 
+            /*
             if ($device_type == '7I7O' && ($port == 14 || $port == 15)) {
                 $type = 2; // ADC
             }
+            */
 
-            if ($type !== '') {
+            if ($command !== '') {
                 //echo $port.':'.$type."<br/>";
-                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "'");
-                $prop['TYPE'] = $type;
+                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
+                $prop['COMMAND'] = $command;
                 $prop['NUM'] = $port;
                 $prop['DEVICE_ID'] = $record['ID'];
                 if (preg_match('/ecmd=(.*?)\&/', $line, $m3)) {

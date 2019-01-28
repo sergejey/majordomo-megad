@@ -1,80 +1,73 @@
 
 <!-- Table 'megaddevices' edit -->
-[#if ID=""#]
-<legend>New Record</legend>
-[#endif ID#]
-
 &nbsp;
 [#if DATA!=""#]<p>[#DATA#]</p>[#endif DATA#]
 
-<p><a href="?id=<#ID#>&view_mode=<#VIEW_MODE#>&tab=<#TAB#>&mode=getdata" class="btn btn-default"><#LANG_REFRESH#></a></p>
+<p>
+ <a href="?id=<#ID#>&view_mode=<#VIEW_MODE#>&tab=<#TAB#>&property_id=new" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> <#LANG_ADD#></a>
+ <a href="?id=<#ID#>&view_mode=<#VIEW_MODE#>&tab=<#TAB#>&mode=getdata" class="btn btn-default"><i class="glyphicon glyphicon-refresh"></i> <#LANG_REFRESH#></a>
+ <a href="?id=<#ID#>&view_mode=<#VIEW_MODE#>&tab=<#TAB#>&mode=getdata&debug=1" class="btn btn-default" target="_blank">ReadState</a>
+ <a href="?id=<#ID#>&view_mode=<#VIEW_MODE#>&tab=<#TAB#>&mode=clear" class="btn btn-default" onclick="return confirm('<#LANG_ARE_YOU_SURE#>');"><i class="glyphicon glyphicon-trash"></i> Clear data</a>
+</p>
 
 
 <form action="?" method="post">
 <table cellpadding="5" class="table table-stripped">
  <tr>
+  <td valign="top"><#LANG_PORT#></td>
   <td valign="top"><#LANG_TYPE#></td>
+  <td valign="top">ECMD</td>
   <td valign="top"><#LANG_CURRENT_VALUE#></td>
-  <td valign="top">Skip default action</td>
-
   <td valign="top"><#LANG_LINKED_OBJECT#></td>
-  <td valign="top"><#LANG_LINKED_PROPERTY#></td>
-  <td valign="top"><#LANG_METHOD#></td>
-
-  <td valign="top"><#LANG_CURRENT_VALUE#> 2</td>
-
-  <td valign="top"><#LANG_LINKED_OBJECT#> 2</td>
-  <td valign="top"><#LANG_LINKED_PROPERTY#> 2</td>
-  <td valign="top"><#LANG_METHOD#> 2</td>
-
   <td valign="top"><#LANG_UPDATED#></td>
-
+  <td>&nbsp;</td>
 
  </tr>
+
+ <script type="application/javascript">
+  function switchDevice<#ID#>(port, port_value) {
+   var url='<#ROOTHTML#>ajax/megad.html?device=<#ID#>&command='+encodeURIComponent(port+':'+port_value);
+   $.ajax({
+    url: url
+   }).done(function(data) {
+    alert('RESULT: '+data);
+   });
+   return false;
+  }
+ </script>
+
  [#begin PROPERTIES#]
  <tr>
+  <td><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=<#TAB#>&property_id=[#ID#]">P [#NUM#].[#COMMAND_INDEX#]</a></td>
   <td valign="top" nowrap>
-  [#NUM#]
+  [#COMMAND#]
+   <!--#
   [#if TYPE="0"#]Input[#endif#]
   [#if TYPE="1"#]Output[#endif#] 
   [#if TYPE="2"#]ADC[#endif#] 
   [#if TYPE="3"#]DSen[#endif#] 
   [#if TYPE="100"#]Int. temp[#endif#]
   [#if TYPE="101"#]Command[#endif#]
-  [#if TYPE="255"#]NC[#endif#] 
-  [#if ECMD!=""#]<br/><small>(ecmd: [#ECMD#])</small>[#endif ECMD#]
+  [#if TYPE="255"#]NC[#endif#]
+   #-->
+   [#if COMMAND="output"#]
+   <a href="#" onclick="return switchDevice[#DEVICE_ID#]([#NUM#],1);">ON</a> |
+   <a href="#" onclick="return switchDevice[#DEVICE_ID#]([#NUM#],0);">OFF</a>
+   [#endif#]
   </td>
+  <td>[#ECMD#]</td>
   <td valign="top" align="center">[#CURRENT_VALUE_STRING#]&nbsp;</td>
-  <td valign="top" align="center">
-   [#if TYPE!="1"#]<input type="checkbox" name="skip_default[#TYPE#][#NUM#]" value="1"[#if SKIP_DEFAULT="1"#] checked[#endif#]>[#else#]&nbsp;[#endif#]
-  </td>
-  <td valign="top"><input type="text" value="[#LINKED_OBJECT#]" name="linked_object[#TYPE#][#NUM#]" id="linked_object[#TYPE#][#NUM#]"></td>
-  <td valign="top"><input type="text" value="[#LINKED_PROPERTY#]" name="linked_property[#TYPE#][#NUM#]" id="linked_property[#TYPE#][#NUM#]"></td>
-  <td valign="top"><input type="text" value="[#LINKED_METHOD#]" name="linked_method[#TYPE#][#NUM#]" id="linked_method[#TYPE#][#NUM#]"></td>
-
-  <td valign="top" align="center">[#CURRENT_VALUE_STRING2#]&nbsp;</td>
-  <td valign="top">
-   [#if TYPE!="1"#]
-   <input type="text" value="[#LINKED_OBJECT2#]" name="linked_object2_[#TYPE#][#NUM#]" id="linked_object2_[#TYPE#][#NUM#]">
-   [#endif TYPE#]
-   </td>
-  <td valign="top">
-  [#if TYPE!="1"#]
-   <input type="text" value="[#LINKED_PROPERTY2#]" name="linked_property2_[#TYPE#][#NUM#]" id="linked_property2_[#TYPE#][#NUM#]">
-  [#endif TYPE#]
-   </td>
-  <td valign="top">
-  [#if TYPE!="1"#]
-   <input type="text" value="[#LINKED_METHOD2#]" name="linked_method2_[#TYPE#][#NUM#]" id="linked_method2_[#TYPE#][#NUM#]">
-  [#endif TYPE#]
-  </td>
+  <td valign="top">[#LINKED_OBJECT#]</td>
   <td valign="top">[#UPDATED#]</td>
-
+  <td>
+   <a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=<#TAB#>&property_id=[#ID#]" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i></a>
+   <a href="http://<#IP#>/<#PASSWORD#>/?pt=[#NUM#]" class="btn btn-default" target="_blank"><i class="glyphicon glyphicon-wrench"></i></a>
+   <a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=<#TAB#>&property_id=[#ID#]&mode=delete" class="btn btn-default" onclick="return confirm('<#LANG_ARE_YOU_SURE#>');"><i class="glyphicon glyphicon-trash"></i></a>
+  </td>
  </tr>
- [#module name="linkedobject" object_field="linked_object<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" property_field="linked_property<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" method_field="linked_method<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" width="200"#]
- [#module name="linkedobject" object_field="linked_object2_<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" property_field="linked_property2_<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" method_field="linked_method2_<#PROPERTIES.TYPE#><#PROPERTIES.NUM#>" width="200"#]
  [#end PROPERTIES#]
 </table>
+ <!--#
 &nbsp;<br/>
 <input type="submit" name="submit" value="<#LANG_SUBMIT#>" class="btn btn-default">
 
@@ -84,5 +77,6 @@
 <input type="hidden" name="mode" value="update">
 <input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
 <input type="hidden" name="tab" value="<#TAB#>">
+#-->
 
 </form>
