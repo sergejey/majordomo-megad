@@ -11,7 +11,7 @@
 </p>
 
 
-<form action="?" method="post">
+
 <table cellpadding="5" class="table table-stripped">
  <tr>
   <td valign="top"><#LANG_PORT#></td>
@@ -19,22 +19,12 @@
   <td valign="top">ECMD</td>
   <td valign="top"><#LANG_CURRENT_VALUE#></td>
   <td valign="top"><#LANG_LINKED_OBJECT#></td>
+  <td valign="top"><#LANG_DETAILS#></td>
   <td valign="top"><#LANG_UPDATED#></td>
   <td>&nbsp;</td>
 
  </tr>
 
- <script type="application/javascript">
-  function switchDevice<#ID#>(port, port_value) {
-   var url='<#ROOTHTML#>ajax/megad.html?device=<#ID#>&command='+encodeURIComponent(port+':'+port_value);
-   $.ajax({
-    url: url
-   }).done(function(data) {
-    alert('RESULT: '+data);
-   });
-   return false;
-  }
- </script>
 
  [#begin PROPERTIES#]
  <tr>
@@ -51,14 +41,20 @@
   [#if TYPE="255"#]NC[#endif#]
    #-->
    [#if COMMAND="output"#]
-   <a href="#" onclick="return switchDevice[#DEVICE_ID#]([#NUM#],1);">ON</a> |
-   <a href="#" onclick="return switchDevice[#DEVICE_ID#]([#NUM#],0);">OFF</a>
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],1,'result[#ID#]');">ON</a> |
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],0,'result[#ID#]');">OFF</a>
+   <span id="result[#ID#]"></span>
    [#endif#]
   </td>
   <td>[#ECMD#]</td>
-  <td valign="top" align="center">[#CURRENT_VALUE_STRING#]&nbsp;</td>
+  <td valign="top" align="center">
+   <div class="dynamic_content" id="value[#ID#]">
+   <span id="current_value[#ID#]">[#CURRENT_VALUE_STRING#]</span>
+   <!--/dynamic_content--></div>
+  </td>
   <td valign="top">[#LINKED_OBJECT#]</td>
-  <td valign="top">[#UPDATED#]</td>
+  <td valign="top">[#COMMENT#]</td>
+  <td valign="top"><div class="dynamic_content" id="updated[#ID#]">[#UPDATED#]<!--/dynamic_content--></div></td>
   <td>
    <a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=<#TAB#>&property_id=[#ID#]" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i></a>
    <a href="http://<#IP#>/<#PASSWORD#>/?pt=[#NUM#]" class="btn btn-default" target="_blank"><i class="glyphicon glyphicon-wrench"></i></a>
@@ -67,16 +63,3 @@
  </tr>
  [#end PROPERTIES#]
 </table>
- <!--#
-&nbsp;<br/>
-<input type="submit" name="submit" value="<#LANG_SUBMIT#>" class="btn btn-default">
-
-<input type="hidden" name="id" value="<#ID#>">
-<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
-<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
-<input type="hidden" name="mode" value="update">
-<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
-<input type="hidden" name="tab" value="<#TAB#>">
-#-->
-
-</form>

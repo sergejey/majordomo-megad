@@ -190,6 +190,7 @@ if ($rec['ID'] && $this->tab == 'data') {
             $property['NUM'] = gr('num', 'int');
             $property['ADD_NUM'] = gr('add_num', 'int');
             $property['SKIP_DEFAULT'] = gr('skip_default', 'int');
+            $property['COMMENT'] = gr('comment');
             $property['COMMAND'] = gr('command');
             if (!$property['ID']) {
                 $property['DEVICE_ID']=$rec['ID'];
@@ -219,31 +220,36 @@ if ($rec['ID'] && $this->tab == 'data') {
         }
         $out['PROPERTY_ID']=$property_id;
         if ($this->mode == 'update') {
-            $this->readValues($rec['ID']);
+            //$this->readValues($rec['ID']);
         }
-    } else {
-        $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, COMMAND");
-        $total = count($properties);
-        for ($i = 0; $i < $total; $i++) {
-            if ($properties[$i]['LINKED_OBJECT']!='') {
-                $object_rec=SQLSelectOne("SELECT * FROM objects WHERE TITLE='".$properties[$i]['LINKED_OBJECT']."'");
-                if ($object_rec['DESCRIPTION']!='') {
-                    $properties[$i]['LINKED_OBJECT'].=' - '.$object_rec['DESCRIPTION'];
-                }
+    }
+    $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, COMMAND");
+    $total = count($properties);
+    for ($i = 0; $i < $total; $i++) {
+        if ($properties[$i]['ID']==$out['PROPERTY_ID']) {
+            $properties[$i]['SELECTED']=1;
+        }
+        if ($properties[$i]['LINKED_OBJECT']!='') {
+            $object_rec=SQLSelectOne("SELECT * FROM objects WHERE TITLE='".$properties[$i]['LINKED_OBJECT']."'");
+            if ($object_rec['DESCRIPTION']!='') {
+                $properties[$i]['LINKED_OBJECT'].=' - '.$object_rec['DESCRIPTION'];
             }
         }
-        $out['PROPERTIES'] = $properties;
     }
+    $out['PROPERTIES'] = $properties;
+
 }
 
 if ($this->mode == 'clear') {
     SQLExec("DELETE FROM megadproperties WHERE DEVICE_ID=".$rec['ID']);
     $this->readValues($rec['ID']);
+    $this->readConfig($rec['ID']);
     $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
 }
 
 if ($this->mode == 'getdata') {
     $this->readValues($rec['ID']);
+    $this->readConfig($rec['ID']);
     $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
 }
 

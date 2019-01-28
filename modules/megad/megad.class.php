@@ -217,6 +217,7 @@ class megad extends module
 
         if ($device && $command) {
             $result = $this->sendCommand($device, $command);
+            $this->readValues($device);
             if ($result) {
                 echo "OK: ".$result;
             } else {
@@ -537,6 +538,9 @@ class megad extends module
         }
         if ($device['ID']) {
             $url = 'http://' . $device['IP'] . '/' . $device['PASSWORD'] . '/?' . ($custom ? '' : 'cmd=') . $command;
+            if ($this->config['API_DEBUG']) {
+                DebMes("Sending command: $url", 'megad');
+            }
             return getURL($url, 0);
         } else {
             return 0;
@@ -571,7 +575,7 @@ class megad extends module
         $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $device_id);
         $total = count($properties);
         for ($i = 0; $i < $total; $i++) {
-            if ($properties[$i]['COMMAND'] == 'output') {
+            if ($properties[$i]['COMMAND'] == 'output' && $properties[$i]['CURRENT_VALUE_STRING']) {
                 $this->sendCommand($properties[$i]['DEVICE_ID'], $properties[$i]['NUM'] . ':' . $properties[$i]['CURRENT_VALUE_STRING']);
                 if ($i < ($total - 1)) {
                     usleep(5000);
@@ -746,6 +750,7 @@ class megad extends module
  megadproperties: DEF varchar(255) NOT NULL DEFAULT ''
  megadproperties: MISC varchar(255) NOT NULL DEFAULT ''
  megadproperties: SKIP_DEFAULT int(3) NOT NULL DEFAULT '0'
+ megadproperties: COMMENT varchar(255) NOT NULL DEFAULT ''
  megadproperties: UPDATED datetime
 EOD;
         parent::dbInstall($data);

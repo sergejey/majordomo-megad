@@ -1,4 +1,8 @@
 
+<div class="row">
+
+
+<div class="col-md-8">
 <!-- Table 'megaddevices' edit -->
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
     [#if OK#]
@@ -28,6 +32,13 @@
             <div class="col-lg-4"><input type="text" class="form-control" name="add_num" value="[#PROPERTY_ADD_NUM#]"></div>
         </div>
         [#endif#]
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                <#LANG_NOTES#>:
+            </label>
+            <div class="col-lg-4"><input type="text" class="form-control" name="comment" value="[#PROPERTY_COMMENT#]"></div>
+        </div>
 
         [#if NEW_PROPERTY!="1"#]
         <div class="form-group">
@@ -77,6 +88,29 @@
                 </select>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                <#LANG_VALUE#>:
+            </label>
+            <div class="col-lg-4">
+                <div class="dynamic_content" id="value[#PROPERTY_ID#]">
+                    <span id="current_value[#PROPERTY_ID#]">[#PROPERTY_CURRENT_VALUE_STRING#]</span>
+                    <!--/dynamic_content-->
+                </div>
+            </div>
+        </div>
+        [#if PROPERTY_COMMAND="output"#]
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                &nbsp;
+            </label>
+            <div class="col-lg-4">
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],[#PROPERTY_NUM#],1,'switchResult[#PROPERTY_ID#]');">ON</a> |
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],[#PROPERTY_NUM#],0,'switchResult[#PROPERTY_ID#]');">OFF</a>
+                <span  id="switchResult[#PROPERTY_ID#]"></span>
+            </div>
+        </div>
+        [#endif#]
 
         [#if NEW_PROPERTY!="1"#]
         <div class="form-group">
@@ -128,3 +162,20 @@
         </div>
     </fieldset>
 </form>
+</div>
+
+    <div class="col-md-4">
+        <table class="table">
+            [#begin PROPERTIES#]
+            <tr>
+                <td[#if SELECTED#] style="background-color:lightgreen"[#endif#]>
+                <a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=<#TAB#>&property_id=[#ID#]">P [#NUM#].[#COMMAND_INDEX#]</a>
+                </td>
+                <td[#if SELECTED#] style="background-color:lightgreen"[#endif#]>[#COMMENT#]</td>
+            </tr>
+            [#end PROPERTIES#]
+        </table>
+    </div>
+
+
+</div>

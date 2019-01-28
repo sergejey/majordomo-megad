@@ -80,7 +80,7 @@ if ($prop['ID']) {
 }
 
 $i2c_properties=SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND COMMAND LIKE 'i2c%' ORDER BY NUM");
-if ($i2c_properties[0]['ID']) {
+if ($stateData!='' && $i2c_properties[0]['ID']) {
     include_once(DIR_MODULES.$this->name.'/libs/i2c_com.class.php');
     include_once(DIR_MODULES.$this->name.'/libs/i2c_functions.inc.php');
     foreach($i2c_properties as $property) {
