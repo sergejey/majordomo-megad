@@ -1,5 +1,6 @@
 <?php
 
+
 $record = SQLSelectOne("SELECT * FROM megaddevices WHERE ID='" . (int)$id . "'");
 
 
@@ -9,6 +10,12 @@ if ($all) {
 } else {
     $stateData = getURL($url, 0);
 }
+
+if ($_GET['debug']) {
+    dprint($url."\n".$stateData,false);
+ }
+
+if ($stateData=='') return;
 
 //echo $stateData;exit;
 $commands = array();
@@ -23,6 +30,8 @@ for ($i = 0; $i < $total; $i++) {
     $cmd=(int)$prop['COMMAND'];
     */
     $current_prop=SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND NUM='".$i."' AND COMMAND_INDEX=0");
+    if (preg_match('/^i2c/',$current_prop['COMMAND'])) continue;
+
     if ($states[$i] == 'ON') {
         $cmd = array('NUM' => $i, 'VALUE' => 1, 'COMMAND' => 'output');
         $commands[] = $cmd;
@@ -72,7 +81,7 @@ for ($i = 0; $i < $total; $i++) {
 
 //internal temp sensor data
 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND COMMAND='inttemp'");
-if ($prop['ID']) {
+if (!$quick && $prop['ID']) {
     $stateData = getURL('http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?tget=1', 0);
     if ($stateData != '') {
         $commands[] = array('NUM' => 0, 'COMMAND' => 'inttemp', 'VALUE' => $stateData);
@@ -80,7 +89,7 @@ if ($prop['ID']) {
 }
 
 $i2c_properties=SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='".$record['ID']."' AND COMMAND LIKE 'i2c%' ORDER BY NUM");
-if ($stateData!='' && $i2c_properties[0]['ID']) {
+if (!$quick && $stateData!='' && $i2c_properties[0]['ID']) {
     include_once(DIR_MODULES.$this->name.'/libs/i2c_com.class.php');
     include_once(DIR_MODULES.$this->name.'/libs/i2c_functions.inc.php');
     foreach($i2c_properties as $property) {
@@ -103,7 +112,6 @@ if ($stateData!='' && $i2c_properties[0]['ID']) {
 }
 
 if ($_GET['debug']) {
-    dprint($url."\n".$stateData,false);
     dprint($commands);
 }
 

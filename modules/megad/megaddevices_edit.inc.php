@@ -187,8 +187,16 @@ if ($rec['ID'] && $this->tab == 'data') {
             $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
         }
         if ($this->mode == 'update') {
-            $property['NUM'] = gr('num', 'int');
-            $property['ADD_NUM'] = gr('add_num', 'int');
+            if (preg_match('/,/',gr('num'))) {
+                $tmp=explode(',',gr('num'));
+                $num1=(int)trim($tmp[0]);
+                $num2=(int)trim($tmp[1]);
+                $property['NUM'] = $num1;
+                $property['ADD_NUM'] = $num2;
+            } else {
+                $property['NUM'] = gr('num','int');
+                $property['ADD_NUM'] = gr('add_num', 'int');
+            }
             $property['SKIP_DEFAULT'] = gr('skip_default', 'int');
             $property['COMMENT'] = gr('comment');
             $property['COMMAND'] = gr('command');
@@ -202,6 +210,11 @@ if ($rec['ID'] && $this->tab == 'data') {
                 $property['LINKED_METHOD'] = gr('linked_method');
                 SQLUpdate('megadproperties', $property);
             }
+
+            if ($property['ADD_NUM']!='') {
+                SQLExec("UPDATE megadproperties SET COMMAND='i2c' WHERE DEVICE_ID=".$rec['ID']." AND NUM=".$property['ADD_NUM']);
+            }
+
         }
         if (preg_match('/i2c/',$property['COMMAND'])) {
             $out['NEED_ADD_PORT']=1;

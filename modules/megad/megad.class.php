@@ -217,7 +217,7 @@ class megad extends module
 
         if ($device && $command) {
             $result = $this->sendCommand($device, $command);
-            $this->readValues($device);
+            $this->readValues($device,'',1);
             if ($result) {
                 echo "OK: ".$result;
             } else {
@@ -243,7 +243,7 @@ class megad extends module
         require(DIR_MODULES . $this->name . '/readconfig.inc.php');
     }
 
-    function readValues($id, $all = '')
+    function readValues($id, $all = '', $quick = 0)
     {
         require(DIR_MODULES . $this->name . '/readvalues.inc.php');
     }
@@ -376,6 +376,7 @@ class megad extends module
 
             if (isset($_GET['all'])) {
                 $this->readValues($rec['ID'], $_GET['all']);
+                return;
             }
 
             $commands=array();
@@ -429,7 +430,7 @@ class megad extends module
                 $commands[] = array('NUM' => 0, 'COMMAND' => 'inttemp', 'VALUE' => $at);
             }
             foreach($commands as $command) {
-                $this->processCommand($rec['ID'],$command);
+                $this->processCommand($rec['ID'],$command,1);
             }
         }
 
@@ -447,13 +448,6 @@ class megad extends module
                 }
             }
             $mega_id = $rec['ID'];
-            /*
-            $code = '';
-            $code .= 'include_once(DIR_MODULES."megad/megad.class.php");';
-            $code .= '$mega=new megad();';
-            $code .= '$mega->readValues(' . (int)$mega_id . ');';
-            setTimeOut('mega_refresh_' . $mega_id, $code, 1);
-            */
             $url=BASE_URL.'/ajax/megad.html?op=readvalues&device='.$mega_id;
             $code='getURL("'.$url.'",0);';
             setTimeOut('mega_refresh_' . $mega_id, $code, 1);
@@ -480,7 +474,7 @@ class megad extends module
     }
 
 
-    function processCommand($device_id, $command)
+    function processCommand($device_id, $command, $force = 0)
     {
         if (!isset($command['INDEX'])) {
             $command['INDEX'] = 0;
@@ -505,11 +499,11 @@ class megad extends module
         }
         SQLUpdate('megadproperties', $prop);
         if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
-            if ($old_value != $prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING'] != gg($prop['LINKED_OBJECT'] . '.' . $prop['LINKED_PROPERTY'])) {
+            if ($force || $old_value != $prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING'] != gg($prop['LINKED_OBJECT'] . '.' . $prop['LINKED_PROPERTY'])) {
                 setGlobal($prop['LINKED_OBJECT'] . '.' . $prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name => '0'));
             }
         }
-        if ($prop['LINKED_OBJECT'] && $prop['LINKED_METHOD'] && ($old_value != $prop['CURRENT_VALUE_STRING'])) {
+        if ($force || $prop['LINKED_OBJECT'] && $prop['LINKED_METHOD'] && ($old_value != $prop['CURRENT_VALUE_STRING'])) {
             $params = array();
             $params['TITLE'] = $record['TITLE'];
             $params['VALUE'] = $prop['CURRENT_VALUE_STRING'];
@@ -567,7 +561,7 @@ class megad extends module
         } elseif ($prop['COMMAND'] == 'raw') { // raw command
             $this->sendCommand($prop['DEVICE_ID'], $value);
         }
-        $this->readValues($prop['DEVICE_ID']);
+        $this->readValues($prop['DEVICE_ID'],'',1);
     }
 
     function restoreDeviceStatus($device_id)

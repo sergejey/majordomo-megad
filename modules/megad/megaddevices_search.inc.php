@@ -45,6 +45,10 @@
    $total=count($res);
    for($i=0;$i<$total;$i++) {
     // some action for every record if required
+    $latest_update=SQLSelectOne("SELECT UPDATED FROM megadproperties WHERE DEVICE_ID=".$res[$i]['ID']." ORDER BY UPDATED DESC LIMIT 1");
+    if ($latest_update['UPDATED']) {
+     $res[$i]['UPDATED']=$latest_update['UPDATED'];
+    }
    }
    $out['RESULT']=$res;
   }

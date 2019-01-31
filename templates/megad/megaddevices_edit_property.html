@@ -2,7 +2,7 @@
 <div class="row">
 
 
-<div class="col-md-8">
+<div class="col-md-6">
 <!-- Table 'megaddevices' edit -->
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
     [#if OK#]
@@ -164,14 +164,17 @@
 </form>
 </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
         <table class="table">
             [#begin PROPERTIES#]
             <tr>
-                <td[#if SELECTED#] style="background-color:lightgreen"[#endif#]>
+                <td[#if SELECTED#] style="background-color:lightgreen"[#endif#] nowrap>
                 <a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=<#TAB#>&property_id=[#ID#]">P [#NUM#].[#COMMAND_INDEX#]</a>
                 </td>
+                <td[#if SELECTED#] style="background-color:lightgreen"[#endif#]>[#COMMAND#]</td>
+                <td[#if SELECTED#] style="background-color:lightgreen"[#endif#]>[#CURRENT_VALUE_STRING#]</td>
                 <td[#if SELECTED#] style="background-color:lightgreen"[#endif#]>[#COMMENT#]</td>
+                <td[#if SELECTED#] style="background-color:lightgreen"[#endif#]>[#LINKED_OBJECT#]</td>
             </tr>
             [#end PROPERTIES#]
         </table>
