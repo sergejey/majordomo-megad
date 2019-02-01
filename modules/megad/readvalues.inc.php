@@ -54,7 +54,7 @@ for ($i = 0; $i < $total; $i++) {
         $commands[] = $cmd;
         $matched=1;
     }
-    if (preg_match_all('/(temp|hum):([\d\.]+)/',$states[$i],$m)) {
+    if (preg_match_all('/(temp|hum):([\-\d\.]+)/',$states[$i],$m)) {
         $totalm=count($m[1]);
         for($im=0;$im<$totalm;$im++) {
             if ($m[1][$im]=='temp') {
