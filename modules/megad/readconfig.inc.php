@@ -33,20 +33,6 @@ if (preg_match('/OK/', $data)) {
     if (preg_match_all('/pn=(\d+)&(.+?)\\n' . '/is', $record['CONFIG'], $m)) {
         $total = count($m[2]);
 
-        $additional_ports=array();
-
-        $port=array();
-        $port['TYPE']=101; // direct command
-        $port['NUM']=100;
-        $additional_ports[]=$port;
-
-        if ($device_type == '7I7O') {
-            $port=array();
-            $port['TYPE']=100; // int temp sensor
-            $port['NUM']=100;
-            $additional_ports[]=$port;
-        }
-
         for ($i = 0; $i < $total; $i++) {
             $port = $m[1][$i];
             $line = $m[2][$i];
@@ -105,17 +91,6 @@ if (preg_match('/OK/', $data)) {
                 } else {
                     SQLUpdate('megadproperties', $prop);
                 }
-            }
-        }
-
-        foreach($additional_ports as $k=>$v) {
-            $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND TYPE='" . $port['TYPE'] . "'");
-            if (!$prop['ID']) {
-             $prop=array();
-             $prop['TYPE']=$port['TYPE'];
-             $prop['NUM'] = $port['NUM'];
-             $prop['DEVICE_ID'] = $record['ID'];
-             $prop['ID'] = SQLInsert('megadproperties', $prop);
             }
         }
 

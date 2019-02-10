@@ -395,14 +395,25 @@ class megad extends module
                         $commands[]=$cmd;
                         $prop['CURRENT_VALUE_STRING']=$v;
                     } else {
-                        if ($m == '1') {
+                        if ($m == 2) {
+                            $value = 1;
+                            $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'long_press');
+                            $commands[]=$cmd;
+                        } elseif ($m == 1) {
+                            $value = 1;
+                            $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'release');
+                            $commands[] = $cmd;
+
                             $value = 0;
+                            $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => $prop['COMMAND']);
+                            $prop['CURRENT_VALUE_STRING']=$value;
+                            $commands[]=$cmd;
                         } else {
                             $value = 1;
+                            $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => $prop['COMMAND']);
+                            $prop['CURRENT_VALUE_STRING']=$value;
+                            $commands[]=$cmd;
                         }
-                        $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => $prop['COMMAND']);
-                        $prop['CURRENT_VALUE_STRING']=$value;
-                        $commands[]=$cmd;
                     }
                    }
 
@@ -416,7 +427,13 @@ class megad extends module
                     $commands[]=$cmd;
                 } elseif ($_GET['click']) {
                     $value = $_GET['click'];
-                    $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'click');
+                    $command = 'click';
+                    if ($value==2) {
+                        $command = 'double_click';
+                        $value = 1;
+                    }
+                    $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => $command);
+
                     $commands[] = $cmd;
                 }
                 if (isset($cnt)) {
