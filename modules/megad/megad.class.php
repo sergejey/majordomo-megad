@@ -508,13 +508,15 @@ class megad extends module
             $prop['NUM'] = $command['NUM'];
             $prop['COMMAND'] = $command['COMMAND'];
             $prop['COMMAND_INDEX'] = $command['INDEX'];
+            $prop['CURRENT_VALUE_STRING'] = $command['VALUE'];
+            $old_value = $prop['CURRENT_VALUE_STRING'];
             $prop['ID'] = SQLInsert('megadproperties', $prop);
         }
         $prop['CURRENT_VALUE_STRING'] = $command['VALUE'];
         if ($old_value != $prop['CURRENT_VALUE_STRING']) {
             $prop['UPDATED'] = date('Y-m-d H:i:s');
+            SQLUpdate('megadproperties', $prop);
         }
-        SQLUpdate('megadproperties', $prop);
         if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
             if ($force || $old_value != $prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING'] != gg($prop['LINKED_OBJECT'] . '.' . $prop['LINKED_PROPERTY'])) {
                 setGlobal($prop['LINKED_OBJECT'] . '.' . $prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name => '0'));
