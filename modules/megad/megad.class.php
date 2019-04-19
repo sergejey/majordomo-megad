@@ -580,7 +580,7 @@ class megad extends module
         } elseif ($prop['COMMAND'] == 'raw') { // raw command
             $this->sendCommand($prop['DEVICE_ID'], $value);
         }
-        $this->readValues($prop['DEVICE_ID'],'',1);
+        //$this->readValues($prop['DEVICE_ID'],'',1);
     }
 
     function restoreDeviceStatus($device_id)
