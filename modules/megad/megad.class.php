@@ -226,9 +226,11 @@ class megad extends module
 
 				    if  (explode(':',$command)[0]=='100')    
 					 {$result = $this->sendAlarm($device, explode(':',$command)[1]); 
-//                         	       debmes('sendalarm', 'megad');}
+//                         	       debmes('sendalarm', 'megad');
+}
                                     else {$result = $this->sendCommand($device, $command);
-//                         	       debmes('sendcommand', 'megad');}
+//                         	       debmes('sendcommand', 'megad');
+}
 
             $this->readValues($device,'',1);
             if ($result) {
