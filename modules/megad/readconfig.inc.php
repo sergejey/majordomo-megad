@@ -96,7 +96,8 @@ if (preg_match_all('/gsm=(.+?)'. '/is', $record['CONFIG'], $m)) {
 
 if ($m[1][0]) {$command='alarm'; $port=100;}
 
-             if ($command !== '') {
+
+             if (($command !== '')&&($m[1][0]<>'&')) {
                 //echo $port.':'.$type."<br/>";
                 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
                 $prop['COMMAND'] = $command;
@@ -129,7 +130,7 @@ if (preg_match_all('/smst=(.+?)'. '/is', $record['CONFIG'], $m)) {
 
 if ($m[1][0]) {$command='counter'; $port=100;}
 
-             if ($command !== '') {
+             if (($command !== '')&&($m[1][0]<>'&')) {
                 //echo $port.':'.$type."<br/>";
                 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
                 $prop['COMMAND'] = $command;
