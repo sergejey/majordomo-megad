@@ -102,7 +102,7 @@ $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record
 if (!$quick && $prop['ID']) {
 $url='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?cf=1';
 $config=getURL($url, 0);
- dprint($url."\n".$config,false);
+// dprint($url."\n".$config,false);
 
 $preg=preg_match_all('/Mode: (.+?)<br>/m', $config,$m, PREG_SET_ORDER, 0);
 //debmes($m, 'megad');
