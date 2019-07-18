@@ -30,14 +30,12 @@ if (preg_match('/OK/', $data)) {
     //process config
     if (preg_match_all('/pn=(\d+)&(.+?)\\n' . '/is', $record['CONFIG'], $m)) {
         $total = count($m[2]);
-
-        for ($i = 0; $i < $total; $i++) {
+         for ($i = 0; $i < $total; $i++) {
             $port = $m[1][$i];
             $line = $m[2][$i];
             $type = '';
             $command = '';
-
-            /*
+             /*
             if (preg_match('/pty=(\d+)/', $line, $m2)) {
                 $type = (int)$m2[1];
             } elseif (preg_match('/ecmd=/', $line)) {
@@ -62,8 +60,7 @@ if (preg_match('/OK/', $data)) {
                 $type = 2; // ADC
             }
             */
-
-            if ($command !== '') {
+             if ($command !== '') {
                 //echo $port.':'.$type."<br/>";
                 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
                 $prop['COMMAND'] = $command;
@@ -91,7 +88,98 @@ if (preg_match('/OK/', $data)) {
                 }
             }
         }
-
         $this->readValues($record['ID']);
     }
+
+if (preg_match_all('/gsm=(.+?)'. '/is', $record['CONFIG'], $m)) {
+//debmes('gsm_mode:'.$m[1][0], 'megadgsm');
+
+if ($m[1][0]) {$command='alarm'; $port=100;}
+
+             if ($command !== '') {
+                //echo $port.':'.$type."<br/>";
+                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
+                $prop['COMMAND'] = $command;
+                $prop['NUM'] = $port;
+                $prop['COMMENT'] = 'GSM ALARM STATUS';
+                $prop['DEVICE_ID'] = $record['ID'];
+                $prop['CURRENT_VALUE'] = $m[1][0];
+                $prop['CURRENT_VALUE_STRING'] = $m[1][0];
+//if ($m[1][0]==1) $prop['CURRENT_VALUE_STRING'] = 'ALARM OFF';
+//if ($m[1][0]==2) $prop['CURRENT_VALUE_STRING'] = 'ALARM ON';
+                if (preg_match('/m=(\d+)/', $line, $m3)) {
+                    $prop['MODE'] = $m[1][0];
+                }
+                if (!$prop['ID']) {
+                    $prop['ID'] = SQLInsert('megadproperties', $prop);
+                } else {
+                    SQLUpdate('megadproperties', $prop);
+                }
+            }
+
+
+//debmes($m[1][1], 'megadgsm');
+//    $this->readValues($record['ID']);
+}
+
+
+if (preg_match_all('/smst=(.+?)'. '/is', $record['CONFIG'], $m)) {
+//debmes('smst:'.$m[1][0], 'megadgsm');
+//debmes($m[1][1], 'megadgsm');
+
+if ($m[1][0]) {$command='counter'; $port=100;}
+
+             if ($command !== '') {
+                //echo $port.':'.$type."<br/>";
+                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
+                $prop['COMMAND'] = $command;
+                $prop['NUM'] = $port;
+                $prop['COMMENT'] = 'GSM SMS TIMEOUT';
+                $prop['DEVICE_ID'] = $record['ID'];
+                $prop['CURRENT_VALUE'] = $m[1][0];
+                $prop['CURRENT_VALUE_STRING'] = $m[1][0];
+//if ($m[1][0]==1) $prop['CURRENT_VALUE_STRING'] = 'ALARM OFF';
+//if ($m[1][0]==2) $prop['CURRENT_VALUE_STRING'] = 'ALARM ON';
+                if (preg_match('/m=(\d+)/', $line, $m3)) {
+                    $prop['MODE'] = $m[1][0];
+                }
+                if (!$prop['ID']) {
+                    $prop['ID'] = SQLInsert('megadproperties', $prop);
+                } else {
+                    SQLUpdate('megadproperties', $prop);
+                }
+            }
+
+}
+
+
+if (preg_match_all('/gsm_num=(.+?)' . '&/is', $record['CONFIG'], $m)) {
+//debmes('gms_num:'.$m[1][0], 'megadgsm');
+//debmes($m, 'megadgsm');
+
+if ($m[1][0]) {$command='input'; $port=100;}
+
+             if ($command !== '') {
+                //echo $port.':'.$type."<br/>";
+                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
+                $prop['COMMAND'] = $command;
+                $prop['NUM'] = $port;
+                $prop['COMMENT'] = 'GSM ALARM PHONE';
+                $prop['DEVICE_ID'] = $record['ID'];
+                $prop['CURRENT_VALUE'] = $m[1][0];
+                $prop['CURRENT_VALUE_STRING'] = $m[1][0];
+//if ($m[1][0]==1) $prop['CURRENT_VALUE_STRING'] = 'ALARM OFF';
+//if ($m[1][0]==2) $prop['CURRENT_VALUE_STRING'] = 'ALARM ON';
+                if (preg_match('/m=(\d+)/', $line, $m3)) {
+                    $prop['MODE'] = $m[1][0];
+                }
+                if (!$prop['ID']) {
+                    $prop['ID'] = SQLInsert('megadproperties', $prop);
+                } else {
+                    SQLUpdate('megadproperties', $prop);
+                }
+            }
+
+}
+
 }
