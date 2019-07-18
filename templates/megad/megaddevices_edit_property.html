@@ -88,6 +88,7 @@
                     <option value="i2c_ssd1306"[#if PROPERTY_COMMAND="i2c_ssd1306"#] selected[#endif#]>I2C ssd1306 (coming soon)</option>
                     <option value="inttemp"[#if PROPERTY_COMMAND="inttemp"#] selected[#endif#]>Internal temp. sensor</option>
                     <option value="raw"[#if PROPERTY_COMMAND="raw"#] selected[#endif#]>RAW command</option>
+                    <option value="alarm"[#if PROPERTY_COMMAND="alarm"#] selected[#endif#]>ALARM</option>
                 </select>
             </div>
         </div>
@@ -114,6 +115,21 @@
             </div>
         </div>
         [#endif#]
+
+
+        [#if PROPERTY_COMMAND="alarm"#]
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                &nbsp;
+            </label>
+            <div class="col-lg-4">
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],[#PROPERTY_NUM#],1,'switchResult[#PROPERTY_ID#]');">ON</a> |
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],[#PROPERTY_NUM#],0,'switchResult[#PROPERTY_ID#]');">OFF</a>
+                <span  id="switchResult[#PROPERTY_ID#]"></span>
+            </div>
+        </div>
+        [#endif#]
+
 
         [#if NEW_PROPERTY!="1"#]
         <div class="form-group">

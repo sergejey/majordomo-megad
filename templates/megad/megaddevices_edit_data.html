@@ -45,6 +45,13 @@
    <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],0,'result[#ID#]');">OFF</a>
    <span id="result[#ID#]"></span>
    [#endif#]
+
+[#if COMMAND="alarm"#]
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],1,'result[#ID#]');">ON</a> |
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],0,'result[#ID#]');">OFF</a>
+   <span id="result[#ID#]"></span>
+   [#endif#]
+
   </td>
   <td>[#ECMD#]</td>
   <td valign="top" align="center">

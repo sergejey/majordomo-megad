@@ -203,6 +203,8 @@ class megad extends module
         $device = $_GET['device'];
         $command = $_GET['command'];
 
+//        debmes('1$device:'.$device .'$command: '. $command, 'megad');
+
         if ($this->ajax) {
             if ($_GET['op'] == 'processCycle') {
                 $this->processCycle();
@@ -212,11 +214,24 @@ class megad extends module
                 echo "OK";
                 exit;
             }
+
         }
 
 
+
+
         if ($device && $command) {
-            $result = $this->sendCommand($device, $command);
+//        debmes('2$device:'.$device .'$command: '. $command, 'megad');
+//        debmes(explode(':',$command)[0], 'megad');
+
+				    if  (explode(':',$command)[0]=='100')    
+					 {$result = $this->sendAlarm($device, explode(':',$command)[1]); 
+//                         	       debmes('sendalarm', 'megad');
+}
+                                    else {$result = $this->sendCommand($device, $command);
+//                         	       debmes('sendcommand', 'megad');
+}
+
             $this->readValues($device,'',1);
             if ($result) {
                 echo "OK: ".$result;
@@ -247,6 +262,8 @@ class megad extends module
     {
         require(DIR_MODULES . $this->name . '/readvalues.inc.php');
     }
+
+
 
     function scan()
     {
@@ -501,6 +518,8 @@ class megad extends module
         } else {
             $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $device_id . "' AND COMMAND='" . $command['COMMAND'] . "' AND COMMAND_INDEX=" . (int)$command['INDEX']);
         }
+//debmes($prop, 'megad');
+
         $old_value = $prop['CURRENT_VALUE_STRING'];
         if (!$prop['ID']) {
             $prop = array();
@@ -561,6 +580,32 @@ class megad extends module
     }
 
 
+    function sendAlarm($id, $command, $custom = false)
+    {
+//debmes ('sendAlarm fnc'.$id.' '.$command, 'medag');
+        $device = SQLSelectOne("SELECT * FROM megaddevices WHERE ID='" . $id . "'");
+        if (!$device['ID']) {
+            $device = SQLSelectOne("SELECT * FROM megaddevices WHERE TITLE LIKE '" . DBSafe($id) . "'");
+        }
+        if (!$device['ID']) {
+            $device = SQLSelectOne("SELECT * FROM megaddevices WHERE IP='" . DBSafe($id) . "'");
+        }
+        if ($device['ID']) {
+            $url = 'http://' . $device['IP'] . '/' . $device['PASSWORD'] . '/?cmd=S:'. $command;
+            if ($this->config['API_DEBUG']) {
+                DebMes("Sending command: $url", 'megad');
+            }
+            return getURL($url, 0);
+        } else {
+            return 0;
+        }
+    }
+
+
+
+
+
+
     /**
      * Title
      *
@@ -579,6 +624,9 @@ class megad extends module
             $this->sendCommand($prop['DEVICE_ID'], $channel . ':' . $value);
         } elseif ($prop['COMMAND'] == 'raw') { // raw command
             $this->sendCommand($prop['DEVICE_ID'], $value);
+        }
+        elseif ($prop['COMMAND'] == 'alarm') { // raw command
+            $this->sendAlarm($prop['DEVICE_ID'], $value);
         }
         //$this->readValues($prop['DEVICE_ID'],'',1);
     }
