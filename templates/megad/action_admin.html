@@ -39,6 +39,11 @@
   <li[#if TAB="config"#] class="active"[#endif#]>
    <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=config">Advanced</a>
   </li>
+  <li[#if TAB="config2"#] class="active"[#endif#]>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=config2">Device config</a>
+  </li>
+
+
 </ul>
 &nbsp;
    [#endif ID#]
@@ -56,6 +61,14 @@
     [#inc megaddevices_edit_config.html#]
    [#endif TAB#]
  [#endif VIEW_MODE#]
+
+
+   [#endif TAB#]
+   [#if TAB="config2"#]
+    [#inc megaddevicesconfig.html#]
+   [#endif TAB#]
+
+
  <!-- / table megaddevices edit -->
  <!-- table megaddevices view --> 
  [#if VIEW_MODE="view_megaddevices"#]
