@@ -88,6 +88,28 @@ if ($this->mode == 'update') {
     }
 }
 // step: config
+
+if ($this->tab=='config2') 
+{
+//$url='http://' . $rec['IP'] . '/' . $rec['PASSWORD'];
+//$url='http://' . $rec['IP'] . '/' . $rec['PASSWORD'] . '/?cf=1';
+//$config=getURL($url, 0);
+
+//$new=str_replace( 'href=/','href='.$rec['IP'].'/', $config);
+
+        $address = $_GET['address'];
+        $par = $_GET['par'];
+
+if ($address=='') $address=$rec['IP'];
+if ($par=='') $par='/'.$rec['PASSWORD'];
+
+$data=$this->gethttpmessage($address,$par); 
+
+
+//$data=$this->gethttpmessage($rec['IP'], '/'. $rec['PASSWORD']);
+$out['TEST']=$data;
+}
+
 if ($this->tab == 'config') {
 
     if ($this->mode == 'upgrade_firmware') {
