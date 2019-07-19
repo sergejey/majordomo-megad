@@ -1,6 +1,4 @@
 <?php
-
-
 /*
 * @version 0.1 (wizard)
 */
@@ -10,47 +8,31 @@
   }
   $qry="1";
   // search filters
-  //searching 'TITLE' (varchar)
-  global $title;
-  if ($title!='') {
-   $qry.=" AND TITLE LIKE '%".DBSafe($title)."%'";
-   $out['TITLE']=$title;
+  if (IsSet($this->device_id)) {
+   $device_id=$this->device_id;
+   $qry.=" AND DEVICE_ID='".$this->device_id."'";
+  } else {
+   global $device_id;
   }
   // QUERY READY
   global $save_qry;
   if ($save_qry) {
-   $qry=$session->data['megaddevices_qry'];
+   $qry=$session->data['megadproperties_qry'];
   } else {
-   $session->data['megaddevices_qry']=$qry;
+   $session->data['megadproperties_qry']=$qry;
   }
   if (!$qry) $qry="1";
   // FIELDS ORDER
-  global $sortby_megaddevices;
-  if (!$sortby_megaddevices) {
-   $sortby_megaddevices=$session->data['megaddevices_sort'];
-  } else {
-   if ($session->data['megaddevices_sort']==$sortby_megaddevices) {
-    if (Is_Integer(strpos($sortby_megaddevices, ' DESC'))) {
-     $sortby_megaddevices=str_replace(' DESC', '', $sortby_megaddevices);
-    } else {
-     $sortby_megaddevices=$sortby_megaddevices." DESC";
-    }
-   }
-   $session->data['megaddevices_sort']=$sortby_megaddevices;
-  }
-  if (!$sortby_megaddevices) $sortby_megaddevices="TITLE";
-  $out['SORTBY']=$sortby_megaddevices;
+  if (!$sortby_megadproperties) $sortby_megadproperties="NUM";
+  $out['SORTBY']=$sortby_megadproperties;
   // SEARCH RESULTS
-  $res=SQLSelect("SELECT * FROM megaddevices WHERE $qry ORDER BY ".$sortby_megaddevices);
+  $res=SQLSelect("SELECT * FROM megadproperties WHERE $qry ORDER BY ".$sortby_megadproperties);
+
   if ($res[0]['ID']) {
    colorizeArray($res);
    $total=count($res);
    for($i=0;$i<$total;$i++) {
     // some action for every record if required
-    $latest_update=SQLSelectOne("SELECT UPDATED FROM megadproperties WHERE DEVICE_ID=".$res[$i]['ID']." ORDER BY UPDATED DESC LIMIT 1");
-    if ($latest_update['UPDATED']) {
-     $res[$i]['UPDATED']=$latest_update['UPDATED'];
-    }
    }
    $out['RESULT']=$res;
   }
