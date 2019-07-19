@@ -140,83 +140,78 @@ class megad extends module
      */
     function admin(&$out)
     {
-if ($_POST['md']=='megad' && $_POST['inst']=='adm' &&$_POST['sourceip']) 
-{
+        if ($_POST['md'] == 'megad' && $_POST['inst'] == 'adm' && $_POST['sourceip']) {
 
 
-$par=array();
+            $par = array();
 //debmes($_POST, 'megad');
-/*
-if ($_POST['eip']<>'') $par['eip']=$_POST['eip'];
-if ($_POST['cf']<>'') $par['cf']=$_POST['cf'];
-if ($_POST['pwd']<>'') $par['pwd']=$_POST['pwd'];
-if ($_POST['gw']<>'') $par['gw']=$_POST['gw'];
-if ($_POST['sip']<>'') $par['sip']=$_POST['sip'];
-if ($_POST['srvt']<>'') $par['srvt']=$_POST['srvt'];
-if ($_POST['sct']<>'') $par['sct']=$_POST['sct'];
-if ($_POST['pr']<>'') $par['pr']=$_POST['pr'];
-if ($_POST['gsm']<>'')  $par['gsm']=$_POST['gsm'];
-if ($_POST['gsm_num']<>'') $par['gsm_num']=$_POST['gsm_num'];
-if ($_POST['smst']<>'') $par['smst']=$_POST['smst'];
-if ($_POST['pty']<>'') $par['pty']=$_POST['pty'];
-if ($_POST['pn']<>'') $par['pn']=$_POST['pn'];
+            /*
+            if ($_POST['eip']<>'') $par['eip']=$_POST['eip'];
+            if ($_POST['cf']<>'') $par['cf']=$_POST['cf'];
+            if ($_POST['pwd']<>'') $par['pwd']=$_POST['pwd'];
+            if ($_POST['gw']<>'') $par['gw']=$_POST['gw'];
+            if ($_POST['sip']<>'') $par['sip']=$_POST['sip'];
+            if ($_POST['srvt']<>'') $par['srvt']=$_POST['srvt'];
+            if ($_POST['sct']<>'') $par['sct']=$_POST['sct'];
+            if ($_POST['pr']<>'') $par['pr']=$_POST['pr'];
+            if ($_POST['gsm']<>'')  $par['gsm']=$_POST['gsm'];
+            if ($_POST['gsm_num']<>'') $par['gsm_num']=$_POST['gsm_num'];
+            if ($_POST['smst']<>'') $par['smst']=$_POST['smst'];
+            if ($_POST['pty']<>'') $par['pty']=$_POST['pty'];
+            if ($_POST['pn']<>'') $par['pn']=$_POST['pn'];
 
-if ($_POST['ecmd']<>'') $par['ecmd']=$_POST['ecmd'];
-if ($_POST['af']<>'') $par['af']=$_POST['af'];
-if ($_POST['gsmf']<>'') $par['gsmf']=$_POST['gsmf'];
+            if ($_POST['ecmd']<>'') $par['ecmd']=$_POST['ecmd'];
+            if ($_POST['af']<>'') $par['af']=$_POST['af'];
+            if ($_POST['gsmf']<>'') $par['gsmf']=$_POST['gsmf'];
 
-if ($_POST['grp']<>'') $par['grp']=$_POST['grp'];
-if ($_POST['m']<>'') $par['m']=$_POST['m'];
-if ($_POST['d']<>'') $par['d']=$_POST['d'];
-if ($_POST['gsmf']<>'') $par['gsmf']=$_POST['gsmf'];
-*/
-$par= $_POST;
-unset($par['sourceurl']);
-unset($par['sourceip']);
-unset($par['pd']);
-unset($par['md']);
-unset($par['inst']);
+            if ($_POST['grp']<>'') $par['grp']=$_POST['grp'];
+            if ($_POST['m']<>'') $par['m']=$_POST['m'];
+            if ($_POST['d']<>'') $par['d']=$_POST['d'];
+            if ($_POST['gsmf']<>'') $par['gsmf']=$_POST['gsmf'];
+            */
+            $par = $_POST;
+            unset($par['sourceurl']);
+            unset($par['sourceip']);
+            unset($par['pd']);
+            unset($par['md']);
+            unset($par['inst']);
 
 
-$sourceip=$_POST['sourceip'];
-$sourceurl=$_POST['sourceurl'];
+            $sourceip = $_POST['sourceip'];
+            $sourceurl = $_POST['sourceurl'];
 
-$pwd=SQLSelectOne ('select * from megaddevices where IP="'.$sourceip.'"')['PASSWORD'];
+            $pwd = SQLSelectOne('SELECT * FROM megaddevices WHERE IP="' . $sourceip . '"')['PASSWORD'];
 
- 
+
 //debmes('$sourceip:'. $sourceip.'  pwd:'.$pwd, 'megad');
 //debmes('$sourceurl:'. $sourceurl, 'megad');
-$url2=$_GET['par'];
+            $url2 = $_GET['par'];
 //debmes($par,'megad');
 
 
-
-$cmd='';
-foreach ($par as $name=>$value)
-{
+            $cmd = '';
+            foreach ($par as $name => $value) {
 //debmes( $name.'='.$value, 'megad');
 //$cmd.='&'.$name.'='.$value;
-$cmd=$cmd.'&'.$name.'='.urlencode(trim($value));
-}
+                $cmd = $cmd . '&' . $name . '=' . urlencode(trim($value));
+            }
 //$cmd=urldecode($cmd);
 
 //$ip=$par['eip'];
 //if ($ip=='') $id=$this->ip;
 
 //debmes($cmd,'megad');
-$newurl='http://'.$sourceip.'/'.$pwd.'/'.$cmd;
+            $newurl = 'http://' . $sourceip . '/' . $pwd . '/' . $cmd;
 
 //debmes('get message '.$newurl,'megad');
-$config=getURL($newurl, 0);
-echo $config;
-$redirect="?&data_source=&view_mode=edit_megaddevices&id=2&tab=config2&address=".$par['eip'].'&par='.urlencode($sourceurl);
+            $config = getURL($newurl, 0);
+            echo $config;
+            $redirect = "?&data_source=&view_mode=edit_megaddevices&id=2&tab=config2&address=" . $par['eip'] . '&par=' . urlencode($sourceurl);
 //debmes('redirect '.$redirect,'megad');
-$this->redirect($redirect);
+            $this->redirect($redirect);
 
 
-
-
-}
+        }
 
         if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
             $out['SET_DATASOURCE'] = 1;
@@ -228,8 +223,6 @@ $this->redirect($redirect);
             $out['API_IP'] = $this->get_local_ip();
         }
         $out['API_DEBUG'] = $this->config['API_DEBUG'];
-
-        
 
 
         if ($this->view_mode == 'update_settings') {
@@ -253,7 +246,6 @@ $this->redirect($redirect);
                 $this->delete_megaddevices($this->id);
                 $this->redirect("?data_source=megaddevices");
             }
-
 
 
             if ($this->view_mode == 'scan') {
@@ -301,23 +293,21 @@ $this->redirect($redirect);
         }
 
 
-
-
         if ($device && $command) {
 //        debmes('2$device:'.$device .'$command: '. $command, 'megad');
 //        debmes(explode(':',$command)[0], 'megad');
 
-				    if  (explode(':',$command)[0]=='100')    
-					 {$result = $this->sendAlarm($device, explode(':',$command)[1]); 
+            if (explode(':', $command)[0] == '100') {
+                $result = $this->sendAlarm($device, explode(':', $command)[1]);
 //                         	       debmes('sendalarm', 'megad');
-}
-                                    else {$result = $this->sendCommand($device, $command);
+            } else {
+                $result = $this->sendCommand($device, $command);
 //                         	       debmes('sendcommand', 'megad');
-}
+            }
 
-            $this->readValues($device,'',1);
+            $this->readValues($device, '', 1);
             if ($result) {
-                echo "OK: ".$result;
+                echo "OK: " . $result;
             } else {
                 echo "Error";
             }
@@ -347,43 +337,38 @@ $this->redirect($redirect);
     }
 
     function gethttpmessage($ip, $cmd)
-{
+    {
 
-$config=getURL($ip. $cmd, 0);
-$new=$config;
-//$new=str_replace( 'href=/sec','href=?viewmode=redirect&address='.$ip.'&par='.$cmd, $config);
-//$new=str_replace( 'href=/sec','href=?viewmode=redirect&address='.$ip.'&par=', $config);
-//$new=preg_replace( '<a href=(.*?)</a\>','<a href=</a\>', $config);
-//$new=preg_replace( '<a href=(.*?)</a\>','<a href=</a\>', $config);
-//$new=preg_replace("#\<a href=([^\' target='_blank'>]*)\](.*)\</a>#is", "<a href=\"$1\">$2</a>", $config);
-//$new=preg_replace("<a href=(.*)</a>", "<a href=\"?viewmode=redirect&address='.$ip.'&par='.$cmd\"</a>", $config);
-$new=preg_replace('/<a href=(.+?)>/i', '<a href="?data_source=&view_mode=edit_megaddevices&id='.$this->id.'&tab=config2&address='.$ip.'&par=$1">', $new);
+        $config = getURL($ip . $cmd, 0);
+        $new = $config;
 
-//$new=preg_replace('/<form action=(.+?)>/i', '<form action='.$ip.'$1', $new);
-//$new=preg_replace('/<form action=(.+?)>/i', '<form action='.'>', $new);
+        $new = preg_replace('/<a href=(.+?)>/i', '<a href="?data_source=&view_mode=edit_megaddevices&id=' . $this->id . '&tab=config2&address=' . $ip . '&par=$1">', $new);
 
-$new=preg_replace('/<form action=(.+?)>/i', '<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">', $new);
+        $new = preg_replace('/<form action=(.+?)>/i', '<form action="?" method="post" class="form" enctype="multipart/form-data" name="frmEdit">', $new);
 
-///
-//$new=str_replace('<input type="hidden" name="inst" value="adm">', '<input type="hidden" name="inst2" value="adm">', $new);
-//$new=str_replace('inst', 'inst2', $new);
-$new=str_replace('<input type=submit value=Save>', '<input type=submit value=Save><input type="hidden" name="sourceurl" value="'.$cmd.'"><input type="hidden" name="sourceip" value="'.$ip.'">', $new);
+        $new = preg_replace('/<input name=/is', '<input class="form-control" name=', $new);
+        $new = preg_replace('/<input size=/is', '<input class="form-control" size=', $new);
+        $new = preg_replace('/<select name=/is', '<select class="form-control" name=', $new);
+        $new = preg_replace('/>ON</is', ' class="btn btn-default">ON<', $new);
+        $new = preg_replace('/>OFF</is', ' class="btn btn-default">OFF<', $new);
 
+        $new = str_replace('Act <input', 'Act <a href="#" onclick="return showMegaDHelp(\'act\');"><i class="glyphicon glyphicon-info-sign"></i></a> <input', $new);
+        $new = str_replace('Net <input', 'Net <a href="#" onclick="return showMegaDHelp(\'net\');"><i class="glyphicon glyphicon-info-sign"></i></a> <input', $new);
+        $new = str_replace('Raw <input', 'Raw <a href="#" onclick="return showMegaDHelp(\'raw\');"><i class="glyphicon glyphicon-info-sign"></i></a> <input', $new);
+        $new = str_replace('Mode <select', 'Mode <a href="#" onclick="return showMegaDHelp(\'mode\');"><i class="glyphicon glyphicon-info-sign"></i></a> <select', $new);
+        $new = str_replace('Type <select', '<hr/>Type <a href="#" onclick="return showMegaDHelp(\'type\');"><i class="glyphicon glyphicon-info-sign"></i></a> <select', $new);
+        $new = str_replace('Def <select', 'Def <a href="#" onclick="return showMegaDHelp(\'def\');"><i class="glyphicon glyphicon-info-sign"></i></a> <select', $new);
 
+        $new = preg_replace('/checkbox name=af.+?>/is','\0 Af <a href="#" onclick="return showMegaDHelp(\'af\');"><i class="glyphicon glyphicon-info-sign"></i></a><br/>',$new);
+        $new = preg_replace('/checkbox name=naf.+?>/is','\0 Naf <a href="#" onclick="return showMegaDHelp(\'naf\');"><i class="glyphicon glyphicon-info-sign"></i></a><br/>',$new);
+        $new = preg_replace('/checkbox name=misc.+?>/is','\0 Misc <a href="#" onclick="return showMegaDHelp(\'misc\');"><i class="glyphicon glyphicon-info-sign"></i></a><br/>',$new);
 
-//debmes($new, 'megad');
+        $new = str_replace('<input type=submit value=Save>', '<input type=submit class="btn btn-default btn-primary" value=Save><input type="hidden" name="sourceurl" value="' . $cmd . '"><input type="hidden" name="sourceip" value="' . $ip . '">', $new);
 
-//$new=str_replace('IP:', 'IP2: ', $new);
-
-//<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
-
-
-
-//$out['TEST']=$new;
-return  $new;
+        return $new;
 
 
-}
+    }
 
 
     function scan()
@@ -517,7 +502,7 @@ return  $new;
                 return;
             }
 
-            $commands=array();
+            $commands = array();
             //input data changed
             if (isset($pt)) {
                 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM='" . DBSafe($pt) . "' AND COMMAND='input'");
@@ -530,13 +515,13 @@ return  $new;
                     }
                     if (isset($v)) {
                         $cmd = array('NUM' => $pt, 'VALUE' => $v, 'COMMAND' => $prop['COMMAND']);
-                        $commands[]=$cmd;
-                        $prop['CURRENT_VALUE_STRING']=$v;
+                        $commands[] = $cmd;
+                        $prop['CURRENT_VALUE_STRING'] = $v;
                     } else {
                         if ($m == 2) {
                             $value = 1;
                             $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'long_press');
-                            $commands[]=$cmd;
+                            $commands[] = $cmd;
                         } elseif ($m == 1) {
                             $value = 1;
                             $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'release');
@@ -544,29 +529,29 @@ return  $new;
 
                             $value = 0;
                             $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => $prop['COMMAND']);
-                            $prop['CURRENT_VALUE_STRING']=$value;
-                            $commands[]=$cmd;
+                            $prop['CURRENT_VALUE_STRING'] = $value;
+                            $commands[] = $cmd;
                         } else {
                             $value = 1;
                             $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => $prop['COMMAND']);
-                            $prop['CURRENT_VALUE_STRING']=$value;
-                            $commands[]=$cmd;
+                            $prop['CURRENT_VALUE_STRING'] = $value;
+                            $commands[] = $cmd;
                         }
                     }
-                   }
+                }
 
                 if ($_GET['wg']) {
                     $value = $_GET['wg'];
                     $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'wiegand');
-                    $commands[]=$cmd;
+                    $commands[] = $cmd;
                 } elseif ($_GET['ib']) {
                     $value = $_GET['ib'];
                     $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'ibutton');
-                    $commands[]=$cmd;
+                    $commands[] = $cmd;
                 } elseif ($_GET['click']) {
                     $value = $_GET['click'];
                     $command = 'click';
-                    if ($value==2) {
+                    if ($value == 2) {
                         $command = 'double_click';
                         $value = 1;
                     }
@@ -576,7 +561,7 @@ return  $new;
                 }
                 if (isset($cnt)) {
                     $cmd = array('NUM' => $pt, 'VALUE' => $cnt, 'COMMAND' => 'counter');
-                    $commands[]=$cmd;
+                    $commands[] = $cmd;
                 }
             }
 
@@ -584,8 +569,8 @@ return  $new;
             if (isset($at)) {
                 $commands[] = array('NUM' => 0, 'COMMAND' => 'inttemp', 'VALUE' => $at);
             }
-            foreach($commands as $command) {
-                $this->processCommand($rec['ID'],$command,1);
+            foreach ($commands as $command) {
+                $this->processCommand($rec['ID'], $command, 1);
             }
         }
 
@@ -603,8 +588,8 @@ return  $new;
                 }
             }
             $mega_id = $rec['ID'];
-            $url=BASE_URL.'/ajax/megad.html?op=readvalues&device='.$mega_id;
-            $code='getURL("'.$url.'",0);';
+            $url = BASE_URL . '/ajax/megad.html?op=readvalues&device=' . $mega_id;
+            $code = 'getURL("' . $url . '",0);';
             setTimeOut('mega_refresh_' . $mega_id, $code, 1);
         }
         return $ecmd;
@@ -712,7 +697,7 @@ return  $new;
             $device = SQLSelectOne("SELECT * FROM megaddevices WHERE IP='" . DBSafe($id) . "'");
         }
         if ($device['ID']) {
-            $url = 'http://' . $device['IP'] . '/' . $device['PASSWORD'] . '/?cmd=S:'. $command;
+            $url = 'http://' . $device['IP'] . '/' . $device['PASSWORD'] . '/?cmd=S:' . $command;
             if ($this->config['API_DEBUG']) {
                 DebMes("Sending command: $url", 'megad');
             }
@@ -721,10 +706,6 @@ return  $new;
             return 0;
         }
     }
-
-
-
-
 
 
     /**
@@ -745,8 +726,7 @@ return  $new;
             $this->sendCommand($prop['DEVICE_ID'], $channel . ':' . $value);
         } elseif ($prop['COMMAND'] == 'raw') { // raw command
             $this->sendCommand($prop['DEVICE_ID'], $value);
-        }
-        elseif ($prop['COMMAND'] == 'alarm') { // raw command
+        } elseif ($prop['COMMAND'] == 'alarm') { // raw command
             $this->sendAlarm($prop['DEVICE_ID'], $value);
         }
         //$this->readValues($prop['DEVICE_ID'],'',1);
@@ -855,7 +835,7 @@ return  $new;
 
         $devices = SQLSelect("SELECT ID FROM megaddevices");
         if ($devices[0]['ID']) {
-            foreach($devices as $device) {
+            foreach ($devices as $device) {
                 $this->readValues($device['ID']);
             }
         }
