@@ -122,7 +122,7 @@ if ($mode=='<b>ARM</b>')    {$stateData='1';}
 //}
 //$stateData = 'comming';
     if (($stateData != '')&&(strlen($stateData))<20) {
-        echo "arm: ".$stateData."<br>";
+//        echo "arm: ".$stateData."<br>";
         $commands[] = array('NUM' => 100, 'COMMAND' => 'alarm', 'VALUE' => $stateData);
 //debmes($commands, 'megad');
     }
