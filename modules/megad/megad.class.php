@@ -143,32 +143,6 @@ class megad extends module
         if ($_POST['md'] == 'megad' && $_POST['inst'] == 'adm' && $_POST['sourceip']) {
 
 
-            $par = array();
-//debmes($_POST, 'megad');
-            /*
-            if ($_POST['eip']<>'') $par['eip']=$_POST['eip'];
-            if ($_POST['cf']<>'') $par['cf']=$_POST['cf'];
-            if ($_POST['pwd']<>'') $par['pwd']=$_POST['pwd'];
-            if ($_POST['gw']<>'') $par['gw']=$_POST['gw'];
-            if ($_POST['sip']<>'') $par['sip']=$_POST['sip'];
-            if ($_POST['srvt']<>'') $par['srvt']=$_POST['srvt'];
-            if ($_POST['sct']<>'') $par['sct']=$_POST['sct'];
-            if ($_POST['pr']<>'') $par['pr']=$_POST['pr'];
-            if ($_POST['gsm']<>'')  $par['gsm']=$_POST['gsm'];
-            if ($_POST['gsm_num']<>'') $par['gsm_num']=$_POST['gsm_num'];
-            if ($_POST['smst']<>'') $par['smst']=$_POST['smst'];
-            if ($_POST['pty']<>'') $par['pty']=$_POST['pty'];
-            if ($_POST['pn']<>'') $par['pn']=$_POST['pn'];
-
-            if ($_POST['ecmd']<>'') $par['ecmd']=$_POST['ecmd'];
-            if ($_POST['af']<>'') $par['af']=$_POST['af'];
-            if ($_POST['gsmf']<>'') $par['gsmf']=$_POST['gsmf'];
-
-            if ($_POST['grp']<>'') $par['grp']=$_POST['grp'];
-            if ($_POST['m']<>'') $par['m']=$_POST['m'];
-            if ($_POST['d']<>'') $par['d']=$_POST['d'];
-            if ($_POST['gsmf']<>'') $par['gsmf']=$_POST['gsmf'];
-            */
             $par = $_POST;
             unset($par['sourceurl']);
             unset($par['sourceip']);
@@ -183,31 +157,17 @@ class megad extends module
             $pwd = SQLSelectOne('SELECT * FROM megaddevices WHERE IP="' . $sourceip . '"')['PASSWORD'];
 
 
-//debmes('$sourceip:'. $sourceip.'  pwd:'.$pwd, 'megad');
-//debmes('$sourceurl:'. $sourceurl, 'megad');
             $url2 = $_GET['par'];
-//debmes($par,'megad');
-
 
             $cmd = '';
             foreach ($par as $name => $value) {
-//debmes( $name.'='.$value, 'megad');
-//$cmd.='&'.$name.'='.$value;
                 $cmd = $cmd . '&' . $name . '=' . urlencode(trim($value));
             }
-//$cmd=urldecode($cmd);
-
-//$ip=$par['eip'];
-//if ($ip=='') $id=$this->ip;
-
-//debmes($cmd,'megad');
             $newurl = 'http://' . $sourceip . '/' . $pwd . '/' . $cmd;
 
-//debmes('get message '.$newurl,'megad');
             $config = getURL($newurl, 0);
             echo $config;
             $redirect = "?&data_source=&view_mode=edit_megaddevices&id=2&tab=config2&address=" . $par['eip'] . '&par=' . urlencode($sourceurl);
-//debmes('redirect '.$redirect,'megad');
             $this->redirect($redirect);
 
 
@@ -274,11 +234,8 @@ class megad extends module
      */
     function usual(&$out)
     {
-        //$this->admin($out);
         $device = $_GET['device'];
         $command = $_GET['command'];
-
-//        debmes('1$device:'.$device .'$command: '. $command, 'megad');
 
         if ($this->ajax) {
             if ($_GET['op'] == 'processCycle') {
@@ -294,15 +251,11 @@ class megad extends module
 
 
         if ($device && $command) {
-//        debmes('2$device:'.$device .'$command: '. $command, 'megad');
-//        debmes(explode(':',$command)[0], 'megad');
 
             if (explode(':', $command)[0] == '100') {
                 $result = $this->sendAlarm($device, explode(':', $command)[1]);
-//                         	       debmes('sendalarm', 'megad');
             } else {
                 $result = $this->sendCommand($device, $command);
-//                         	       debmes('sendcommand', 'megad');
             }
 
             $this->readValues($device, '', 1);
@@ -424,6 +377,7 @@ class megad extends module
         $properties = SQLSelect("SELECT ID FROM megadproperties WHERE LINKED_OBJECT LIKE '" . DBSafe($object) . "' AND LINKED_PROPERTY LIKE '" . DBSafe($property) . "'");
         $total = count($properties);
         if ($total) {
+            $this->getConfig();
             for ($i = 0; $i < $total; $i++) {
                 $this->setProperty($properties[$i]['ID'], $value);
             }
@@ -679,7 +633,11 @@ class megad extends module
             if ($this->config['API_DEBUG']) {
                 DebMes("Sending command: $url", 'megad');
             }
-            return getURL($url, 0);
+            $response = getURL($url, 0);
+            if ($this->config['API_DEBUG']) {
+                DebMes("Command response: $response", 'megad');
+            }
+            return $response;
         } else {
             return 0;
         }
@@ -688,7 +646,7 @@ class megad extends module
 
     function sendAlarm($id, $command, $custom = false)
     {
-//debmes ('sendAlarm fnc'.$id.' '.$command, 'medag');
+
         $device = SQLSelectOne("SELECT * FROM megaddevices WHERE ID='" . $id . "'");
         if (!$device['ID']) {
             $device = SQLSelectOne("SELECT * FROM megaddevices WHERE TITLE LIKE '" . DBSafe($id) . "'");
@@ -699,9 +657,13 @@ class megad extends module
         if ($device['ID']) {
             $url = 'http://' . $device['IP'] . '/' . $device['PASSWORD'] . '/?cmd=S:' . $command;
             if ($this->config['API_DEBUG']) {
-                DebMes("Sending command: $url", 'megad');
+                DebMes("Sending alarm command: $url", 'megad');
             }
-            return getURL($url, 0);
+            $response = getURL($url, 0);
+            if ($this->config['API_DEBUG']) {
+                DebMes("Alarm command response: $response", 'megad');
+            }
+            return $response;
         } else {
             return 0;
         }

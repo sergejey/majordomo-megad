@@ -11,9 +11,15 @@ if (is_dir(ROOT . 'cms/cached/')) {
 }
 
 $url .= '?ip=' . urlencode($record['IP']) . '&read-conf=' . urlencode($config_file) . '&p=' . urlencode($record['PASSWORD']);
+
 $data = getURL($url.'&local-ip=' . $this->config['API_IP'], 0);
 if (!preg_match('/OK/', $data) && $this->config['API_IP']) {
     $data = getURL($url, 0);
+}
+
+if ($this->config['API_DEBUG']) {
+    DebMes("Config request:\n".$url,'megad');
+    DebMes("Config response:\n".$data,'megad');
 }
 
 if (preg_match('/OK/', $data)) {
