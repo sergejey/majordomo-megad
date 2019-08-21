@@ -580,6 +580,14 @@ class megad extends module
         }
 //debmes($prop, 'megad');
 
+        if ($prop['REVERSE']) {
+            if ($command['VALUE']) {
+                $command['VALUE']=0;
+            } else {
+                $command['VALUE']=1;
+            }
+        }
+
         $old_value = $prop['CURRENT_VALUE_STRING'];
         if (!$prop['ID']) {
             $prop = array();
@@ -682,6 +690,14 @@ class megad extends module
         $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE ID='" . $property_id . "'");
         $prop['CURRENT_VALUE_STRING'] = $value;
         SQLUpdate('megadproperties', $prop);
+
+        if ($prop['REVERSE']) {
+            if ($value) {
+                $value=0;
+            } else {
+                $value=1;
+            }
+        }
 
         $channel = $prop['NUM'];
         if ($prop['COMMAND'] == 'output') { // output
@@ -861,6 +877,7 @@ class megad extends module
  megadproperties: CURRENT_VALUE_STRING varchar(255) NOT NULL DEFAULT ''
  megadproperties: CURRENT_VALUE_STRING2 varchar(255) NOT NULL DEFAULT ''
  megadproperties: COUNTER int(10) NOT NULL DEFAULT '0'
+ megadproperties: REVERSE int(10) NOT NULL DEFAULT '0' 
  megadproperties: LINKED_OBJECT varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_PROPERTY varchar(255) NOT NULL DEFAULT ''
  megadproperties: LINKED_METHOD varchar(255) NOT NULL DEFAULT ''

@@ -116,6 +116,18 @@
         </div>
         [#endif#]
 
+        [#if (PROPERTY_COMMAND=="output") || (PROPERTY_COMMAND=="input")#]
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                Invert value
+            </label>
+            <div class="col-lg-4">
+                <input type="radio" name="reverse" value="1"[#if PROPERTY_REVERSE="1"#] checked[#endif#]> <#LANG_YES#>
+                <input type="radio" name="reverse" value="0"[#if PROPERTY_REVERSE!="1"#] checked[#endif#]> <#LANG_NO#>
+            </div>
+        </div>
+        [#endif#]
+
 
         [#if PROPERTY_COMMAND="alarm"#]
         <div class="form-group">

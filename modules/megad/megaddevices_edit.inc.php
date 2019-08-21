@@ -219,6 +219,7 @@ if ($rec['ID'] && $this->tab == 'data') {
                 $property['NUM'] = gr('num','int');
                 $property['ADD_NUM'] = gr('add_num', 'int');
             }
+            $property['REVERSE'] = gr('reverse','int');
             $property['SKIP_DEFAULT'] = gr('skip_default', 'int');
             $property['COMMENT'] = gr('comment');
             $property['COMMAND'] = gr('command');
