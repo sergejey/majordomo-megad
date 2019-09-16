@@ -249,8 +249,15 @@ class megad extends module
 
         }
 
+ 	if ($device && $_GET['clearalarmwrn']) {
+            $result = $this->clearalarmwrn($device);
+		}
+
+
 
         if ($device && $command) {
+
+
 
             if (explode(':', $command)[0] == '100') {
                 $result = $this->sendAlarm($device, explode(':', $command)[1]);
@@ -450,6 +457,44 @@ class megad extends module
             $at = $_GET['at'];
             $dir = $_GET['dir'];
             $cnt = $_GET['cnt'];
+
+
+
+            if (isset($_GET['sms'])==1) {
+/*                debmes('sms:'.$_GET['sms'],'megad');
+                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM=100 AND COMMAND='alarmwrn'");
+                $prop['COMMAND'] = 'alarmwrn';
+                $prop['NUM'] = '100';
+                $prop['COMMENT'] = 'GSM WARNING ALARM STATUS';
+                $prop['DEVICE_ID'] = $rec['ID'];
+
+                $prop['CURRENT_VALUE_STRING'] ='1';
+*/
+                   $prop['CURRENT_VALUE'] = '1';
+                    $cmd = array('NUM' => 100, 'VALUE' => 1, 'COMMAND' => 'alarmwrn');
+                    $commands[] = $cmd;
+ 
+                    foreach ($commands as $command) {
+                    $this->processCommand($rec['ID'], $command, 1); }
+
+
+/*                if ($prop['ID']) {
+		SQLUpdate('megadproperties',$prop );
+		debmes('sqlupdate', 'megad');
+		debmes($prop, 'megad');
+		} else 
+		{
+		debmes('sqlinsert', 'megad');
+		debmes($prop, 'megad');
+		SQLInsert('megadproperties',$prop );
+		}
+*/
+
+
+
+
+}
+
 
             if (isset($_GET['all'])) {
                 $this->readValues($rec['ID'], $_GET['all']);
@@ -651,6 +696,53 @@ class megad extends module
         }
     }
 
+
+
+    function clearalarmwrn($id)
+    {
+
+            $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $id . "' AND COMMAND='alarmwrn' and NUM=100");
+
+//                   $prop['CURRENT_VALUE'] = '1';
+//                    $cmd = array('NUM' => 100, 'VALUE' => 0, 'COMMAND' => 'alarmwrn');
+//                    $commands[] = $cmd;
+ 
+//                    foreach ($commands as $command) {
+//                    $this->processCommand($id, $command, 0); }
+//                       return 'Cleared';
+
+
+        $old_value = $prop['CURRENT_VALUE_STRING'];
+        if (!$prop['ID']) {
+            $prop = array();
+            $prop['DEVICE_ID'] = $id;
+            $prop['NUM'] = 100;
+            $prop['COMMAND'] = 'alarmwrn';
+            $prop['COMMAND_INDEX'] = '';
+            $prop['CURRENT_VALUE'] = 0;
+            $prop['CURRENT_VALUE_STRING'] = 0;
+            $prop['COMMENT'] = 'GSM WARNING ALARM STATUS';
+            $old_value = $prop['CURRENT_VALUE_STRING'];
+            $prop['UPDATED'] = date('Y-m-d H:i:s');
+            $prop['ID'] = SQLInsert('megadproperties', $prop);
+        }
+
+        $prop['CURRENT_VALUE_STRING'] = $command['VALUE'];
+        if ($old_value != $prop['CURRENT_VALUE_STRING']) {
+            $prop['UPDATED'] = date('Y-m-d H:i:s');
+            $prop['CURRENT_VALUE'] = 0;
+            $prop['CURRENT_VALUE_STRING'] = 0;
+
+            SQLUpdate('megadproperties', $prop);
+        }
+        if ($prop['LINKED_OBJECT'] && $prop['LINKED_PROPERTY']) {
+            if ($old_value != $prop['CURRENT_VALUE_STRING'] || $prop['CURRENT_VALUE_STRING'] != gg($prop['LINKED_OBJECT'] . '.' . $prop['LINKED_PROPERTY'])) {
+                setGlobal($prop['LINKED_OBJECT'] . '.' . $prop['LINKED_PROPERTY'], $prop['CURRENT_VALUE_STRING'], array($this->name => '0'));
+            }
+        }
+
+
+    }
 
     function sendAlarm($id, $command, $custom = false)
     {
