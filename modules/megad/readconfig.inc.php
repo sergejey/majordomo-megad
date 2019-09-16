@@ -164,7 +164,7 @@ if (preg_match_all('/gsm_num=(.+?)' . '&/is', $record['CONFIG'], $m)) {
 //debmes('gms_num:'.$m[1][0], 'megadgsm');
 //debmes($m, 'megadgsm');
 
-if ($m[1][0]) {$command='input'; $port=100;}
+if ($m[1][0]) {$command='raw'; $port=100;}
 
              if ($command !== '') {
                 //echo $port.':'.$type."<br/>";
@@ -187,6 +187,26 @@ if ($m[1][0]) {$command='input'; $port=100;}
                 }
             }
 
+if ($m[1][0]) {$command='alarmwrn'; $port=100;}
+                $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $port . "' AND COMMAND='".$command."'");
+                $prop['COMMAND'] = $command;
+                $prop['NUM'] = $port;
+                $prop['COMMENT'] = 'GSM WARNING ALARM STATUS';
+                $prop['DEVICE_ID'] = $record['ID'];
+                $prop['CURRENT_VALUE'] = '0';
+                $prop['CURRENT_VALUE_STRING'] ='0';
+                if (preg_match('/m=(\d+)/', $line, $m3)) {
+                    $prop['MODE'] = $m[1][0];
+                }
+                if (!$prop['ID']) {
+                    $prop['ID'] = SQLInsert('megadproperties', $prop);
+                } else {
+                    SQLUpdate('megadproperties', $prop);
+                }
+
 }
+
+
+
 
 }
