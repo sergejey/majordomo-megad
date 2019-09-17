@@ -24,6 +24,17 @@
         });
         return false;
     }
+
+    function clearAlarmwrn(device_id, port, port_value, result_id) {
+        var url='<#ROOTHTML#>ajax/megad.html?device='+device_id+'&clearalarmwrn=1';
+        $('#'+result_id).html('...');
+        $.ajax({
+            url: url
+        }).done(function(data) {
+            $('#'+result_id).html(data);
+        });
+        return false;
+    }
 </script>
 
 
