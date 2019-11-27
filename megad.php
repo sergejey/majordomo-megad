@@ -1,13 +1,4 @@
 <?php
-@ini_set('zlib.output_compression', 'Off');
-@ini_set('output_buffering', 'Off');
-@ini_set('output_handler', '');
-
-if (function_exists('apache_setenv')) {
-    @apache_setenv('no-gzip', 1);
-}
-
-
 include_once("./config.php");
 include_once("./lib/loader.php");
 include_once(DIR_MODULES . "application.class.php");
@@ -22,13 +13,23 @@ $megad->getConfig();
 if ($megad->config['API_DEBUG']) {
     DebMes("Request: " . $_SERVER['REQUEST_URI'] . " (" . $_SERVER['REMOTE_ADDR'] . ")", 'megad');
 }
+
 $result = $megad->processRequest();
-if ($result != '') {
-    echo $result;
-}
 if ($megad->config['API_DEBUG']) {
     DebMes("Result: " . $result, 'megad');
 }
 
-$db->Disconnect(); 
+$db->Disconnect();
 
+@ini_set('zlib.output_compression', 'Off');
+@ini_set('output_buffering', 'Off');
+@ini_set('output_handler', '');
+@ini_set('implicit_flush', 1);
+@ob_implicit_flush(true);
+if (function_exists('apache_setenv')) {
+    @apache_setenv('no-gzip', 1);
+}
+header('X-Accel-Buffering: no');
+header('Content-Length: '.strlen($result));
+echo $result;
+flush();

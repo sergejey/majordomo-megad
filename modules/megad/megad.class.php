@@ -407,15 +407,15 @@ class megad extends module
     function processRequest()
     {
 
-        global $mdid;
-        global $st;
 
+        $mdid = gr('mdid');
+        $st = gr('st');
         $ip = $_SERVER['REMOTE_ADDR'];
 
         $ecmd = '';
 
         if ($mdid) {
-            $rec = SQLSelectOne("SELECT * FROM megaddevices WHERE MDID LIKE '" . trim($mdid) . "%'");
+            $rec = SQLSelectOne("SELECT * FROM megaddevices WHERE MDID='" . trim($mdid) . "'");
         }
 
         if ($st == '1' && $rec['ID']) {
@@ -426,6 +426,9 @@ class megad extends module
 
         if (!$rec['ID']) {
             $rec = SQLSelectOne("SELECT * FROM megaddevices WHERE IP='" . $ip . "'");
+            if ($this->config['API_DEBUG']) {
+                debmes('found by ip '.$rec['ID'],'megad');
+            }
         }
 
 
@@ -509,8 +512,14 @@ class megad extends module
                     $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM='" . DBSafe($pt) . "' AND COMMAND!='counter'");
                 }
                 if ($prop['ID']) {
+
                     if ($prop['ECMD'] && !($prop['SKIP_DEFAULT'])) {
-                        $ecmd = $prop['ECMD'];
+                        if ($rec['DEFAULT_BEHAVIOR']==0) {
+                            $ecmd = $prop['ECMD'];
+                        }
+                        if ($rec['DEFAULT_BEHAVIOR']==1) {
+                            $ecmd = 'd';
+                        }
                     }
                     if (isset($v)) {
                         $cmd = array('NUM' => $pt, 'VALUE' => $v, 'COMMAND' => $prop['COMMAND']);
@@ -623,7 +632,17 @@ class megad extends module
         } else {
             $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $device_id . "' AND COMMAND='" . $command['COMMAND'] . "' AND COMMAND_INDEX=" . (int)$command['INDEX']);
         }
-//debmes($prop, 'megad');
+
+        /*
+        if ($this->config['API_DEBUG']) {
+            debmes('Processing command: '.json_encode($command),'megad');
+            if ($prop['ID']) {
+                debmes('Prop ID: '.($prop['ID']),'megad');
+            } else {
+                debmes('New property','megad');
+            }
+        }
+        */
 
         if ($prop['REVERSE']) {
             if ($command['VALUE']) {
@@ -953,6 +972,7 @@ class megad extends module
  megaddevices: PASSWORD varchar(255) NOT NULL DEFAULT ''
  megaddevices: ADDRESS int(3) NOT NULL DEFAULT '0'
  megaddevices: I2C_VERSION int(1) NOT NULL DEFAULT '0' 
+ megaddevices: DEFAULT_BEHAVIOR int(1) NOT NULL DEFAULT '0' 
  megaddevices: UPDATE_PERIOD int(10) NOT NULL DEFAULT '0'
  megaddevices: NEXT_UPDATE datetime
  megaddevices: CONFIG text

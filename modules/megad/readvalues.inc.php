@@ -76,7 +76,7 @@ $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record
 if (!$quick && $prop['ID']) {
     $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?tget=1';
     $stateData = getURL($url, 0);
-    if ($stateData != '') {
+    if (is_numeric($stateData)) {
         $commands[] = array('NUM' => 0, 'COMMAND' => 'inttemp', 'VALUE' => $stateData);
     }
 }

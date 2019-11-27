@@ -45,6 +45,7 @@ if ($this->mode == 'update') {
         $rec['UPDATE_PERIOD'] = (int)$update_period;
 
         $rec['I2C_VERSION']=gr('i2c_version','int');
+        $rec['DEFAULT_BEHAVIOR'] = gr('default_behavior','int');
 
         $rec['NEXT_UPDATE'] = date('Y-m-d H:i:s', time() + $rec['UPDATE_PERIOD']);
 
