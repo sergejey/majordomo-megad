@@ -32,4 +32,4 @@ if (function_exists('apache_setenv')) {
 header('X-Accel-Buffering: no');
 header('Content-Length: '.strlen($result));
 echo $result;
-flush();
+//flush();
