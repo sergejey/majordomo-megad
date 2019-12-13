@@ -598,7 +598,7 @@ class megad extends module
             $mega_id = $rec['ID'];
             $url = BASE_URL . '/ajax/megad.html?op=readvalues&device=' . $mega_id;
             $code = 'getURL("' . $url . '",0);';
-            setTimeOut('mega_refresh_' . $mega_id, $code, 1);
+            setTimeOut('mega_refresh_' . $mega_id, $code, 10);
         }
         return $ecmd;
     }
