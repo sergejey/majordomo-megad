@@ -394,6 +394,7 @@ class megad extends module
 
     function processCycle()
     {
+        $this->getConfig();
         $this->updateDevices();
     }
 
