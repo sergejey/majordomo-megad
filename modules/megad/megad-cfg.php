@@ -55,6 +55,8 @@ else
         }
 }
 
+echo "Local ip: $local_ip\n";
+
 $broadcast_ip = preg_replace("/(\d+)\.(\d+)\.(\d+)\.(\d+)/", "$1.$2.$3.255", $local_ip);
 
 $socket = stream_socket_server("udp://$local_ip:42000", $errno, $errstr, STREAM_SERVER_BIND);
@@ -533,7 +535,7 @@ if ( (array_key_exists('ip', $options) && array_key_exists('new-ip', $options)) 
 if ( array_key_exists('write-conf', $options) && $conf_flag == 1 )
 {
         echo "Writing configuration... ";
-
+        set_time_limit(120);
         $wconf = file($options['write-conf']);
         for ( $i = 0; $i < count($wconf); $i++ )
         {
@@ -559,6 +561,9 @@ if ( array_key_exists('write-conf', $options) && $conf_flag == 1 )
                 {
                         file_get_contents("http://".$options['ip']."/".$options['p']."/?".$wconf[$i]);
                         usleep(100000);
+                }
+                if (preg_match('/&eip=(.+?)&/',$wconf[$i],$m)) {
+                        $options['ip']=$m[1];
                 }
         }
 
