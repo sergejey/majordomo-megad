@@ -24,6 +24,7 @@ if ($this->mode == 'update') {
         global $mdid;
         $rec['MDID'] = $mdid;
 
+        $rec['RESTORE_ON_REBOOT'] = gr('restore_on_reboot','int');
 
         //updating 'IP' (varchar)
         global $ip;

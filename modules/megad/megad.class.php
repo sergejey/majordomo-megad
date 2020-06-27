@@ -419,7 +419,7 @@ class megad extends module
             $rec = SQLSelectOne("SELECT * FROM megaddevices WHERE MDID='" . trim($mdid) . "'");
         }
 
-        if ($st == '1' && $rec['ID']) {
+        if ($st == '1' && $rec['ID'] && $rec['RESTORE_ON_REBOOT']) {
             //restore on start
             $this->restoreDeviceStatus($rec['ID']);
             return;
@@ -974,6 +974,7 @@ class megad extends module
  megaddevices: ADDRESS int(3) NOT NULL DEFAULT '0'
  megaddevices: I2C_VERSION int(1) NOT NULL DEFAULT '0' 
  megaddevices: DEFAULT_BEHAVIOR int(1) NOT NULL DEFAULT '0' 
+ megaddevices: RESTORE_ON_REBOOT int(1) NOT NULL DEFAULT '0'
  megaddevices: UPDATE_PERIOD int(10) NOT NULL DEFAULT '0'
  megaddevices: NEXT_UPDATE datetime
  megaddevices: CONFIG text
