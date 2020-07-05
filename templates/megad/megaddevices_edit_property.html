@@ -21,7 +21,14 @@
                 <#LANG_PORT#>[#if I2C="1"#] SCL[#endif#]:
                     (*)
             </label>
-            <div class="col-lg-4"><input type="text" class="form-control" name="num" value="[#PROPERTY_NUM#]" required></div>
+            <div class="col-lg-4">
+                [#if PROPERTY_COMMAND_INDEX!="0" && PROPERTY_COMMAND_INDEX!=""#]
+                [#PROPERTY_NUM#].[#PROPERTY_COMMAND_INDEX#]
+                <input type="hidden" name="num" value="[#PROPERTY_NUM#]">
+                [#else#]
+                 <input type="text" class="form-control" name="num" value="[#PROPERTY_NUM#]" required>
+                [#endif#]
+            </div>
         </div>
 
         [#if NEED_ADD_PORT="1"#]
@@ -33,12 +40,32 @@
         </div>
         [#endif#]
 
+        [#if NEED_ADD_INT="1"#]
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                <#LANG_PORT#> INT:
+            </label>
+            <div class="col-lg-4"><input type="text" class="form-control" name="add_int" value="[#PROPERTY_ADD_INT#]"></div>
+        </div>
+        [#endif#]
+
         <div class="form-group">
             <label class="col-lg-3 control-label">
                 <#LANG_NOTES#>:
             </label>
             <div class="col-lg-4"><input type="text" class="form-control" name="comment" value="[#PROPERTY_COMMENT#]"></div>
         </div>
+
+        [#if PROPERTY_COMMAND_INDEX!="0" && PROPERTY_COMMAND_INDEX!=""#]
+        <div class="form-group">
+            <label class="col-lg-3 control-label">
+                <#LANG_TYPE#>:
+                    (*)
+            </label>
+            <div class="col-lg-4">[#PROPERTY_COMMAND#]</div>
+            <input type="hidden" name="command" value="[#PROPERTY_COMMAND#]">
+        </div>
+        [#else PROPERTY_COMMAND_INDEX#]
 
         [#if NEW_PROPERTY!="1"#]
         <div class="form-group">
@@ -82,8 +109,9 @@
                     <option value="humidity"[#if PROPERTY_COMMAND="humidity"#] selected[#endif#]>Humidity</option>
                     <option value="wiegand"[#if PROPERTY_COMMAND="wiegand"#] selected[#endif#]>Wiegand</option>
                     <option value="ibutton"[#if PROPERTY_COMMAND="ibutton"#] selected[#endif#]>IButton</option>
-                    <option value="i2c"[#if PROPERTY_COMMAND="i2c"#] selected[#endif#]>I2C</option>
-                    <option value="i2c_htu21d"[#if PROPERTY_COMMAND="i2c_htu21d"#] selected[#endif#]>I2C htu21d</option>
+                    <option value="i2c"[#if PROPERTY_COMMAND="i2c"#] selected[#endif#]>I2C (SCL)</option>
+                    <option value="i2c_htu21d"[#if PROPERTY_COMMAND="i2c_htu21d"#] selected[#endif#]>I2C htu21d (SCL)</option>
+                    <option value="i2c_16i_xt"[#if PROPERTY_COMMAND="i2c_16i_xt"#] selected[#endif#]>I2C MegaD-16I-XT (SCL)</option>
                     <option value="i2c_bmp180"[#if PROPERTY_COMMAND="i2c_bmp180"#] selected[#endif#]>I2C bmp180 (coming soon)</option>
                     <option value="i2c_tsl2591"[#if PROPERTY_COMMAND="i2c_tsl2591"#] selected[#endif#]>I2C tsl2591 (coming soon)</option>
                     <option value="i2c_ssd1306"[#if PROPERTY_COMMAND="i2c_ssd1306"#] selected[#endif#]>I2C ssd1306 (coming soon)</option>
@@ -93,6 +121,7 @@
                 </select>
             </div>
         </div>
+        [#endif PROPERTY_COMMAND_INDEX#]
         <div class="form-group">
             <label class="col-lg-3 control-label">
                 <#LANG_VALUE#>:

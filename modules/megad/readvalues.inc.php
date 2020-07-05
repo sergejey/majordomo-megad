@@ -113,6 +113,7 @@ if (!$quick && $stateData != '' && $i2c_properties[0]['ID']) {
     foreach ($i2c_properties as $property) {
         $scl = $property['NUM'];
         $sda = $property['ADD_NUM'];
+        if (!$scl || !$sda) continue;
         $i2c_com = new i2c_com('http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?', $scl, $sda, $record['I2C_VERSION']);
         if ($property['COMMAND'] == 'i2c_htu21d') {
             include_once(DIR_MODULES . $this->name . '/libs/i2c_htu21d.inc.php');
@@ -123,6 +124,21 @@ if (!$quick && $stateData != '' && $i2c_properties[0]['ID']) {
                 if (is_numeric($humidity)) {
                     $hum_compensated = round($humidity + (25 - $temperature) * -0.15, 2);
                     $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
+                }
+            }
+        } elseif ($property['COMMAND'] == 'i2c_16i_xt') {
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&cmd=get';
+            $data = getURL($url);
+            $ar = explode(';',$data);
+            $totalc = count($ar);
+            if ($totalc==16) {
+                for($ic=0;$ic<$totalc;$ic++) {
+                    if ($ar[$ic]=='ON') {
+                        $v=1;
+                    } else {
+                        $v=0;
+                    }
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'input', 'INDEX' => ($ic+1), 'VALUE' => $v);
                 }
             }
         }

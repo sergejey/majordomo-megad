@@ -505,15 +505,25 @@ class megad extends module
                 return;
             }
 
+
             $commands = array();
             //input data changed
-            if (isset($pt)) {
+            if (isset($pt) && preg_match('/ext(\d+)=(\d+)/',$_SERVER['REQUEST_URI'],$m)) {
+                // extender port input
+                $ext_prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND ADD_INT='" . (int)$pt . "'");
+                if ($ext_prop['ID']) {
+                    $idx = (int)$m[1];
+                    $value = $m[2];
+                    $cmd = array('NUM' => $ext_prop['NUM'], 'INDEX' => $idx + 1, 'VALUE' => $value, 'COMMAND' => 'input');
+                    $commands[] = $cmd;
+                }
+                $ecmd = 'd';
+            } elseif (isset($pt)) {
                 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM='" . DBSafe($pt) . "' AND COMMAND='input'");
                 if (!$prop['ID']) {
                     $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM='" . DBSafe($pt) . "' AND COMMAND!='counter'");
                 }
                 if ($prop['ID']) {
-
                     if ($prop['ECMD'] && !($prop['SKIP_DEFAULT'])) {
                         if ($rec['DEFAULT_BEHAVIOR']==0) {
                             $ecmd = $prop['ECMD'];
@@ -987,6 +997,7 @@ class megad extends module
  megadproperties: COMMAND_INDEX int(3) NOT NULL DEFAULT '0'
  megadproperties: NUM int(3) NOT NULL DEFAULT '0'
  megadproperties: ADD_NUM int(3) NOT NULL DEFAULT '0' 
+ megadproperties: ADD_INT int(3) NOT NULL DEFAULT '0'
  megadproperties: CURRENT_VALUE int(10) NOT NULL DEFAULT '0'
  megadproperties: CURRENT_VALUE_STRING varchar(255) NOT NULL DEFAULT ''
  megadproperties: CURRENT_VALUE_STRING2 varchar(255) NOT NULL DEFAULT ''

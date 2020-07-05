@@ -207,6 +207,9 @@ if ($rec['ID'] && $this->tab == 'data') {
     if ($property_id) {
         $property = SQLSelectOne("SELECT * FROM megadproperties WHERE ID=" . (int)$property_id);
         if ($this->mode == 'delete') {
+            if ($property['INDEX']==0) {
+                SQLExec("DELETE FROM megadproperties WHERE NUM=".$property['NUM']);
+            }
             SQLExec("DELETE FROM megadproperties WHERE ID=".$property['ID']);
             $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
         }
@@ -221,6 +224,7 @@ if ($rec['ID'] && $this->tab == 'data') {
                 $property['NUM'] = gr('num','int');
                 $property['ADD_NUM'] = gr('add_num', 'int');
             }
+            $property['ADD_INT'] = gr('add_int', 'int');
             $property['REVERSE'] = gr('reverse','int');
             $property['SKIP_DEFAULT'] = gr('skip_default', 'int');
             $property['COMMENT'] = gr('comment');
@@ -245,6 +249,9 @@ if ($rec['ID'] && $this->tab == 'data') {
             $out['NEED_ADD_PORT']=1;
             $out['I2C']=1;
         }
+        if ($property['COMMAND']=='i2c_16i_xt') {
+            $out['NEED_ADD_INT']=1;
+        }
         //
         if ($property['LINKED_OBJECT']) {
             addLinkedProperty($property['LINKED_OBJECT'], $property['LINKED_PROPERTY'], $this->name);
@@ -257,8 +264,8 @@ if ($rec['ID'] && $this->tab == 'data') {
             $out['NEW_PROPERTY']=1;
         }
         $out['PROPERTY_ID']=$property_id;
-        if ($this->mode == 'update') {
-            //$this->readValues($rec['ID']);
+        if ($this->mode == 'update' && $out['I2C'] && $property['ADD_NUM']) {
+            $this->readValues($rec['ID']);
         }
     }
     $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, COMMAND");
