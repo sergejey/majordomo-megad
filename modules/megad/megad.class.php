@@ -508,12 +508,12 @@ class megad extends module
 
             $commands = array();
             //input data changed
-            if (isset($pt) && preg_match('/ext(\d+)=(\d+)/',$_SERVER['REQUEST_URI'],$m)) {
+            if (isset($pt) && preg_match('/ext(\d+)=(\d+)/',$_SERVER['REQUEST_URI'],$matches)) {
                 // extender port input
                 $ext_prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=" . $rec['ID'] . " AND ADD_INT='" . (int)$pt . "'");
                 if ($ext_prop['ID']) {
-                    $idx = (int)$m[1];
-                    $value = $m[2];
+                    $idx = (int)$matches[1];
+                    $value = $matches[2];
                     $cmd = array('NUM' => $ext_prop['NUM'], 'INDEX' => $idx + 1, 'VALUE' => $value, 'COMMAND' => 'input');
                     $commands[] = $cmd;
                 }
@@ -545,7 +545,6 @@ class megad extends module
                             $value = 1;
                             $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => 'release');
                             $commands[] = $cmd;
-
                             $value = 0;
                             $cmd = array('NUM' => $pt, 'VALUE' => $value, 'COMMAND' => $prop['COMMAND']);
                             $prop['CURRENT_VALUE_STRING'] = $value;
