@@ -299,10 +299,40 @@ class megad extends module
     function gethttpmessage($ip, $cmd)
     {
 
+        $device = SQLSelectOne("SELECT * FROM megaddevices WHERE IP='".$ip."'");
+
         $config = getURL($ip . $cmd, 0);
         $new = $config;
 
-        $new = preg_replace('/<a href=(.+?)>/i', '<a href="?data_source=&view_mode=edit_megaddevices&id=' . $this->id . '&tab=config2&address=' . $ip . '&par=$1">', $new);
+        if (preg_match_all('/<a href=(.+?)>/i',$new,$m)) {
+            $total = count($m[0]);
+            for($i=0;$i<$total;$i++) {
+                $new=str_replace($m[0][$i],'<a href="?data_source=&view_mode=edit_megaddevices&id=' . $this->id . '&tab=config2&address=' . $ip . '&par='.urlencode($m[1][$i]).'">',$new);
+            }
+        }
+
+        if ($device['ID'] && preg_match_all('/P(\d+).*? - (.+?)<\/a>/',$new,$m)) {
+            $total = count($m[0]);
+            for($i=0;$i<$total;$i++) {
+                $line = $m[0][$i];
+                $num = $m[1][$i];
+                $pin = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=".$device['ID']." AND COMMAND_INDEX=0 AND NUM=".(int)$num);
+                if ($pin['ID']) {
+                    //$line.=' '.$pin['ID'];
+                    if ($pin['LINKED_OBJECT']) {
+                        $object_rec=SQLSelectOne("SELECT TITLE,DESCRIPTION FROM objects WHERE TITLE='".DBSafe($pin['LINKED_OBJECT'])."'");
+                        $title = $object_rec['TITLE'];
+                        if ($object_rec['DESCRIPTION']) {
+                            $title.=' - '.$object_rec['DESCRIPTION'];
+                        }
+                        $line.=' [<a href="?view_mode=edit_megaddevices&tab=data&id='.$device['ID'].'&property_id='.$pin['ID'].'">'.$title.'</a>]';
+                    }
+                    $new = str_replace($m[0][$i],$line,$new);
+                }
+            }
+        }
+
+        //$new = preg_replace('/<a href=(.+?)>/i', '<a href="?data_source=&view_mode=edit_megaddevices&id=' . $this->id . '&tab=config2&address=' . $ip . '&par=$1">', $new);
 
         $new = preg_replace('/<form action=(.+?)>/i', '<form action="?" method="post" class="form" enctype="multipart/form-data" name="frmEdit">', $new);
 
@@ -323,7 +353,7 @@ class megad extends module
         $new = preg_replace('/checkbox name=naf.+?>/is','\0 Naf <a href="#" onclick="return showMegaDHelp(\'naf\');"><i class="glyphicon glyphicon-info-sign"></i></a><br/>',$new);
         $new = preg_replace('/checkbox name=misc.+?>/is','\0 Misc <a href="#" onclick="return showMegaDHelp(\'misc\');"><i class="glyphicon glyphicon-info-sign"></i></a><br/>',$new);
 
-        $new = str_replace('<input type=submit value=Save>', '<input type=submit class="btn btn-default btn-primary" value=Save><input type="hidden" name="sourceurl" value="' . $cmd . '"><input type="hidden" name="sourceip" value="' . $ip . '">', $new);
+        $new = str_replace('<input type=submit value=Save>', '<input type=submit class="btn btn-default btn-primary" value=Save><input type="hidden" name="sourceurl" value="' . $cmd . '"><input type="hidden" name="sourceip" value="' . $ip . '"><input type="hidden" name="view_mode" value="'.$this->view_mode.'"><input type="hidden" name="tab" value="'.$this->tab.'"><input type="hidden" name="id" value="'.$device['ID'].'">', $new);
 
         return $new;
 

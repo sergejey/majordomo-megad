@@ -105,7 +105,7 @@ if ($this->tab=='config2')
 if ($address=='') $address=$rec['IP'];
 if ($par=='') $par='/'.$rec['PASSWORD'];
 
-$data=$this->gethttpmessage($address,$par); 
+$data=$this->gethttpmessage($address,$par);
 
 
 //$data=$this->gethttpmessage($rec['IP'], '/'. $rec['PASSWORD']);
