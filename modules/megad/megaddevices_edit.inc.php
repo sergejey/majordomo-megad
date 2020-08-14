@@ -208,7 +208,7 @@ if ($rec['ID'] && $this->tab == 'data') {
         $property = SQLSelectOne("SELECT * FROM megadproperties WHERE ID=" . (int)$property_id);
         if ($this->mode == 'delete') {
             if ($property['INDEX']==0) {
-                SQLExec("DELETE FROM megadproperties WHERE NUM=".$property['NUM']);
+                SQLExec("DELETE FROM megadproperties WHERE NUM=".$property['NUM']." AND DEVICE_ID=".(int)$property['DEVICE_ID']);
             }
             SQLExec("DELETE FROM megadproperties WHERE ID=".$property['ID']);
             $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
