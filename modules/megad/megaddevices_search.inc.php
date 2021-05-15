@@ -1,5 +1,13 @@
 <?php
 
+$go_linked_object=gr('go_linked_object');
+$go_linked_property=gr('go_linked_property');
+if ($go_linked_object && $go_linked_property) {
+ $tmp = SQLSelectOne("SELECT ID, DEVICE_ID FROM megadproperties WHERE LINKED_OBJECT = '".DBSafe($go_linked_object)."' AND LINKED_PROPERTY='".DBSafe($go_linked_property)."'");
+ if ($tmp['ID']) {
+  $this->redirect("?id=".$tmp['ID']."&view_mode=edit_megaddevices&id=".$tmp['DEVICE_ID']."&tab=data&property_id=".$tmp['ID']);
+ }
+}
 
 /*
 * @version 0.1 (wizard)
