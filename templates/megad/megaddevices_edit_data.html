@@ -41,14 +41,14 @@
   [#if TYPE="255"#]NC[#endif#]
    #-->
    [#if COMMAND="output"#]
-   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],1,'result[#ID#]');">ON</a> |
-   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],0,'result[#ID#]');">OFF</a>
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],'[#PROPERTY_PORT#]',1,'result[#ID#]');">ON</a> |
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],'[#PROPERTY_PORT#]',0,'result[#ID#]');">OFF</a>
    <span id="result[#ID#]"></span>
    [#endif#]
 
 [#if COMMAND="alarm"#]
-   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],1,'result[#ID#]');">ON</a> |
-   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],[#NUM#],0,'result[#ID#]');">OFF</a>
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],'[#PROPERTY_PORT#]',1,'result[#ID#]');">ON</a> |
+   <a href="#" onclick="return switchMegaDDevice([#DEVICE_ID#],'[#PROPERTY_PORT#]',0,'result[#ID#]');">OFF</a>
    <span id="result[#ID#]"></span>
    [#endif#]
 

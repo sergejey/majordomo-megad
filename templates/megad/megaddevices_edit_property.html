@@ -18,7 +18,7 @@
 
         <div class="form-group">
             <label class="col-lg-3 control-label"[#if ERR_PORT#] style="color:red;font-weight:bold"[#endif#]>
-                <#LANG_PORT#>[#if I2C="1"#] SCL[#endif#]:
+                <#LANG_PORT#>[#if I2C="1"#] SDA[#endif#]:
                     (*)
             </label>
             <div class="col-lg-4">
@@ -34,7 +34,7 @@
         [#if NEED_ADD_PORT="1"#]
         <div class="form-group">
             <label class="col-lg-3 control-label">
-                <#LANG_PORT#> [#if I2C="1"#] SDA[#else#](add.)[#endif#]:
+                <#LANG_PORT#> [#if I2C="1"#] SCL[#else#](add.)[#endif#]:
             </label>
             <div class="col-lg-4"><input type="text" class="form-control" name="add_num" value="[#PROPERTY_ADD_NUM#]"></div>
         </div>
@@ -109,12 +109,17 @@
                     <option value="humidity"[#if PROPERTY_COMMAND="humidity"#] selected[#endif#]>Humidity</option>
                     <option value="wiegand"[#if PROPERTY_COMMAND="wiegand"#] selected[#endif#]>Wiegand</option>
                     <option value="ibutton"[#if PROPERTY_COMMAND="ibutton"#] selected[#endif#]>IButton</option>
-                    <option value="i2c"[#if PROPERTY_COMMAND="i2c"#] selected[#endif#]>I2C (SCL)</option>
-                    <option value="i2c_htu21d"[#if PROPERTY_COMMAND="i2c_htu21d"#] selected[#endif#]>I2C htu21d (SCL)</option>
-                    <option value="i2c_16i_xt"[#if PROPERTY_COMMAND="i2c_16i_xt"#] selected[#endif#]>I2C MegaD-16I-XT (SCL)</option>
+                    <!--#
+                    <option value="i2c_sda"[#if PROPERTY_COMMAND="i2c_sda"#] selected[#endif#]>I2C (SDA)</option>
+                    #-->
+                    <option value="i2c_htu21d_sda"[#if PROPERTY_COMMAND="i2c_htu21d_sda"#] selected[#endif#]>I2C htu21d (SDA)</option>
+                    <option value="i2c_16i_xt_sda"[#if PROPERTY_COMMAND="i2c_16i_xt_sda"#] selected[#endif#]>I2C MegaD-16I-XT Inputs (SDA)</option>
+                    <option value="i2c_16ir_xt_sda"[#if PROPERTY_COMMAND="i2c_16ir_xt_sda"#] selected[#endif#]>I2C MegaD-16IR-XT Relays (SDA)</option>
+                    <!--#
                     <option value="i2c_bmp180"[#if PROPERTY_COMMAND="i2c_bmp180"#] selected[#endif#]>I2C bmp180 (coming soon)</option>
                     <option value="i2c_tsl2591"[#if PROPERTY_COMMAND="i2c_tsl2591"#] selected[#endif#]>I2C tsl2591 (coming soon)</option>
                     <option value="i2c_ssd1306"[#if PROPERTY_COMMAND="i2c_ssd1306"#] selected[#endif#]>I2C ssd1306 (coming soon)</option>
+                    #-->
                     <option value="inttemp"[#if PROPERTY_COMMAND="inttemp"#] selected[#endif#]>Internal temp. sensor</option>
                     <option value="raw"[#if PROPERTY_COMMAND="raw"#] selected[#endif#]>RAW command</option>
                     <option value="alarm"[#if PROPERTY_COMMAND="alarm"#] selected[#endif#]>ALARM</option>
@@ -139,8 +144,8 @@
                 &nbsp;
             </label>
             <div class="col-lg-4">
-                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],[#PROPERTY_NUM#],1,'switchResult[#PROPERTY_ID#]');">ON</a> |
-                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],[#PROPERTY_NUM#],0,'switchResult[#PROPERTY_ID#]');">OFF</a>
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],'[#PROPERTY_PORT#]',1,'switchResult[#PROPERTY_ID#]');">ON</a> |
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],'[#PROPERTY_PORT#]',0,'switchResult[#PROPERTY_ID#]');">OFF</a>
                 <span  id="switchResult[#PROPERTY_ID#]"></span>
             </div>
         </div>

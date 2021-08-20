@@ -850,7 +850,12 @@ class megad extends module
             }
         }
 
-        $channel = $prop['NUM'];
+        if ($prop['COMMAND_INDEX']>0) {
+            $channel=$prop['NUM'].'e'.((int)$prop['COMMAND_INDEX']-1);
+        } else {
+            $channel=$prop['NUM'];
+        }
+
         if ($prop['COMMAND'] == 'output') { // output
             $this->sendCommand($prop['DEVICE_ID'], $channel . ':' . $value);
         } elseif ($prop['COMMAND'] == 'raw') { // raw command

@@ -252,6 +252,14 @@ if ($rec['ID'] && $this->tab == 'data') {
         if ($property['COMMAND']=='i2c_16i_xt') {
             $out['NEED_ADD_INT']=1;
         }
+
+        if ($property['COMMAND_INDEX']>0) {
+            $out['PROPERTY_PORT']=$property['NUM'].'e'.((int)$property['COMMAND_INDEX']-1);
+        } else {
+            $out['PROPERTY_PORT']=$property['NUM'];
+        }
+
+
         //
         if ($property['LINKED_OBJECT']) {
             addLinkedProperty($property['LINKED_OBJECT'], $property['LINKED_PROPERTY'], $this->name);
@@ -264,13 +272,18 @@ if ($rec['ID'] && $this->tab == 'data') {
             $out['NEW_PROPERTY']=1;
         }
         $out['PROPERTY_ID']=$property_id;
-        if ($this->mode == 'update' && $out['I2C'] && $property['ADD_NUM']) {
+        if ($this->mode == 'update' && $out['I2C']) {
             $this->readValues($rec['ID']);
         }
     }
     $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, COMMAND");
     $total = count($properties);
     for ($i = 0; $i < $total; $i++) {
+        if ($properties[$i]['COMMAND_INDEX']>0) {
+            $properties[$i]['PROPERTY_PORT']=$properties[$i]['NUM'].'e'.((int)$properties[$i]['COMMAND_INDEX']-1);
+        } else {
+            $properties[$i]['PROPERTY_PORT']=$properties[$i]['NUM'];
+        }
         if ($properties[$i]['ID']==$out['PROPERTY_ID']) {
             $properties[$i]['SELECTED']=1;
         }
