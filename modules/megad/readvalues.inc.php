@@ -113,10 +113,10 @@ if (!$quick && $prop['ID']) {
 
 $i2c_properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND COMMAND LIKE 'i2c%' ORDER BY NUM");
 if ($stateData != '' && $i2c_properties[0]['ID']) {
-    include_once(DIR_MODULES . $this->name . '/libs/i2c_com.class.php');
-    include_once(DIR_MODULES . $this->name . '/libs/i2c_functions.inc.php');
     foreach ($i2c_properties as $property) {
-        if ($property['COMMAND'] == 'i2c_htu21d_sda') {
+        if (!$quick && $property['COMMAND'] == 'i2c_htu21d_sda') {
+            include_once(DIR_MODULES . $this->name . '/libs/i2c_com.class.php');
+            include_once(DIR_MODULES . $this->name . '/libs/i2c_functions.inc.php');
             $sda = $property['NUM'];
             $scl = $property['ADD_NUM'];
             if (!$scl || !$sda) continue;
@@ -131,7 +131,9 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
                     $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
                 }
             }
-        } elseif ($property['COMMAND'] == 'i2c_htu21d') {
+        } elseif (!$quick && $property['COMMAND'] == 'i2c_htu21d') {
+            include_once(DIR_MODULES . $this->name . '/libs/i2c_com.class.php');
+            include_once(DIR_MODULES . $this->name . '/libs/i2c_functions.inc.php');
             $sda = $property['ADD_NUM'];
             $scl = $property['NUM'];
             if (!$scl || !$sda) continue;
@@ -197,7 +199,6 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
 
 foreach ($commands as $command) {
     $this->processCommand($record['ID'], $command);
-
 }
 
 if ($_GET['debug']) {

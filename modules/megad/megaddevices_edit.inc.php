@@ -249,7 +249,7 @@ if ($rec['ID'] && $this->tab == 'data') {
             $out['NEED_ADD_PORT']=1;
             $out['I2C']=1;
         }
-        if ($property['COMMAND']=='i2c_16i_xt') {
+        if ($property['COMMAND']=='i2c_16i_xt' || $property['COMMAND']=='i2c_16i_xt_sda') {
             $out['NEED_ADD_INT']=1;
         }
 
