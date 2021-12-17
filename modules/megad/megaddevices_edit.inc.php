@@ -99,8 +99,22 @@ if ($this->tab=='config2')
 
 //$new=str_replace( 'href=/','href='.$rec['IP'].'/', $config);
 
-        $address = $_GET['address'];
-        $par = $_GET['par'];
+//dprint($_POST);
+
+$address = $_GET['address'];
+$par = $_GET['par'];
+
+if ($_GET['submit']) {
+    $new_url='';
+    foreach($_GET as $k=>$v) {
+        if (!in_array($k,array('submit','par','address','view_mode','tab','id','pd','md','inst'))) {
+            $new_url.='&'.$k.'='.urlencode($v);
+        }
+    }
+    if ($new_url!='') {
+        $par.='?'.$new_url;
+    }
+}
 
 if ($address=='') $address=$rec['IP'];
 if ($par=='') $par='/'.$rec['PASSWORD'];

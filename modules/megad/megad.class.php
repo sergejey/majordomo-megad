@@ -334,7 +334,12 @@ class megad extends module
 
         //$new = preg_replace('/<a href=(.+?)>/i', '<a href="?data_source=&view_mode=edit_megaddevices&id=' . $this->id . '&tab=config2&address=' . $ip . '&par=$1">', $new);
 
-        $new = preg_replace('/<form action=(.+?)>/i', '<form action="?" method="post" class="form" enctype="multipart/form-data" name="frmEdit">', $new);
+        if (preg_match('/<form action=(.+?)>/is',$new,$m)) {
+            $cmd = $m[1];
+            $new = preg_replace('/<form action=(.+?)>/i', '<form action="?" method="get" class="form" enctype="multipart/form-data" name="frmEdit">', $new);
+            $new = str_replace('<input type=submit value=Save>', '<input type=submit name="submit" class="btn btn-default btn-primary" value=Save><input type="hidden" name="par" value="' . $cmd . '"><input type="hidden" name="address" value="' . $ip . '"><input type="hidden" name="view_mode" value="'.$this->view_mode.'"><input type="hidden" name="tab" value="'.$this->tab.'"><input type="hidden" name="id" value="'.$device['ID'].'">', $new);
+        }
+
 
         $new = preg_replace('/<input name=/is', '<input class="form-control" name=', $new);
         $new = preg_replace('/<input size=/is', '<input class="form-control" size=', $new);
@@ -353,7 +358,6 @@ class megad extends module
         $new = preg_replace('/checkbox name=naf.+?>/is','\0 Naf <a href="#" onclick="return showMegaDHelp(\'naf\');"><i class="glyphicon glyphicon-info-sign"></i></a><br/>',$new);
         $new = preg_replace('/checkbox name=misc.+?>/is','\0 Misc <a href="#" onclick="return showMegaDHelp(\'misc\');"><i class="glyphicon glyphicon-info-sign"></i></a><br/>',$new);
 
-        $new = str_replace('<input type=submit value=Save>', '<input type=submit class="btn btn-default btn-primary" value=Save><input type="hidden" name="sourceurl" value="' . $cmd . '"><input type="hidden" name="sourceip" value="' . $ip . '"><input type="hidden" name="view_mode" value="'.$this->view_mode.'"><input type="hidden" name="tab" value="'.$this->tab.'"><input type="hidden" name="id" value="'.$device['ID'].'">', $new);
 
         return $new;
 
