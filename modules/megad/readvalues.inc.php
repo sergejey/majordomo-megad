@@ -131,6 +131,18 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
                     $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
                 }
             }
+        } elseif (!$quick && $property['COMMAND'] == 'i2c_ptsensor') {
+            $sda = $property['NUM'];
+            $scl = $property['ADD_NUM'];
+            if (!$scl || !$sda) continue;
+            $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=ptsensor&i2c_par=1';
+            $data = getURL($url);
+            sleep(1);
+            $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=ptsensor&i2c_par=2';
+            $data = getURL($url);
+            if ($data!='') {
+                $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => $property['COMMAND'], 'VALUE' => $data);
+            }
         } elseif (!$quick && $property['COMMAND'] == 'i2c_htu21d') {
             include_once(DIR_MODULES . $this->name . '/libs/i2c_com.class.php');
             include_once(DIR_MODULES . $this->name . '/libs/i2c_functions.inc.php');
