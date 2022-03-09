@@ -21,6 +21,7 @@ if ($stateData == '') return;
 $commands = array();
 $states = explode(';', $stateData);
 $total = count($states);
+
 for ($i = 0; $i < $total; $i++) {
     $matched = 0;
     $current_prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND NUM='" . $i . "' AND COMMAND_INDEX=0");
@@ -57,11 +58,11 @@ for ($i = 0; $i < $total; $i++) {
         $totalm = count($m[1]);
         for ($im = 0; $im < $totalm; $im++) {
             if ($m[1][$im] == 'temp') {
-                $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'temperature', 'INDEX' => $im);
+                $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'temperature', 'INDEX' => 1);
                 $commands[] = $cmd;
                 $matched = 1;
             } else {
-                $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'humidity', 'INDEX' => $im);
+                $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'humidity', 'INDEX' => 1);
                 $commands[] = $cmd;
                 $matched = 1;
             }
@@ -120,9 +121,23 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
             $sda = $property['NUM'];
             $scl = $property['ADD_NUM'];
             if (!$scl || !$sda) continue;
+            $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=htu21d&i2c_par=1';
+            $temperature = getURL($url);
+            if (is_numeric($temperature)) {
+                $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'temperature', 'INDEX' => 1, 'VALUE' => $temperature);
+                $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=htu21d';
+                sleep(1);
+                $humidity = getURL($url);
+                if (is_numeric($humidity)) {
+                    $hum_compensated = round($humidity + (25 - $temperature) * -0.15, 2);
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
+                }
+            }
+            /*
             $i2c_com = new i2c_com('http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?', $scl, $sda, $record['I2C_VERSION']);
             include_once(DIR_MODULES . $this->name . '/libs/i2c_htu21d.inc.php');
             $temperature = get_htu21d_temperature($i2c_com);
+            dprint($temperature);
             if (is_numeric($temperature)) {
                 $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'temperature', 'INDEX' => 1, 'VALUE' => $temperature);
                 $humidity = get_htu21d_humidity($i2c_com);
@@ -131,6 +146,7 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
                     $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
                 }
             }
+            */
         } elseif (!$quick && $property['COMMAND'] == 'i2c_ptsensor') {
             $sda = $property['NUM'];
             $scl = $property['ADD_NUM'];

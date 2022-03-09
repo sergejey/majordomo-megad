@@ -311,12 +311,13 @@ class megad extends module
             }
         }
 
-        if ($device['ID'] && preg_match_all('/P(\d+).*? - (.+?)<\/a>/',$new,$m)) {
+        if ($device['ID'] && preg_match_all('/\WP(\d+).*? - (.+?)<\/a>/',$new,$m)) {
+            //dprint($m);
             $total = count($m[0]);
             for($i=0;$i<$total;$i++) {
                 $line = $m[0][$i];
                 $num = $m[1][$i];
-                $pin = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=".$device['ID']." AND COMMAND_INDEX=0 AND NUM=".(int)$num);
+                $pin = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID=".$device['ID']." AND NUM=".(int)$num. " AND LINKED_OBJECT!='' ORDER BY COMMAND_INDEX");
                 if ($pin['ID']) {
                     //$line.=' '.$pin['ID'];
                     if ($pin['LINKED_OBJECT']) {
@@ -706,6 +707,14 @@ class megad extends module
             $prop['CURRENT_VALUE_STRING'] = $command['VALUE'];
             $old_value = $prop['CURRENT_VALUE_STRING'];
             $prop['ID'] = SQLInsert('megadproperties', $prop);
+
+            /*
+            $other_prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $device_id . "' AND NUM='" . $command['NUM'] . "' AND COMMAND_INDEX=" . (int)$command['INDEX']." AND ID!=".$prop['ID']);
+            if ($other_prop['ID']) {
+                SQLExec("DELETE FROM megadproperties WHERE ID=".$other_prop['ID']);
+            }
+            */
+
         }
         $prop['CURRENT_VALUE_STRING'] = $command['VALUE'];
         if ($old_value != $prop['CURRENT_VALUE_STRING']) {
