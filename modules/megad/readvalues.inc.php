@@ -72,6 +72,9 @@ for ($i = 0; $i < $total; $i++) {
         if ($current_prop['ID']) {
             $cmd = array('NUM' => $i, 'VALUE' => $states[$i], 'COMMAND' => $current_prop['COMMAND']);
             $commands[] = $cmd;
+        } else {
+            $cmd = array('NUM' => $i, 'VALUE' => $states[$i], 'COMMAND' => 'output');
+            $commands[] = $cmd;
         }
     }
 }
@@ -174,6 +177,17 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
                 if (is_numeric($humidity)) {
                     $hum_compensated = round($humidity + (25 - $temperature) * -0.15, 2);
                     $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
+                }
+            }
+        } elseif ($property['COMMAND'] == 'i2c_16pwm_sda') {
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$property['NUM'].'&cmd=get';
+            $data = getURL($url);
+            $ar = explode(';',$data);
+            $totalc = count($ar);
+            if ($totalc==16) {
+                for($ic=0;$ic<$totalc;$ic++) {
+                    $v = (int)$ar[$ic];
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'output', 'INDEX' => ($ic+1), 'VALUE' => $v);
                 }
             }
         } elseif ($property['COMMAND'] == 'i2c_16i_xt_sda') {
