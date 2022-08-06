@@ -68,6 +68,21 @@ for ($i = 0; $i < $total; $i++) {
             }
         }
     }
+    if (preg_match('/pm1:([\-\d\.]+)/',$states[$i],$m)) {
+        $cmd = array('NUM' => $i, 'VALUE' => $m[1], 'COMMAND' => 'pm1', 'INDEX' => 1);
+        $commands[] = $cmd;
+        $matched = 1;
+    }
+    if (preg_match('/pm2.5:([\-\d\.]+)/',$states[$i],$m)) {
+        $cmd = array('NUM' => $i, 'VALUE' => $m[1], 'COMMAND' => 'pm2.5', 'INDEX' => 1);
+        $commands[] = $cmd;
+        $matched = 1;
+    }
+    if (preg_match('/pm10:([\-\d\.]+)/',$states[$i],$m)) {
+        $cmd = array('NUM' => $i, 'VALUE' => $m[1], 'COMMAND' => 'pm10', 'INDEX' => 1);
+        $commands[] = $cmd;
+        $matched = 1;
+    }
     if (!$matched) {
         if ($current_prop['ID']) {
             $cmd = array('NUM' => $i, 'VALUE' => $states[$i], 'COMMAND' => $current_prop['COMMAND']);
