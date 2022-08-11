@@ -26,9 +26,13 @@
     }
 </script>
 
-
-<p><a href="?">&lt;&lt;&lt; <#LANG_BACK#></a></p>
-   [#if TITLE!=""#]<h4>[#TITLE#] ([#IP#])[#if COMMENT!=""#] - [#COMMENT#][#endif#]</h4>[#endif TITLE#]
+        <ul class="nav nav-tabs">
+            <li><a href="?">&lt;&lt;&lt; <#LANG_BACK#></a></li>
+        [#begin ALL_DEVICES#]
+            <li[#if ID="<#ID#>"#] class="active"[#endif#]><a href="?&view_mode=<#VIEW_MODE#>&id=[#ID#]&tab=<#TAB#>">[#TITLE#]</a></li>
+        [#end ALL_DEVICES#]
+        </ul>
+[#if TITLE!=""#]<h4>[#COMMENT#] ([#IP#])</h4>[#endif TITLE#]
 <ul class="nav nav-tabs">
   <li[#if TAB=""#] class="active"[#endif#]>
    <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab="><#LANG_GENERAL#></a>

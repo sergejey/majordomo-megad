@@ -146,11 +146,21 @@
         [#if PROPERTY_COMMAND="output"#]
         <div class="form-group">
             <label class="col-lg-3 control-label">
-                &nbsp;
+                &nbsp;&nbsp;
             </label>
             <div class="col-lg-4">
-                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],'[#PROPERTY_PORT#]',1,'switchResult[#PROPERTY_ID#]');">ON</a> |
-                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],'[#PROPERTY_PORT#]',0,'switchResult[#PROPERTY_ID#]');">OFF</a>
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],'[#PROPERTY_PORT#]',1,'switchResult[#PROPERTY_ID#]');"><#LANG_ON#> (1)</a> |
+                <a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],'[#PROPERTY_PORT#]',0,'switchResult[#PROPERTY_ID#]');"><#LANG_OFF#> (0)</a> |
+                <a href="#" onclick="$('#sendValueBlock').toggle();return false"><#LANG_VALUE#></a>
+                <span id="sendValueBlock" style="display:none">
+                    <table>
+                        <tr>
+                            <td><input type="text" id="sendValue" value="0" class="form-control"></td>
+                            <td><a href="#" onclick="return switchMegaDDevice([#PROPERTY_DEVICE_ID#],'[#PROPERTY_PORT#]',$('#sendValue').val(),'switchResult[#PROPERTY_ID#]');" class="btn btn-default"><#LANG_SEND#></a></td>
+                        </tr>
+                    </table>
+
+                </span>
                 <span  id="switchResult[#PROPERTY_ID#]"></span>
             </div>
         </div>

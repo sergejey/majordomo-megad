@@ -5,6 +5,10 @@
 if ($this->owner->name == 'panel') {
     $out['CONTROLPANEL'] = 1;
 }
+
+$all_devices=SQLSelect("SELECT ID,TITLE FROM megaddevices WHERE 1 ORDER BY TITLE");
+$out['ALL_DEVICES']=$all_devices;
+
 $table_name = 'megaddevices';
 $rec = SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
 if ($this->mode == 'update') {
