@@ -302,7 +302,9 @@ class megad extends module
         $device = SQLSelectOne("SELECT * FROM megaddevices WHERE IP='".$ip."'");
 
         $config = getURL($ip . $cmd, 0);
-        $new = $config;
+        $new = '';
+        //$new = 'URL: <b>'.$ip. $cmd.'</b><br><br/>';
+        $new.= $config;
 
         if (preg_match_all('/<a href=(.+?)>/i',$new,$m)) {
             $total = count($m[0]);
@@ -335,12 +337,19 @@ class megad extends module
 
         //$new = preg_replace('/<a href=(.+?)>/i', '<a href="?data_source=&view_mode=edit_megaddevices&id=' . $this->id . '&tab=config2&address=' . $ip . '&par=$1">', $new);
 
-        if (preg_match('/<form action=(.+?)>/is',$new,$m)) {
-            $cmd = $m[1];
-            $new = preg_replace('/<form action=(.+?)>/i', '<form action="?" method="get" class="form" enctype="multipart/form-data" name="frmEdit">', $new);
-            $new = str_replace('<input type=submit value=Save>', '<input type=submit name="submit" class="btn btn-default btn-primary" value=Save><input type="hidden" name="par" value="' . $cmd . '"><input type="hidden" name="address" value="' . $ip . '"><input type="hidden" name="view_mode" value="'.$this->view_mode.'"><input type="hidden" name="tab" value="'.$this->tab.'"><input type="hidden" name="id" value="'.$device['ID'].'">', $new);
+        if (preg_match_all('/<form([^<>]+)action=(.+?)>/is',$new,$m)) {
+            $total = count($m[0]);
+            for($i=0;$i<$total;$i++) {
+                $src = $m[0][$i];
+                $cmd = $m[2][$i];
+                $new = str_replace($src,'<form '.$m[1][$i].' action="?" method="get" class="form" enctype="multipart/form-data" name="frmEdit"><input type="hidden" name="par" value="' . $cmd . '"><input type="hidden" name="address" value="' . $ip . '"><input type="hidden" name="view_mode" value="'.$this->view_mode.'"><input type="hidden" name="tab" value="'.$this->tab.'"><input type="hidden" name="id" value="'.$device['ID'].'">',$new);
+            }
+            //$cmd = $m[1];
+            //$new = preg_replace('/<form action=(.+?)>/i', '<form action="?" method="get" class="form" enctype="multipart/form-data" name="frmEdit">', $new);
+            //$new = str_replace('<input type=submit value=Save>', '<input type=submit name="submit" class="btn btn-default btn-primary" value=Save><input type="hidden" name="par" value="' . $cmd . '"><input type="hidden" name="address" value="' . $ip . '"><input type="hidden" name="view_mode" value="'.$this->view_mode.'"><input type="hidden" name="tab" value="'.$this->tab.'"><input type="hidden" name="id" value="'.$device['ID'].'">', $new);
         }
 
+        $new = preg_replace('/type=submit/is', 'type=submit name=submit class="btn btn-default"', $new);
 
         $new = preg_replace('/<input name=/is', '<input class="form-control" name=', $new);
         $new = preg_replace('/<input size=/is', '<input class="form-control" size=', $new);

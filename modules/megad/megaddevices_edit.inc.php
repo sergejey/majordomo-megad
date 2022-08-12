@@ -6,8 +6,8 @@ if ($this->owner->name == 'panel') {
     $out['CONTROLPANEL'] = 1;
 }
 
-$all_devices=SQLSelect("SELECT ID,TITLE FROM megaddevices WHERE 1 ORDER BY TITLE");
-$out['ALL_DEVICES']=$all_devices;
+$all_devices = SQLSelect("SELECT ID,TITLE FROM megaddevices WHERE 1 ORDER BY TITLE");
+$out['ALL_DEVICES'] = $all_devices;
 
 $table_name = 'megaddevices';
 $rec = SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
@@ -23,12 +23,12 @@ if ($this->mode == 'update') {
             $ok = 0;
         }
 
-        $rec['COMMENT']=gr('comment');
+        $rec['COMMENT'] = gr('comment');
 
         global $mdid;
         $rec['MDID'] = $mdid;
 
-        $rec['RESTORE_ON_REBOOT'] = gr('restore_on_reboot','int');
+        $rec['RESTORE_ON_REBOOT'] = gr('restore_on_reboot', 'int');
 
         //updating 'IP' (varchar)
         global $ip;
@@ -49,8 +49,8 @@ if ($this->mode == 'update') {
         global $update_period;
         $rec['UPDATE_PERIOD'] = (int)$update_period;
 
-        $rec['I2C_VERSION']=gr('i2c_version','int');
-        $rec['DEFAULT_BEHAVIOR'] = gr('default_behavior','int');
+        $rec['I2C_VERSION'] = gr('i2c_version', 'int');
+        $rec['DEFAULT_BEHAVIOR'] = gr('default_behavior', 'int');
 
         $rec['NEXT_UPDATE'] = date('Y-m-d H:i:s', time() + $rec['UPDATE_PERIOD']);
 
@@ -95,39 +95,36 @@ if ($this->mode == 'update') {
 }
 // step: config
 
-if ($this->tab=='config2') 
-{
-//$url='http://' . $rec['IP'] . '/' . $rec['PASSWORD'];
-//$url='http://' . $rec['IP'] . '/' . $rec['PASSWORD'] . '/?cf=1';
-//$config=getURL($url, 0);
+if ($this->tab == 'config2') {
 
-//$new=str_replace( 'href=/','href='.$rec['IP'].'/', $config);
+    $address = $_GET['address'];
+    $par = $_GET['par'];
 
-//dprint($_POST);
+    if (preg_match('/^http/', $par)) {
+        header("Location:" . $par);
+        exit;
+    }
 
-$address = $_GET['address'];
-$par = $_GET['par'];
-
-if ($_GET['submit']) {
-    $new_url='';
-    foreach($_GET as $k=>$v) {
-        if (!in_array($k,array('submit','par','address','view_mode','tab','id','pd','md','inst'))) {
-            $new_url.='&'.$k.'='.urlencode($v);
+    if ($_GET['submit']) {
+        $new_url = '';
+        foreach ($_GET as $k => $v) {
+            if (!in_array($k, array('submit', 'par', 'address', 'view_mode', 'tab', 'id', 'pd', 'md', 'inst'))) {
+                $new_url .= '&' . $k . '=' . urlencode($v);
+            }
+        }
+        if ($new_url != '') {
+            $par .= '?' . $new_url;
         }
     }
-    if ($new_url!='') {
-        $par.='?'.$new_url;
-    }
-}
 
-if ($address=='') $address=$rec['IP'];
-if ($par=='') $par='/'.$rec['PASSWORD'];
+    if ($address == '') $address = $rec['IP'];
+    if ($par == '') $par = '/' . $rec['PASSWORD'];
 
-$data=$this->gethttpmessage($address,$par);
+    $data = $this->gethttpmessage($address, $par);
 
 
 //$data=$this->gethttpmessage($rec['IP'], '/'. $rec['PASSWORD']);
-$out['TEST']=$data;
+    $out['TEST'] = $data;
 }
 
 if ($this->tab == 'config') {
@@ -225,32 +222,32 @@ if ($rec['ID'] && $this->tab == 'data') {
     if ($property_id) {
         $property = SQLSelectOne("SELECT * FROM megadproperties WHERE ID=" . (int)$property_id);
         if ($this->mode == 'delete') {
-            if ($property['INDEX']==0) {
-                SQLExec("DELETE FROM megadproperties WHERE NUM=".$property['NUM']." AND DEVICE_ID=".(int)$property['DEVICE_ID']);
+            if ($property['INDEX'] == 0) {
+                SQLExec("DELETE FROM megadproperties WHERE NUM=" . $property['NUM'] . " AND DEVICE_ID=" . (int)$property['DEVICE_ID']);
             }
-            SQLExec("DELETE FROM megadproperties WHERE ID=".$property['ID']);
+            SQLExec("DELETE FROM megadproperties WHERE ID=" . $property['ID']);
             $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
         }
         if ($this->mode == 'update') {
-            if (preg_match('/,/',gr('num'))) {
-                $tmp=explode(',',gr('num'));
-                $num1=(int)trim($tmp[0]);
-                $num2=(int)trim($tmp[1]);
+            if (preg_match('/,/', gr('num'))) {
+                $tmp = explode(',', gr('num'));
+                $num1 = (int)trim($tmp[0]);
+                $num2 = (int)trim($tmp[1]);
                 $property['NUM'] = $num1;
                 $property['ADD_NUM'] = $num2;
             } else {
-                $property['NUM'] = gr('num','int');
+                $property['NUM'] = gr('num', 'int');
                 $property['ADD_NUM'] = gr('add_num', 'int');
             }
             $property['ADD_INT'] = gr('add_int', 'int');
-            $property['REVERSE'] = gr('reverse','int');
+            $property['REVERSE'] = gr('reverse', 'int');
             $property['SKIP_DEFAULT'] = gr('skip_default', 'int');
             $property['COMMENT'] = gr('comment');
             $property['COMMAND'] = gr('command');
             if (!$property['ID']) {
-                $property['DEVICE_ID']=$rec['ID'];
-                $property['ID']=SQLInsert('megadproperties', $property);
-                $property_id=$property['ID'];
+                $property['DEVICE_ID'] = $rec['ID'];
+                $property['ID'] = SQLInsert('megadproperties', $property);
+                $property_id = $property['ID'];
             } else {
                 $property['LINKED_OBJECT'] = gr('linked_object');
                 $property['LINKED_PROPERTY'] = gr('linked_property');
@@ -258,23 +255,23 @@ if ($rec['ID'] && $this->tab == 'data') {
                 SQLUpdate('megadproperties', $property);
             }
 
-            if ($property['ADD_NUM']!='') {
-                SQLExec("UPDATE megadproperties SET COMMAND='i2c' WHERE DEVICE_ID=".$rec['ID']." AND NUM=".$property['ADD_NUM']);
+            if ($property['ADD_NUM'] != '') {
+                SQLExec("UPDATE megadproperties SET COMMAND='i2c' WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM=" . $property['ADD_NUM']);
             }
 
         }
-        if (preg_match('/i2c/',$property['COMMAND'])) {
-            $out['NEED_ADD_PORT']=1;
-            $out['I2C']=1;
+        if (preg_match('/i2c/', $property['COMMAND'])) {
+            $out['NEED_ADD_PORT'] = 1;
+            $out['I2C'] = 1;
         }
-        if ($property['COMMAND']=='i2c_16i_xt' || $property['COMMAND']=='i2c_16i_xt_sda') {
-            $out['NEED_ADD_INT']=1;
+        if ($property['COMMAND'] == 'i2c_16i_xt' || $property['COMMAND'] == 'i2c_16i_xt_sda') {
+            $out['NEED_ADD_INT'] = 1;
         }
 
-        if ($property['COMMAND_INDEX']>0) {
-            $out['PROPERTY_PORT']=$property['NUM'].'e'.((int)$property['COMMAND_INDEX']-1);
+        if ($property['COMMAND_INDEX'] > 0) {
+            $out['PROPERTY_PORT'] = $property['NUM'] . 'e' . ((int)$property['COMMAND_INDEX'] - 1);
         } else {
-            $out['PROPERTY_PORT']=$property['NUM'];
+            $out['PROPERTY_PORT'] = $property['NUM'];
         }
 
 
@@ -287,9 +284,9 @@ if ($rec['ID'] && $this->tab == 'data') {
                 $out['PROPERTY_' . $k] = $v;
             }
         } else {
-            $out['NEW_PROPERTY']=1;
+            $out['NEW_PROPERTY'] = 1;
         }
-        $out['PROPERTY_ID']=$property_id;
+        $out['PROPERTY_ID'] = $property_id;
         if ($this->mode == 'update' && $out['I2C']) {
             $this->readValues($rec['ID']);
         }
@@ -297,18 +294,18 @@ if ($rec['ID'] && $this->tab == 'data') {
     $properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY NUM, COMMAND_INDEX, COMMAND");
     $total = count($properties);
     for ($i = 0; $i < $total; $i++) {
-        if ($properties[$i]['COMMAND_INDEX']>0) {
-            $properties[$i]['PROPERTY_PORT']=$properties[$i]['NUM'].'e'.((int)$properties[$i]['COMMAND_INDEX']-1);
+        if ($properties[$i]['COMMAND_INDEX'] > 0) {
+            $properties[$i]['PROPERTY_PORT'] = $properties[$i]['NUM'] . 'e' . ((int)$properties[$i]['COMMAND_INDEX'] - 1);
         } else {
-            $properties[$i]['PROPERTY_PORT']=$properties[$i]['NUM'];
+            $properties[$i]['PROPERTY_PORT'] = $properties[$i]['NUM'];
         }
-        if ($properties[$i]['ID']==$out['PROPERTY_ID']) {
-            $properties[$i]['SELECTED']=1;
+        if ($properties[$i]['ID'] == $out['PROPERTY_ID']) {
+            $properties[$i]['SELECTED'] = 1;
         }
-        if ($properties[$i]['LINKED_OBJECT']!='') {
-            $object_rec=SQLSelectOne("SELECT * FROM objects WHERE TITLE='".$properties[$i]['LINKED_OBJECT']."'");
-            if ($object_rec['DESCRIPTION']!='') {
-                $properties[$i]['LINKED_OBJECT'].=' - '.$object_rec['DESCRIPTION'];
+        if ($properties[$i]['LINKED_OBJECT'] != '') {
+            $object_rec = SQLSelectOne("SELECT * FROM objects WHERE TITLE='" . $properties[$i]['LINKED_OBJECT'] . "'");
+            if ($object_rec['DESCRIPTION'] != '') {
+                $properties[$i]['LINKED_OBJECT'] .= ' - ' . $object_rec['DESCRIPTION'];
             }
         }
     }
@@ -317,7 +314,7 @@ if ($rec['ID'] && $this->tab == 'data') {
 }
 
 if ($this->mode == 'clear') {
-    SQLExec("DELETE FROM megadproperties WHERE DEVICE_ID=".$rec['ID']);
+    SQLExec("DELETE FROM megadproperties WHERE DEVICE_ID=" . $rec['ID']);
     $this->readValues($rec['ID']);
     $this->readConfig($rec['ID']);
     $this->redirect("?view_mode=" . $this->view_mode . "&tab=" . $this->tab . "&id=" . $rec['ID']);
