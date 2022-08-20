@@ -130,11 +130,19 @@ if ($this->tab == 'config2') {
 if ($this->tab == 'config') {
 
     if ($this->mode == 'upgrade_firmware') {
-        $url = BASE_URL . '/modules/megad/megad-cfg.php';
+        $url = BASE_URL . '/modules/megad/megad-cfg-2561.php';
+
         $url .= '?ip=' . urlencode($rec['IP']) . '&p=' . urlencode($rec['PASSWORD']) . '&w=1';
+        $local_ip = '';
         if ($this->config['API_IP']) {
-            $url .= '&local-ip=' . $this->config['API_IP'];
+            $local_ip = $this->config['API_IP'];
+        } else {
+            $local_ip = getLocalIp();
         }
+        if ($local_ip) {
+            $url .= '&local-ip=' . $local_ip;
+        }
+
         global $beta;
         if ($beta) {
             $url .= "&b=1";
@@ -144,8 +152,6 @@ if ($this->tab == 'config') {
         if ($clear) {
             $url .= "&ee=1";
         }
-
-        //echo $url;exit;
 
         $data = getURL($url, 0);
         if (!$data) {
@@ -158,9 +164,6 @@ if ($this->tab == 'config') {
         global $server_ip;
         global $server_script;
         $url = 'http://' . $rec['IP'] . '/' . $rec['PASSWORD'] . '/?cf=1&sip=' . $server_ip . "&sct=" . urlencode($server_script);
-        if ($this->config['API_IP']) {
-            $url .= '&local-ip=' . $this->config['API_IP'];
-        }
         $data = getURL($url, 0);
         $data = 'OK';
         $this->redirect("?view_mode=" . $this->view_mode . "&tab=config" . "&id=" . $rec['ID'] . "&result=" . urlencode($data));
@@ -169,11 +172,24 @@ if ($this->tab == 'config') {
     if ($this->mode == 'write_config') {
         global $config;
 
-        SaveFile(ROOT . 'cached/megad.cfg', $config);
-        $url = BASE_URL . '/modules/megad/megad-cfg.php';
-        $url .= '?ip=' . urlencode($rec['IP']) . '&write-conf=' . urlencode(ROOT . 'cached/megad.cfg') . '&p=' . urlencode($rec['PASSWORD']);
+        if (is_dir(ROOT . 'cms/cached/')) {
+            $config_file = ROOT . 'cms/cached/megad.cfg';
+        } else {
+            $config_file = ROOT . 'cached/megad.cfg';
+        }
+        SaveFile($config_file, $config);
+
+        $url = BASE_URL . '/modules/megad/megad-cfg-2561.php';
+        $url .= '?ip=' . urlencode($rec['IP']) . '&write-conf=' . urlencode($config_file) . '&p=' . urlencode($rec['PASSWORD']);
+
+        $local_ip = '';
         if ($this->config['API_IP']) {
-            $url .= '&local-ip=' . $this->config['API_IP'];
+            $local_ip = $this->config['API_IP'];
+        } else {
+            $local_ip = getLocalIp();
+        }
+        if ($local_ip) {
+            $url .= '&local-ip=' . $local_ip;
         }
         $data = getURL($url, 0);
 

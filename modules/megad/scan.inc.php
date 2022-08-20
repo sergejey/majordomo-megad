@@ -1,17 +1,19 @@
 <?php
 
- $url=BASE_URL.'/modules/megad/megad-cfg.php';
+ $url=BASE_URL.'/modules/megad/megad-cfg-2561.php';
  $url.='?scan=1';
 
- /*
+ $local_ip = '';
  if ($this->config['API_IP']) {
-  $url.='&local-ip='.$this->config['API_IP'];
+     $local_ip = $this->config['API_IP'];
+ } else {
+     $local_ip = getLocalIp();
  }
- */
+ if ($local_ip) {
+     $url.='&local-ip='.$local_ip;
+ }
 
  $data=getURL($url, 0);
-
- //echo $data;exit;
 
  if ($data!='') {
   $lines=explode("\n", $data);

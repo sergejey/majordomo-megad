@@ -19,6 +19,15 @@ if( !function_exists('hex2bin') )
 $options = getopt("sp:fewb", array("scan", "ip:", "new-ip:", "fw:", "local-ip:", "ee", "read-conf:", "write-conf:"));
 #print_r($options);
 
+if ($_SERVER['REQUEST_METHOD']=='GET') {
+    foreach($_GET as $k=>$v) {
+        if (get_magic_quotes_gpc()) {
+            $v=stripslashes($v);
+        }
+        $options[$k]=$v;
+    }
+}
+
 # Prepearing sockets
 if ( !empty($options['local-ip']) )
 $local_ip = $options['local-ip'];
@@ -161,21 +170,31 @@ if ( array_key_exists('read-conf', $options) || array_key_exists('write-conf', $
 
 		for ( $i = 0; $i < count($pages); $i++ )
 		{
-			if ( $preset_flag == 1 )			
+			if ( $preset_flag == 1 )
 			{
 				//echo "Setting preset 0\n";
 				$page = file_get_contents("http://".$options['ip']."/".$options['p']."/?cf=1&pr=0");
 				sleep(1);
 				$preset_flag = 2;
 			}
-
 			$page = file_get_contents("http://".$options['ip']."/".$options['p']."/?".$pages[$i]);
-			$page = str_replace("<<", "<", $page);
 
-			@$dom->loadHTML($page);
+            if (preg_match('/value=<br>/is',$page)) {
+                //echo "skipping $pages[$i]<Br/>";
+                continue;
+            } elseif (preg_match('/name=cf value=1>/is',$page) && preg_match('/cf=10/',$pages[$i])) {
+                //echo "skipping $pages[$i]<Br/>";
+                continue;
+            } else {
+                //echo "reading ".$pages[$i]."<br/>";
+                //echo htmlspecialchars($page)."<hr>";
+            }
+
+			$page = str_replace("<<", "<", $page);
+            @$dom->loadHTML($page);
+
 			//$url = "http://".$options['ip']."/".$options['p']."/?";
 			$url = "";
-
 			$els=$dom->getelementsbytagname('input');
 			foreach($els as $inp)
 			{
