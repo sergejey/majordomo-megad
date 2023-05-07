@@ -16,42 +16,25 @@ if ($this->mode == 'update') {
     // step: default
     if ($this->tab == '') {
         //updating 'TITLE' (varchar, required)
-        global $title;
-        $rec['TITLE'] = $title;
+        $rec['TITLE'] = gr('title');
         if ($rec['TITLE'] == '') {
             $out['ERR_TITLE'] = 1;
             $ok = 0;
         }
-
         $rec['COMMENT'] = gr('comment');
-
-        global $mdid;
-        $rec['MDID'] = $mdid;
-
+        $rec['MDID'] = gr('mdid');
         $rec['RESTORE_ON_REBOOT'] = gr('restore_on_reboot', 'int');
-
-        //updating 'IP' (varchar)
-        global $ip;
-        $rec['IP'] = $ip;
-
-        global $type_main;
-        $rec['TYPE_MAIN'] = $type_main;
-
-        global $type;
-        $rec['TYPE'] = $type;
-
-        global $password;
+        $rec['IP'] = gr('ip');
+        $rec['TYPE_MAIN'] = gr('type_main');
+        $rec['TYPE'] = gr('type');
+        $password=gr('password');
         if (!$password) {
             $password = 'sec';
         }
         $rec['PASSWORD'] = $password;
-
-        global $update_period;
-        $rec['UPDATE_PERIOD'] = (int)$update_period;
-
+        $rec['UPDATE_PERIOD'] = gr('update_period','int');
         $rec['I2C_VERSION'] = gr('i2c_version', 'int');
         $rec['DEFAULT_BEHAVIOR'] = gr('default_behavior', 'int');
-
         $rec['NEXT_UPDATE'] = date('Y-m-d H:i:s', time() + $rec['UPDATE_PERIOD']);
 
     }
