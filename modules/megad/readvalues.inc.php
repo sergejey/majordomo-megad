@@ -68,17 +68,17 @@ for ($i = 0; $i < $total; $i++) {
             }
         }
     }
-    if (preg_match('/pm1:([\-\d\.]+)/',$states[$i],$m)) {
+    if (preg_match('/pm1:([\-\d\.]+)/', $states[$i], $m)) {
         $cmd = array('NUM' => $i, 'VALUE' => $m[1], 'COMMAND' => 'pm1', 'INDEX' => 1);
         $commands[] = $cmd;
         $matched = 1;
     }
-    if (preg_match('/pm2.5:([\-\d\.]+)/',$states[$i],$m)) {
+    if (preg_match('/pm2.5:([\-\d\.]+)/', $states[$i], $m)) {
         $cmd = array('NUM' => $i, 'VALUE' => $m[1], 'COMMAND' => 'pm2.5', 'INDEX' => 1);
         $commands[] = $cmd;
         $matched = 1;
     }
-    if (preg_match('/pm10:([\-\d\.]+)/',$states[$i],$m)) {
+    if (preg_match('/pm10:([\-\d\.]+)/', $states[$i], $m)) {
         $cmd = array('NUM' => $i, 'VALUE' => $m[1], 'COMMAND' => 'pm10', 'INDEX' => 1);
         $commands[] = $cmd;
         $matched = 1;
@@ -139,11 +139,11 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
             $sda = $property['NUM'];
             $scl = $property['ADD_NUM'];
             if (!$scl || !$sda) continue;
-            $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=htu21d&i2c_par=1';
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=htu21d&i2c_par=1';
             $temperature = getURL($url);
             if (is_numeric($temperature)) {
                 $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'temperature', 'INDEX' => 1, 'VALUE' => $temperature);
-                $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=htu21d';
+                $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=htu21d';
                 sleep(1);
                 $humidity = getURL($url);
                 if (is_numeric($humidity)) {
@@ -169,12 +169,12 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
             $sda = $property['NUM'];
             $scl = $property['ADD_NUM'];
             if (!$scl || !$sda) continue;
-            $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=ptsensor&i2c_par=1';
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=ptsensor&i2c_par=1';
             $data = getURL($url);
             sleep(1);
-            $url ='http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$sda.'&scl='.$scl.'&i2c_dev=ptsensor&i2c_par=2';
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=ptsensor&i2c_par=2';
             $data = getURL($url);
-            if ($data!='') {
+            if ($data != '') {
                 $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => $property['COMMAND'], 'VALUE' => $data);
             }
         } elseif (!$quick && $property['COMMAND'] == 'i2c_htu21d') {
@@ -195,59 +195,74 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
                 }
             }
         } elseif ($property['COMMAND'] == 'i2c_16pwm_sda') {
-            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$property['NUM'].'&cmd=get';
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $property['NUM'] . '&cmd=get';
             $data = getURL($url);
-            $ar = explode(';',$data);
+            $ar = explode(';', $data);
             $totalc = count($ar);
-            if ($totalc==16) {
-                for($ic=0;$ic<$totalc;$ic++) {
+            if ($totalc == 16) {
+                for ($ic = 0; $ic < $totalc; $ic++) {
                     $v = (int)$ar[$ic];
-                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'output', 'INDEX' => ($ic+1), 'VALUE' => $v);
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'output', 'INDEX' => ($ic + 1), 'VALUE' => $v);
                 }
             }
         } elseif ($property['COMMAND'] == 'i2c_16i_xt_sda') {
-            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$property['NUM'].'&cmd=get';
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $property['NUM'] . '&cmd=get';
             $data = getURL($url);
-            $ar = explode(';',$data);
+            $ar = explode(';', $data);
             $totalc = count($ar);
-            if ($totalc==16) {
-                for($ic=0;$ic<$totalc;$ic++) {
-                    if ($ar[$ic]=='ON') {
-                        $v=1;
+            if ($totalc == 16) {
+                for ($ic = 0; $ic < $totalc; $ic++) {
+                    if ($ar[$ic] == 'ON') {
+                        $v = 1;
                     } else {
-                        $v=0;
+                        $v = 0;
                     }
-                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'input', 'INDEX' => ($ic+1), 'VALUE' => $v);
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'input', 'INDEX' => ($ic + 1), 'VALUE' => $v);
                 }
             }
         } elseif ($property['COMMAND'] == 'i2c_16ir_xt_sda') {
-            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$property['NUM'].'&cmd=get';
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $property['NUM'] . '&cmd=get';
             $data = getURL($url);
-            $ar = explode(';',$data);
+            $ar = explode(';', $data);
             $totalc = count($ar);
-            if ($totalc==16) {
-                for($ic=0;$ic<$totalc;$ic++) {
-                    if ($ar[$ic]=='ON') {
-                        $v=1;
+            if ($totalc == 16) {
+                for ($ic = 0; $ic < $totalc; $ic++) {
+                    if ($ar[$ic] == 'ON') {
+                        $v = 1;
                     } else {
-                        $v=0;
+                        $v = 0;
                     }
-                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'output', 'INDEX' => ($ic+1), 'VALUE' => $v);
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'output', 'INDEX' => ($ic + 1), 'VALUE' => $v);
                 }
             }
         } elseif ($property['COMMAND'] == 'i2c_16i_xt') {
-            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt='.$property['ADD_NUM'].'&cmd=get';
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $property['ADD_NUM'] . '&cmd=get';
             $data = getURL($url);
-            $ar = explode(';',$data);
+            $ar = explode(';', $data);
             $totalc = count($ar);
-            if ($totalc==16) {
-                for($ic=0;$ic<$totalc;$ic++) {
-                    if ($ar[$ic]=='ON') {
-                        $v=1;
+            if ($totalc == 16) {
+                for ($ic = 0; $ic < $totalc; $ic++) {
+                    if ($ar[$ic] == 'ON') {
+                        $v = 1;
                     } else {
-                        $v=0;
+                        $v = 0;
                     }
-                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'input', 'INDEX' => ($ic+1), 'VALUE' => $v);
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'input', 'INDEX' => ($ic + 1), 'VALUE' => $v);
+                }
+            }
+        } elseif ($property['COMMAND'] == 'i2c_scd4x_sda') {
+            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $property['NUM'] . '&cmd=get';
+            $data = getURL($url);
+            if ($data != '' && $data != 'busy') {
+                list($co2, $temperature, $humidity) = explode('/', $data);
+                if (is_numeric($co2)) {
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'co2', 'INDEX' => 1, 'VALUE' => $co2);
+                }
+                if (is_numeric($temperature)) {
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'temp', 'INDEX' => 2, 'VALUE' => $temperature);
+                }
+                if (is_numeric($humidity)) {
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 3, 'VALUE' => $humidity);
                 }
             }
         }
