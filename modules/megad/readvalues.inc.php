@@ -151,20 +151,6 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
                     $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
                 }
             }
-            /*
-            $i2c_com = new i2c_com('http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?', $scl, $sda, $record['I2C_VERSION']);
-            include_once(DIR_MODULES . $this->name . '/libs/i2c_htu21d.inc.php');
-            $temperature = get_htu21d_temperature($i2c_com);
-            dprint($temperature);
-            if (is_numeric($temperature)) {
-                $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'temperature', 'INDEX' => 1, 'VALUE' => $temperature);
-                $humidity = get_htu21d_humidity($i2c_com);
-                if (is_numeric($humidity)) {
-                    $hum_compensated = round($humidity + (25 - $temperature) * -0.15, 2);
-                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'humidity', 'INDEX' => 1, 'VALUE' => $hum_compensated);
-                }
-            }
-            */
         } elseif (!$quick && $property['COMMAND'] == 'i2c_ptsensor') {
             $sda = $property['NUM'];
             $scl = $property['ADD_NUM'];
@@ -253,6 +239,9 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
         } elseif ($property['COMMAND'] == 'i2c_scd4x_sda') {
             $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $property['NUM'] . '&cmd=get';
             $data = getURL($url);
+            if ($data == 'busy' && isset($states[(int)$property['NUM']])) {
+                $data = $states[(int)$property['NUM']];
+            }
             if ($data != '' && $data != 'busy') {
                 list($co2, $temperature, $humidity) = explode('/', $data);
                 if (is_numeric($co2)) {
