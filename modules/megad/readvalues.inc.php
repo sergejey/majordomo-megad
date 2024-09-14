@@ -14,7 +14,7 @@ if ($all) {
         DebMes("State response:\n" . $stateData, 'megad');
     }
 }
-if ($_GET['debug']) {
+if (gr('debug')) {
     dprint($url . "\n" . $stateData, false);
 }
 if ($stateData == '') return;
@@ -97,7 +97,7 @@ for ($i = 0; $i < $total; $i++) {
 
 //internal temp sensor data
 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND COMMAND='inttemp'");
-if (!$quick && $prop['ID']) {
+if (!$quick && isset($prop['ID'])) {
     $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?tget=1';
     $stateData = getURL($url, 0);
     if (is_numeric($stateData)) {
@@ -108,12 +108,16 @@ if (!$quick && $prop['ID']) {
 
 //internal GSM alarm 
 $prop = SQLSelectOne("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND COMMAND='alarm'");
-if (!$quick && $prop['ID']) {
+if (!$quick && isset($prop['ID'])) {
     $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?cf=1';
     $config = getURL($url, 0);
 
     $preg = preg_match_all('/Mode: (.+?)<br>/m', $config, $m, PREG_SET_ORDER, 0);
-    $mode = $m[0][1];
+    if (isset($m[0][1])) {
+        $mode = $m[0][1];
+    } else {
+        $mode = '';
+    }
 
     if ($mode == 'disarm') {
         $stateData = '0';
@@ -131,7 +135,7 @@ if (!$quick && $prop['ID']) {
 
 
 $i2c_properties = SQLSelect("SELECT * FROM megadproperties WHERE DEVICE_ID='" . $record['ID'] . "' AND COMMAND LIKE 'i2c%' ORDER BY NUM");
-if ($stateData != '' && $i2c_properties[0]['ID']) {
+if ($stateData != '' && isset($i2c_properties[0]) && isset($i2c_properties[0]['ID'])) {
     foreach ($i2c_properties as $property) {
         if (!$quick && $property['COMMAND'] == 'i2c_htu21d_sda') {
             include_once(DIR_MODULES . $this->name . '/libs/i2c_com.class.php');
@@ -155,13 +159,35 @@ if ($stateData != '' && $i2c_properties[0]['ID']) {
             $sda = $property['NUM'];
             $scl = $property['ADD_NUM'];
             if (!$scl || !$sda) continue;
+
             $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=ptsensor&i2c_par=1';
             $data = getURL($url);
-            sleep(1);
-            $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=ptsensor&i2c_par=2';
-            $data = getURL($url);
-            if ($data != '') {
-                $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => $property['COMMAND'], 'VALUE' => $data);
+
+            if (gr('debug')) {
+                dprint("$url\n$data",false);
+            }
+
+            if ($data == 'Done') {
+                sleep(2);
+                $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=ptsensor&i2c_par=2';
+                $data = getURL($url);
+                if (gr('debug')) {
+                    dprint("$url\n$data",false);
+                }
+                if ($data != '') {
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => $property['COMMAND'], 'VALUE' => $data);
+                }
+
+                $url = 'http://' . $record['IP'] . '/' . $record['PASSWORD'] . '/?pt=' . $sda . '&scl=' . $scl . '&i2c_dev=ptsensor&i2c_par=3';
+                $data = getURL($url);
+                if (gr('debug')) {
+                    dprint("$url\n$data",false);
+                }
+                if ($data != '') {
+                    $commands[] = array('NUM' => $property['NUM'], 'COMMAND' => 'temperature', 'INDEX' => 1, 'VALUE' => $data);
+                }
+
+
             }
         } elseif (!$quick && $property['COMMAND'] == 'i2c_htu21d') {
             include_once(DIR_MODULES . $this->name . '/libs/i2c_com.class.php');
@@ -262,6 +288,6 @@ foreach ($commands as $command) {
     $this->processCommand($record['ID'], $command);
 }
 
-if ($_GET['debug']) {
+if (gr('debug')) {
     dprint($commands);
 }

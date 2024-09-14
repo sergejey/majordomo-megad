@@ -234,14 +234,15 @@ class megad extends module
      */
     function usual(&$out)
     {
-        $device = $_GET['device'];
-        $command = $_GET['command'];
+        $device = gr('device');
+        $command = gr('command');
 
         if ($this->ajax) {
-            if ($_GET['op'] == 'processCycle') {
+            $op = gr('op');
+            if ($op == 'processCycle') {
                 $this->processCycle();
             }
-            if ($_GET['op'] == 'readvalues') {
+            if ($op == 'readvalues') {
                 $this->readValues($device);
                 echo "OK";
                 exit;
@@ -249,7 +250,7 @@ class megad extends module
 
         }
 
- 	if ($device && $_GET['clearalarmwrn']) {
+ 	if ($device && gr('clearalarmwrn')) {
             $result = $this->clearalarmwrn($device);
 		}
 
