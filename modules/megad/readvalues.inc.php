@@ -54,14 +54,18 @@ for ($i = 0; $i < $total; $i++) {
         $commands[] = $cmd;
         $matched = 1;
     }
-    if (preg_match_all('/(temp|hum):([\-\d\.]+)/', $states[$i], $m)) {
+    if (preg_match_all('/(temp|hum|press):([\-\d\.]+)/', $states[$i], $m)) {
         $totalm = count($m[1]);
         for ($im = 0; $im < $totalm; $im++) {
             if ($m[1][$im] == 'temp') {
                 $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'temperature', 'INDEX' => 1);
                 $commands[] = $cmd;
                 $matched = 1;
-            } else {
+            } elseif ($m[1][$im] == 'press') {
+                $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'pressure', 'INDEX' => 1);
+                $commands[] = $cmd;
+                $matched = 1;
+            } elseif ($m[1][$im] == 'hum') {
                 $cmd = array('NUM' => $i, 'VALUE' => $m[2][$im], 'COMMAND' => 'humidity', 'INDEX' => 1);
                 $commands[] = $cmd;
                 $matched = 1;
