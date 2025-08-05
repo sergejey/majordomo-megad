@@ -27,12 +27,12 @@ if ($this->mode == 'update') {
         $rec['IP'] = gr('ip');
         $rec['TYPE_MAIN'] = gr('type_main');
         $rec['TYPE'] = gr('type');
-        $password=gr('password');
+        $password = gr('password');
         if (!$password) {
             $password = 'sec';
         }
         $rec['PASSWORD'] = $password;
-        $rec['UPDATE_PERIOD'] = gr('update_period','int');
+        $rec['UPDATE_PERIOD'] = gr('update_period', 'int');
         $rec['I2C_VERSION'] = gr('i2c_version', 'int');
         $rec['DEFAULT_BEHAVIOR'] = gr('default_behavior', 'int');
         $rec['NEXT_UPDATE'] = date('Y-m-d H:i:s', time() + $rec['UPDATE_PERIOD']);
@@ -254,11 +254,13 @@ if ($rec['ID'] && $this->tab == 'data') {
                 SQLUpdate('megadproperties', $property);
             }
 
-            if ($property['ADD_NUM'] != '') {
-                SQLExec("UPDATE megadproperties SET COMMAND='i2c' WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM=" . $property['ADD_NUM']);
+            if (preg_match('/i2c/', $property['COMMAND'])) {
+                if ($property['ADD_NUM'] != '' && $property['ADD_NUM'] != $property['NUM']) {
+                    SQLExec("UPDATE megadproperties SET COMMAND='i2c' WHERE DEVICE_ID=" . $rec['ID'] . " AND NUM=" . $property['ADD_NUM']);
+                }
             }
-
         }
+
         if (preg_match('/i2c/', $property['COMMAND'])) {
             $out['NEED_ADD_PORT'] = 1;
             $out['I2C'] = 1;
