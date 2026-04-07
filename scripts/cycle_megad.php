@@ -13,9 +13,16 @@ $ctl = new control_modules();
 echo date("H:i:s") . " running " . basename(__FILE__) . PHP_EOL;
 $latest_check=0;
 $checkEvery=5; // poll every 5 seconds
+$cycleVarName='ThisComputer.'.str_replace('.php', '', basename(__FILE__)).'Run';
+
 while (1)
 {
-   setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
+   //setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);       
+    if ($latest_check_cycle + 25 < time())
+           {
+       $latest_check_cycle = time();
+       saveToCache("MJD:$cycleVarName", $latest_check_cycle);
+           }
    if ((time()-$latest_check)>$checkEvery) {
       $latest_check=time();
       $url=BASE_URL.'/ajax/megad.html?op=processCycle';
