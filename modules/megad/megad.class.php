@@ -880,7 +880,12 @@ class megad extends module
         }
 
         if ($prop['COMMAND'] == 'output') { // output
-            $this->sendCommand($prop['DEVICE_ID'], $channel . ':' . $value);
+            if ($prop['MODE'] == 1 && !($prop['COMMAND_INDEX'] > 0)) {
+                // PWM port (mode 1): MegaD expects pt=N&pwm=V, 'cmd=N:V' is not applied to PWM outputs
+                $this->sendCommand($prop['DEVICE_ID'], 'pt=' . $prop['NUM'] . '&pwm=' . (int)$value, true);
+            } else {
+                $this->sendCommand($prop['DEVICE_ID'], $channel . ':' . $value);
+            }
         } elseif ($prop['COMMAND'] == 'raw') { // raw command
             $this->sendCommand($prop['DEVICE_ID'], $value);
         } elseif ($prop['COMMAND'] == 'alarm') { // raw command
